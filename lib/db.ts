@@ -207,6 +207,11 @@ export function getDb() {
           const db = loadDB();
           const upper = sql.trim().toUpperCase();
 
+          // SELECT COUNT — check FIRST before table-specific routing
+          if (upper.includes('COUNT')) {
+            return handleCount(db, sql);
+          }
+
           // SELECT from saved_items with enrichment join
           if (upper.includes('SAVED_ITEMS') && upper.includes('ENRICHMENTS')) {
             return handleGetSavedItemWithEnrichment(db, params, sql);
@@ -225,11 +230,6 @@ export function getDb() {
           // SELECT from settings
           if (upper.includes('SETTINGS')) {
             return handleGetSetting(db, params, sql);
-          }
-
-          // SELECT COUNT
-          if (upper.includes('COUNT')) {
-            return handleCount(db, sql);
           }
 
           return undefined;
