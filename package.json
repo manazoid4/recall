@@ -23,7 +23,10 @@
     "lint": "tsc --noEmit",
     "db:setup": "tsx scripts/setup-db.ts",
     "db:seed": "tsx scripts/seed-demo.ts",
-    "extension:build": "cd extension && npm run build"
+    "extension:build": "cd extension && npm run build",
+    "extension:clean": "cd extension && npm run clean",
+    "extension:zip": "cd extension && npm run zip",
+    "extension:test": "cd extension && npm run test"
   },
   "dependencies": {
     "next": "^14.2.5",

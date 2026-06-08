@@ -1,0 +1,17 @@
+{
+  "name": "saved-brain-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension to scrape saved/bookmarked posts from Instagram and X/Twitter",
+  "private": true,
+  "scripts": {
+    "build": "tsc && node scripts/copy-assets.js",
+    "clean": "rm -rf dist",
+    "zip": "npm run build && node scripts/package.js",
+    "test": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "@types/chrome": "^0.0.268",
+    "archiver": "^7.0.1"
+  }
+}

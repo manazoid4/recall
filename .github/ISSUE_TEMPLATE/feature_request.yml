@@ -1,0 +1,59 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+title: "[Feature] "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea for how to improve Saved Brain? We'd love to hear it! Please fill out the template below.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A brief one-sentence description of the feature
+      placeholder: "e.g., Add dark mode support for the dashboard"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: What problem does this solve? Who would use this and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How should this feature work?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any other ways you've thought of solving this?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Mockups, references, or anything else that might help
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: This is not a duplicate of an existing feature request
+          required: true
+        - label: I understand this is a feature request and not a commitment
+          required: true

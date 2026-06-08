@@ -1,0 +1,90 @@
+name: Bug Report
+description: Report something that's broken
+title: "[Bug] "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the template below to help us investigate.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A brief one-sentence description of the bug
+      placeholder: "e.g., Search returns no results when querying with special characters"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How we can reproduce the bug step by step
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Enter '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How much does this bug affect your experience?
+      options:
+        - Low - Minor inconvenience
+        - Medium - Causes significant issues
+        - High - App unusable
+        - Critical - Data loss or security issue
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, and any relevant setup
+      placeholder: "e.g., Chrome 125 on Windows 11, Next.js 14.2.5"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console Logs / Error Messages
+      description: Any relevant error output from the browser console or server logs
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Screenshots, links, or anything else that might help
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I am using the latest version of the app
+          required: true
