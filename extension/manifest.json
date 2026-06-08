@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Saved Brain",
+  "version": "1.0.0",
+  "description": "Scrape saved/bookmarked posts from Instagram and X/Twitter and sync to your backend.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://*.instagram.com/*",
+    "https://x.com/*",
+    "https://twitter.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.instagram.com/*/saved/*",
+        "https://*.instagram.com/*/saved/"
+      ],
+      "js": ["content-instagram.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://x.com/*/bookmarks",
+        "https://twitter.com/*/bookmarks"
+      ],
+      "js": ["content-twitter.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Saved Brain"
+  }
+}

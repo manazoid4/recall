@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Saved Brain</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 320px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #0f172a; }
+    h1 { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .logo { width: 24px; height: 24px; background: #f59e0b; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
+    .status { padding: 12px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; font-size: 13px; }
+    .status-label { color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-value { font-weight: 600; margin-top: 4px; }
+    .config { margin-bottom: 12px; }
+    .config label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; color: #64748b; }
+    .config input { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; outline: none; }
+    .config input:focus { border-color: #f59e0b; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
+    button { width: 100%; padding: 10px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #f97316; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: white; color: #0f172a; border: 1px solid #e2e8f0; margin-top: 8px; }
+    .btn-secondary:hover { background: #f8fafc; }
+    .error { color: #dc2626; font-size: 12px; margin-top: 8px; }
+    .success { color: #16a34a; font-size: 12px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1><span class="logo">🧠</span> Saved Brain</h1>
+
+  <div class="status">
+    <div class="status-label">Status</div>
+    <div class="status-value" id="status">Checking...</div>
+  </div>
+
+  <div class="config">
+    <label>Backend URL</label>
+    <input type="text" id="backendUrl" placeholder="http://localhost:3000">
+  </div>
+
+  <div class="config">
+    <label>API Key (optional)</label>
+    <input type="password" id="apiKey" placeholder="Your API key">
+  </div>
+
+  <button id="syncBtn">Sync Now</button>
+  <button id="saveBtn" class="btn-secondary">Save Settings</button>
+
+  <div id="message"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
