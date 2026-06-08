@@ -2,7 +2,7 @@
 
 import { useState, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Upload, Link as LinkIcon, FileJson, Loader2, Check, AlertCircle } from 'lucide-react';
+import { Upload, Link as LinkIcon, FileJson, Loader2, Check, AlertCircle, Github } from 'lucide-react';
 
 export default function UploadPage() {
   return (
@@ -16,7 +16,7 @@ function UploadContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [mode, setMode] = useState<'select' | 'file' | 'url' | 'paste'>(
+  const [mode, setMode] = useState<'select' | 'file' | 'url' | 'paste' | 'github'>(
     searchParams.get('url') ? 'url' : 'select'
   );
   const [uploading, setUploading] = useState(false);
@@ -24,6 +24,8 @@ function UploadContent() {
   const [error, setError] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState('');
   const [pasteContent, setPasteContent] = useState('');
+  const [githubUsername, setGithubUsername] = useState('');
+  const [githubToken, setGithubToken] = useState('');
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -129,6 +131,35 @@ function UploadContent() {
     }
   };
 
+  const handleGithubSubmit = async () => {
+    if (!githubUsername.trim()) return;
+    setUploading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/github/stars', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: githubUsername.trim(),
+          token: githubToken.trim() || undefined,
+        }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Failed to import GitHub stars');
+
+      setSuccess(`Imported ${result.data.ingested} GitHub stars (${result.data.skipped} duplicates skipped)`);
+      setGithubUsername('');
+      setGithubToken('');
+      setTimeout(() => router.push('/library'), 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to import GitHub stars');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center gap-3">
@@ -193,6 +224,19 @@ function UploadContent() {
             <div>
               <div className="font-bold text-ink">Paste Content</div>
               <div className="text-sm text-muted">Save raw text or notes</div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setMode('github')}
+            className="flex w-full items-center gap-4 rounded-xl border border-line bg-panel p-6 text-left transition-all hover:border-yellow/50 hover:shadow-sm"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange/10">
+              <Github className="h-6 w-6 text-orange" />
+            </div>
+            <div>
+              <div className="font-bold text-ink">Import GitHub Stars</div>
+              <div className="text-sm text-muted">Import your starred repositories</div>
             </div>
           </button>
         </div>
@@ -285,6 +329,56 @@ function UploadContent() {
             >
               {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
               Save Content
+            </button>
+          </div>
+        </div>
+      )}
+
+      {mode === 'github' && (
+        <div className="rounded-xl border border-line bg-panel p-8">
+          <h2 className="mb-4 text-lg font-bold text-ink">Import GitHub Stars</h2>
+          <p className="mb-4 text-sm text-muted">
+            Import your GitHub starred repositories. A token is optional but increases the rate limit.
+          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-ink">GitHub Username</label>
+              <input
+                type="text"
+                value={githubUsername}
+                onChange={(e) => setGithubUsername(e.target.value)}
+                placeholder="e.g., torvalds"
+                className="w-full rounded-lg border border-line bg-panel px-4 py-3 text-sm text-ink placeholder-muted outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/20"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-ink">Personal Access Token (optional)</label>
+              <input
+                type="password"
+                value={githubToken}
+                onChange={(e) => setGithubToken(e.target.value)}
+                placeholder="ghp_..."
+                className="w-full rounded-lg border border-line bg-panel px-4 py-3 text-sm text-ink placeholder-muted outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/20"
+              />
+              <p className="mt-1 text-xs text-muted">
+                Create one at GitHub Settings → Developer settings → Personal access tokens
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 flex gap-3">
+            <button
+              onClick={() => setMode('select')}
+              className="rounded-lg border border-line px-4 py-2 text-sm text-muted hover:bg-surface"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleGithubSubmit}
+              disabled={uploading || !githubUsername.trim()}
+              className="flex items-center gap-2 rounded-lg bg-yellow px-6 py-2 font-bold text-white disabled:opacity-50"
+            >
+              {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
+              Import Stars
             </button>
           </div>
         </div>

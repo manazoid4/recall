@@ -108,6 +108,7 @@ export const SOURCE_TYPES = [
   'notion',
   'chrome-bookmarks',
   'obsidian',
+  'github',
   'manual-upload',
 ] as const;
 
