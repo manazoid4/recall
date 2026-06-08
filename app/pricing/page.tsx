@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Check, Brain, ArrowRight, Zap, Shield, Infinity } from 'lucide-react';
+import { Check, Brain, ArrowRight, Shield, Infinity } from 'lucide-react';
+import CheckoutButton from '@/components/CheckoutButton';
 
 const freeFeatures = [
   '50 saved items',
@@ -134,10 +135,7 @@ export default function PricingPage() {
               </li>
             ))}
           </ul>
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-yellow py-3 font-black text-white transition-all hover:-translate-y-0.5 hover:bg-orange">
-            <Zap className="h-5 w-5" />
-            GET LIFETIME ACCESS — £49
-          </button>
+          <CheckoutButton label="GET LIFETIME ACCESS — £49" />
           <p className="mt-3 text-center text-xs text-muted">
             🔒 Secure payment via LemonSqueezy · 30-day refund
           </p>
@@ -194,10 +192,9 @@ export default function PricingPage() {
         <p className="mt-3 text-lg text-white/80">
           Join thousands turning their digital hoard into a searchable second brain.
         </p>
-        <button className="mt-8 inline-flex items-center gap-2 rounded-xl bg-ink px-8 py-4 text-lg font-black text-white transition-all hover:-translate-y-0.5">
-          GET LIFETIME — £49
-          <ArrowRight className="h-5 w-5" />
-        </button>
+        <div className="mx-auto mt-8 max-w-sm">
+          <CheckoutButton label="GET LIFETIME — £49" className="bg-ink hover:bg-ink/90" />
+        </div>
         <p className="mt-4 text-sm font-bold text-white/60">
           One payment · Every feature · Forever
         </p>
