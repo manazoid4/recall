@@ -8,15 +8,19 @@ export async function POST(
   { params }: { params: { slug: string } }
 ) {
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const originalSlug = params.slug;
 
+  // Only allow cloning public boards or boards owned by the user
   const original = await db
-    .prepare('SELECT * FROM boards WHERE slug = ?')
-    .get(originalSlug) as Record<string, unknown> | undefined;
+    .prepare('SELECT * FROM boards WHERE slug = ? AND (is_public = 1 OR owner_id = ?)')
+    .get(originalSlug, userId) as Record<string, unknown> | undefined;
 
   if (!original) {
-    return NextResponse.json({ error: 'Board not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Board not found or not public' }, { status: 404 });
   }
 
   const originalId = original.id as string;
