@@ -7,19 +7,17 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
-  
-  let query = `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
+
+  const item = await db.prepare(
+    `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
        FROM saved_items si
        LEFT JOIN enrichments e ON e.item_id = si.id
-       WHERE si.id = ?`;
-  const queryParams: (string | null)[] = [params.id];
-  if (userId) {
-    query += ' AND si.owner_id = ?';
-    queryParams.push(userId);
-  }
-  
-  const item = await db.prepare(query).get(...queryParams) as Record<string, unknown> | undefined;
+       WHERE si.id = ? AND si.owner_id = ?`
+  ).get(params.id, userId) as Record<string, unknown> | undefined;
 
   if (!item) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -47,15 +45,11 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { userId } = await auth();
-  const db = getDb();
-  
-  let deleteQuery = 'DELETE FROM saved_items WHERE id = ?';
-  const deleteParams: (string | null)[] = [params.id];
-  if (userId) {
-    deleteQuery += ' AND owner_id = ?';
-    deleteParams.push(userId);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  
-  await db.prepare(deleteQuery).run(...deleteParams);
+  const db = getDb();
+
+  await db.prepare('DELETE FROM saved_items WHERE id = ? AND owner_id = ?').run(params.id, userId);
   return NextResponse.json({ success: true });
 }

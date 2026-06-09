@@ -93,6 +93,21 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ data: items, total: Number(countRow?.total ?? 0) });
 }
 
+export async function DELETE(request: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const { searchParams } = new URL(request.url);
+  const all = searchParams.get('all');
+  if (all !== 'true') {
+    return NextResponse.json({ error: 'Use ?all=true to delete all items' }, { status: 400 });
+  }
+  const db = getDb();
+  await db.prepare('DELETE FROM saved_items WHERE owner_id = ?').run(userId);
+  return NextResponse.json({ success: true });
+}
+
 export async function POST(request: NextRequest) {
   const rateLimitResult = rateLimit(request);
   if (rateLimitResult) return rateLimitResult;
