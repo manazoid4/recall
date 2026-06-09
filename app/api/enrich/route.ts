@@ -1,7 +1,6 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { enrichItem } from '@/lib/ai/enrich';
-import { v4 as uuid } from 'uuid';
 import { auth } from '@clerk/nextjs/server';
 import { enrichSchema } from '@/lib/schemas';
 import { rateLimit } from '@/lib/rate-limit';
@@ -61,10 +60,14 @@ export async function POST(request: NextRequest) {
       }, userId || undefined);
 
       await db.prepare(
-        `INSERT OR REPLACE INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET
+           summary = excluded.summary, tags = excluded.tags, sentiment = excluded.sentiment,
+           topics = excluded.topics, entities = excluded.entities,
+           quality_score = excluded.quality_score, provider = excluded.provider, model = excluded.model`
       ).run(
-        uuid(),
+        `enrichment-${data.itemId}`,
         data.itemId,
         result.summary,
         JSON.stringify(result.tags),
@@ -102,10 +105,14 @@ export async function POST(request: NextRequest) {
           }, userId || undefined);
 
           await db.prepare(
-            `INSERT OR REPLACE INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+            `INSERT INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON CONFLICT(id) DO UPDATE SET
+               summary = excluded.summary, tags = excluded.tags, sentiment = excluded.sentiment,
+               topics = excluded.topics, entities = excluded.entities,
+               quality_score = excluded.quality_score, provider = excluded.provider, model = excluded.model`
           ).run(
-            uuid(),
+            `enrichment-${item.id as string}`,
             item.id,
             result.summary,
             JSON.stringify(result.tags),
