@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       : null,
   }));
 
-  return NextResponse.json({ data: items, total: countRow.total });
+  return NextResponse.json({ data: items, total: Number(countRow?.total ?? 0) });
 }
 
 export async function POST(request: NextRequest) {

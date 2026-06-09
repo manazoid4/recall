@@ -59,7 +59,8 @@ function toPostgresSQL(sqlStr: string): string {
   let result = sqlStr.replace(/\?/g, () => `$${++idx}`);
   // Convert datetime('now') → NOW()
   result = result.replace(/datetime\('now'\)/gi, 'NOW()');
-  // Convert CURRENT_TIMESTAMP (same in both, no change needed)
+  // Cast COUNT(*) to int so pg returns number not BigInt string
+  result = result.replace(/COUNT\(\*\)/gi, 'COUNT(*)::int');
   return result;
 }
 
