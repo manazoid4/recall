@@ -11,7 +11,7 @@ export async function POST(
   const db = getDb();
   const originalSlug = params.slug;
 
-  const original = db
+  const original = await db
     .prepare('SELECT * FROM boards WHERE slug = ?')
     .get(originalSlug) as Record<string, unknown> | undefined;
 
@@ -26,7 +26,7 @@ export async function POST(
   const baseSlug = `clone-of-${originalSlug}`;
   let cloneSlug = baseSlug;
   let counter = 1;
-  while (db.prepare('SELECT id FROM boards WHERE slug = ?').get(cloneSlug)) {
+  while (await db.prepare('SELECT id FROM boards WHERE slug = ?').get(cloneSlug)) {
     cloneSlug = `${baseSlug}-${counter}`;
     counter++;
   }
@@ -36,18 +36,18 @@ export async function POST(
   const cloneDescription = `Cloned from ${originalSlug}. Original: ${originalName}`;
 
   // Insert clone board
-  db.prepare(
+  await db.prepare(
     `INSERT INTO boards (id, slug, name, description, is_public, clone_count, owner_id)
      VALUES (?, ?, ?, ?, ?, ?, ?)`
   ).run(cloneId, cloneSlug, cloneName, cloneDescription, 0, 0, userId || null);
 
   // Copy board items
-  const originalItems = db
+  const originalItems = await db
     .prepare('SELECT * FROM board_items WHERE board_id = ?')
     .all(originalId) as Record<string, unknown>[];
 
   for (const item of originalItems) {
-    db.prepare(
+    await db.prepare(
       `INSERT INTO board_items (board_id, item_id, position, added_at)
        VALUES (?, ?, ?, ?)`
     ).run(cloneId, item.item_id, item.position, new Date().toISOString());
@@ -55,7 +55,7 @@ export async function POST(
 
   // Increment original board clone count
   const currentClones = (original.clone_count as number) || 0;
-  db.prepare('UPDATE boards SET clone_count = ? WHERE id = ?').run(currentClones + 1, originalId);
+  await db.prepare('UPDATE boards SET clone_count = ? WHERE id = ?').run(currentClones + 1, originalId);
 
   return NextResponse.json({
     data: {

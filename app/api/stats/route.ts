@@ -18,9 +18,9 @@ export async function GET() {
     params.push(userId);
   }
 
-  const items = db.prepare(itemsQuery).get(...params) as { count: number };
-  const enriched = db.prepare(enrichedQuery).get(...params) as { count: number };
-  const boards = db.prepare(boardsQuery).get(...params) as { count: number };
+  const items = await db.prepare(itemsQuery).get(...params) as { count: number };
+  const enriched = await db.prepare(enrichedQuery).get(...params) as { count: number };
+  const boards = await db.prepare(boardsQuery).get(...params) as { count: number };
 
   return NextResponse.json({
     data: {

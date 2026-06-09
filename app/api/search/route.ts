@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
   let items;
   if (mode === 'semantic') {
     // For now, fallback to fulltext (vector search needs sqlite-vss setup)
-    items = db.prepare(baseQuery).all(...params) as Record<string, unknown>[];
+    items = await db.prepare(baseQuery).all(...params) as Record<string, unknown>[];
   } else {
-    items = db.prepare(baseQuery).all(...params) as Record<string, unknown>[];
+    items = await db.prepare(baseQuery).all(...params) as Record<string, unknown>[];
   }
 
   return NextResponse.json({

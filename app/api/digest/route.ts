@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
   }
   itemsQuery += ' ORDER BY si.created_at DESC LIMIT 20';
 
-  const items = db.prepare(itemsQuery).all(...itemsParams) as Record<string, unknown>[];
+  const items = await db.prepare(itemsQuery).all(...itemsParams) as Record<string, unknown>[];
 
   let statsQuery = `SELECT
         (SELECT COUNT(*) FROM saved_items WHERE created_at > ?`;
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
   }
   statsQuery += `) as total_items`;
 
-  const stats = db.prepare(statsQuery).get(...statsParams) as Record<string, unknown>;
+  const stats = await db.prepare(statsQuery).get(...statsParams) as Record<string, unknown>;
 
   const digest = {
     period: '7 days',
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
   }
   itemsQuery += ' ORDER BY si.created_at DESC LIMIT 20';
 
-  const items = db.prepare(itemsQuery).all(...itemsParams) as Record<string, unknown>[];
+  const items = await db.prepare(itemsQuery).all(...itemsParams) as Record<string, unknown>[];
 
   // Try to send via Resend if configured
   const resendKey = process.env.RESEND_API_KEY;

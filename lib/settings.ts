@@ -64,7 +64,7 @@ const PROVIDER_ENV_MAP: Record<string, string> = {
   openrouter: 'OPENROUTER_API_KEY',
 };
 
-export function getSetting(key: string, defaultValue: string = '', ownerId?: string): Promise<string> {
+export async function getSetting(key: string, defaultValue: string = '', ownerId?: string): Promise<string> {
   const db = getDb();
   let query = 'SELECT value FROM settings WHERE key = ?';
   const params: (string)[] = [key];
@@ -72,7 +72,7 @@ export function getSetting(key: string, defaultValue: string = '', ownerId?: str
     query += ' AND owner_id = ?';
     params.push(ownerId);
   }
-  const row = db.prepare(query).get(...params) as { value: string } | undefined;
+  const row = await db.prepare(query).get(...params) as { value: string } | undefined;
   let value = row?.value ?? '';
   // Decrypt secret values when reading
   if (isSecretKey(key) && value && isEncrypted(value)) {
@@ -93,10 +93,10 @@ export function getSetting(key: string, defaultValue: string = '', ownerId?: str
       if (envName) value = process.env[envName] ?? '';
     }
   }
-  return Promise.resolve(value || defaultValue);
+  return value || defaultValue;
 }
 
-export function setSetting(key: string, value: string, ownerId?: string): Promise<void> {
+export async function setSetting(key: string, value: string, ownerId?: string): Promise<void> {
   const db = getDb();
   // Encrypt secret values before storing
   let storedValue = value;
@@ -108,14 +108,13 @@ export function setSetting(key: string, value: string, ownerId?: string): Promis
       storedValue = value;
     }
   }
-  db.prepare(`
+  await db.prepare(`
     INSERT INTO settings (key, value, owner_id, updated_at) VALUES (?, ?, ?, datetime('now'))
     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = datetime('now')
   `).run(key, storedValue, ownerId || null);
-  return Promise.resolve();
 }
 
-export function getAllSettings(ownerId?: string): Promise<Record<string, string>> {
+export async function getAllSettings(ownerId?: string): Promise<Record<string, string>> {
   const db = getDb();
   let query = 'SELECT key, value FROM settings';
   const params: (string)[] = [];
@@ -123,7 +122,7 @@ export function getAllSettings(ownerId?: string): Promise<Record<string, string>
     query += ' WHERE owner_id = ?';
     params.push(ownerId);
   }
-  const rows = db.prepare(query).all(...params) as Array<{ key: string; value: string }>;
+  const rows = await db.prepare(query).all(...params) as Array<{ key: string; value: string }>;
   const result: Record<string, string> = {};
   for (const row of rows) {
     let value = row.value;
@@ -137,5 +136,5 @@ export function getAllSettings(ownerId?: string): Promise<Record<string, string>
     }
     result[row.key] = value;
   }
-  return Promise.resolve(result);
+  return result;
 }

@@ -47,13 +47,13 @@ export async function GET(request: NextRequest) {
     params.push(`%"${tag}"%`);
   }
 
-  const countRow = db
+  const countRow = await db
     .prepare(
       `SELECT COUNT(*) as total FROM saved_items si LEFT JOIN enrichments e ON e.item_id = si.id ${where}`
     )
     .get(...params) as { total: number };
 
-  const rows = db
+  const rows = await db
     .prepare(
       `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score,
               e.provider as e_provider, e.model as e_model, e.created_at as e_created_at
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
   const id = data.id || uuid();
 
   try {
-    db.prepare(
+    await db.prepare(
       `INSERT INTO saved_items (id, url, title, author, saved_at, platform, raw_data, owner_id)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(url) DO UPDATE SET
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       userId || null
     );
 
-    const item = db.prepare('SELECT * FROM saved_items WHERE id = ?').get(id);
+    const item = await db.prepare('SELECT * FROM saved_items WHERE id = ?').get(id);
     return NextResponse.json({ data: item }, { status: 201 });
   } catch (err) {
     return NextResponse.json(

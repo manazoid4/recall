@@ -79,7 +79,7 @@ async function checkIsPro(userId: string): Promise<boolean> {
   try {
     const { getDb } = await import('./db');
     const db = getDb();
-    const purchase = db
+    const purchase = await db
       .prepare('SELECT value FROM settings WHERE key = ?')
       .get(`purchase_${userId}`) as { value: string } | undefined;
     if (purchase) {
@@ -96,7 +96,7 @@ async function getItemCount(userId: string): Promise<number> {
   try {
     const { getDb } = await import('./db');
     const db = getDb();
-    const row = db
+    const row = await db
       .prepare('SELECT COUNT(*) as count FROM saved_items WHERE owner_id = ?')
       .get(userId) as { count: number };
     return row?.count || 0;
@@ -109,7 +109,7 @@ async function getBoardCount(userId: string): Promise<number> {
   try {
     const { getDb } = await import('./db');
     const db = getDb();
-    const row = db
+    const row = await db
       .prepare('SELECT COUNT(*) as count FROM boards WHERE owner_id = ?')
       .get(userId) as { count: number };
     return row?.count || 0;

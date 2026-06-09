@@ -16,7 +16,7 @@ export async function POST(
   }
 
   // Find the board by slug
-  const board = db
+  const board = await db
     .prepare('SELECT * FROM boards WHERE slug = ?')
     .get(params.slug) as Record<string, unknown> | undefined;
 
@@ -32,14 +32,14 @@ export async function POST(
   const boardId = board.id as string;
 
   // Get current max position
-  const maxPos = db
+  const maxPos = await db
     .prepare('SELECT MAX(position) as max_pos FROM board_items WHERE board_id = ?')
     .get(boardId) as { max_pos: number | null } | undefined;
 
   const position = (maxPos?.max_pos || 0) + 1;
 
   // Insert the item
-  db.prepare(
+  await db.prepare(
     `INSERT INTO board_items (board_id, item_id, position, added_at)
      VALUES (?, ?, ?, ?)
      ON CONFLICT(board_id, item_id) DO UPDATE SET
@@ -64,7 +64,7 @@ export async function DELETE(
   }
 
   // Find the board by slug
-  const board = db
+  const board = await db
     .prepare('SELECT * FROM boards WHERE slug = ?')
     .get(params.slug) as Record<string, unknown> | undefined;
 
@@ -79,7 +79,7 @@ export async function DELETE(
 
   const boardId = board.id as string;
 
-  db.prepare(
+  await db.prepare(
     'DELETE FROM board_items WHERE board_id = ? AND item_id = ?'
   ).run(boardId, itemId);
 

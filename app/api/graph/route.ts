@@ -32,7 +32,7 @@ export async function GET() {
   }
   query += ' LIMIT 100';
 
-  const items = db
+  const items = await db
     .prepare(query)
     .all(...params) as Array<{ id: string; title: string | null; url: string; platform: string | null; entities: string }>;
 

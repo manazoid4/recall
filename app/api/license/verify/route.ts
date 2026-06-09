@@ -17,7 +17,7 @@ export async function GET(_request: NextRequest) {
   const db = getDb();
   
   // Check for active purchase in database
-  const purchase = db
+  const purchase = await db
     .prepare('SELECT * FROM purchases WHERE user_id = ? AND status = ? ORDER BY purchased_at DESC LIMIT 1')
     .get(userId, 'active') as Record<string, unknown> | undefined;
 
@@ -32,7 +32,7 @@ export async function GET(_request: NextRequest) {
   }
 
   // Fallback: check legacy settings-based purchase record
-  const legacyPurchase = db
+  const legacyPurchase = await db
     .prepare('SELECT value FROM settings WHERE key = ? AND owner_id = ?')
     .get(`purchase_${userId}`, userId) as { value: string } | undefined;
 
@@ -41,7 +41,7 @@ export async function GET(_request: NextRequest) {
       const data = JSON.parse(legacyPurchase.value);
       if (data.status === 'active') {
         // Migrate to new purchases table
-        db.prepare(
+        await db.prepare(
           `INSERT INTO purchases (id, user_id, email, order_id, status, purchased_at)
            VALUES (?, ?, ?, ?, ?, ?)
            ON CONFLICT DO NOTHING`
@@ -92,14 +92,14 @@ export async function POST(request: NextRequest) {
   // In production, validate against LemonSqueezy API
   // For now, check against our database
   const db = getDb();
-  const purchase = db
+  const purchase = await db
     .prepare('SELECT * FROM purchases WHERE license_key = ? AND status = ?')
     .get(licenseKey, 'active') as Record<string, unknown> | undefined;
 
   if (purchase) {
     // If userId provided, associate purchase with user
     if (userId && !purchase.user_id) {
-      db.prepare('UPDATE purchases SET user_id = ? WHERE id = ?')
+      await db.prepare('UPDATE purchases SET user_id = ? WHERE id = ?')
         .run(userId, purchase.id);
     }
 

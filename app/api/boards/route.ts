@@ -25,7 +25,7 @@ export async function GET() {
     params.push(userId);
   }
   
-  const rows = db
+  const rows = await db
     .prepare(
       `SELECT b.*, COUNT(bi.item_id) as item_count
        FROM boards b
@@ -83,12 +83,12 @@ export async function POST(request: NextRequest) {
   let slug = slugify(data.name);
 
   // Ensure unique slug
-  const existing = db.prepare('SELECT id FROM boards WHERE slug = ?').get(slug);
+  const existing = await db.prepare('SELECT id FROM boards WHERE slug = ?').get(slug);
   if (existing) {
     slug = `${slug}-${Date.now().toString(36)}`;
   }
 
-  db.prepare(
+  await db.prepare(
     `INSERT INTO boards (id, slug, name, description, is_public, owner_id)
      VALUES (?, ?, ?, ?, ?, ?)`
   ).run(id, slug, data.name, data.description || null, data.isPublic ? 1 : 0, userId || null);

@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
   }
   query += ' ORDER BY si.created_at DESC';
 
-  const items = db.prepare(query).all(...params) as Record<string, unknown>[];
+  const items = await db.prepare(query).all(...params) as Record<string, unknown>[];
 
   if (items.length === 0) {
     return NextResponse.json({ error: 'No items to export' }, { status: 400 });
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
   }
   query += ' ORDER BY si.created_at DESC';
 
-  const items = db.prepare(query).all(...params) as Record<string, unknown>[];
+  const items = await db.prepare(query).all(...params) as Record<string, unknown>[];
 
   if (items.length === 0) {
     return NextResponse.json({ error: 'No items to export' }, { status: 400 });

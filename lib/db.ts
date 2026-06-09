@@ -3,14 +3,15 @@ import Database from 'better-sqlite3';
 import path from 'path';
 
 // Determine which database to use
+const databaseUrl = process.env.DATABASE_URL;
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const isSupabase = !!(supabaseUrl && supabaseKey);
+const isProduction = !!(databaseUrl || (supabaseUrl && supabaseKey));
 
-// Supabase client
+// Supabase client (for auth/storage features if needed)
 let _supabase: ReturnType<typeof createClient> | null = null;
 
-function getSupabase() {
+export function getSupabaseClient() {
   if (_supabase) return _supabase;
   if (!supabaseUrl || !supabaseKey) throw new Error('Supabase URL and key required');
   _supabase = createClient(supabaseUrl, supabaseKey, {
@@ -34,78 +35,85 @@ interface StmtResult {
   changes: number;
 }
 
-export function getDb() {
-  if (isSupabase) {
-    return getSupabaseDb();
+// Shared db interface — all methods async for compatibility between SQLite and Postgres
+export interface DbInterface {
+  prepare(sql: string): {
+    run(...params: unknown[]): Promise<StmtResult>;
+    get(...params: unknown[]): Promise<Record<string, unknown> | undefined>;
+    all(...params: unknown[]): Promise<Record<string, unknown>[]>;
+  };
+  exec(sql: string): Promise<void>;
+}
+
+export function getDb(): DbInterface {
+  if (isProduction) {
+    return getPostgresDb();
   }
   return getSQLiteDb();
 }
 
-// Convert SQL with ? placeholders to numbered $1, $2, etc.
-function normalizeParams(sqlStr: string, params: unknown[]): { sql: string; values: unknown[] } {
+// Convert SQLite SQL to Postgres-compatible SQL
+function toPostgresSQL(sqlStr: string): string {
+  // Convert ? placeholders to $1, $2, ...
   let idx = 0;
-  const sql = sqlStr.replace(/\?/g, () => {
-    idx++;
-    return `$${idx}`;
-  });
-  return { sql, values: params };
+  let result = sqlStr.replace(/\?/g, () => `$${++idx}`);
+  // Convert datetime('now') → NOW()
+  result = result.replace(/datetime\('now'\)/gi, 'NOW()');
+  // Convert CURRENT_TIMESTAMP (same in both, no change needed)
+  return result;
 }
 
-function getSupabaseDb() {
+// Postgres adapter using @vercel/postgres (uses DATABASE_URL env var)
+function getPostgresDb(): DbInterface {
   return {
     prepare(sqlStr: string) {
+      const pgSql = toPostgresSQL(sqlStr);
       return {
         async run(...params: unknown[]): Promise<StmtResult> {
-          const { sql, values } = normalizeParams(sqlStr, params);
           try {
-            const { error } = await getSupabase().rpc('exec_sql', { sql, params: values } as any);
-            if (error) {
-              console.error('SQL error:', error.message);
-              return { changes: 0 };
-            }
+            const { db: pgClient } = await import('@vercel/postgres');
+            await pgClient.query(pgSql, params as unknown[]);
             return { changes: 1 };
-          } catch {
+          } catch (err) {
+            console.error('[db.run] error:', (err as Error).message, 'sql:', pgSql.slice(0, 120));
             return { changes: 0 };
           }
         },
         async get(...params: unknown[]): Promise<Record<string, unknown> | undefined> {
-          const { sql, values } = normalizeParams(sqlStr, params);
           try {
-            const { data, error } = await getSupabase().rpc('exec_sql', { sql, params: values } as any);
-            if (error || !data || (data as any[]).length === 0) return undefined;
-            return (data as any[])[0] as Record<string, unknown>;
-          } catch {
+            const { db: pgClient } = await import('@vercel/postgres');
+            const result = await pgClient.query(pgSql, params as unknown[]);
+            if (!result.rows || result.rows.length === 0) return undefined;
+            return result.rows[0] as Record<string, unknown>;
+          } catch (err) {
+            console.error('[db.get] error:', (err as Error).message, 'sql:', pgSql.slice(0, 120));
             return undefined;
           }
         },
         async all(...params: unknown[]): Promise<Record<string, unknown>[]> {
-          const { sql, values } = normalizeParams(sqlStr, params);
           try {
-            const { data, error } = await getSupabase().rpc('exec_sql', { sql, params: values } as any);
-            if (error || !data) return [];
-            return (data as any[]) as Record<string, unknown>[];
-          } catch {
+            const { db: pgClient } = await import('@vercel/postgres');
+            const result = await pgClient.query(pgSql, params as unknown[]);
+            return (result.rows || []) as Record<string, unknown>[];
+          } catch (err) {
+            console.error('[db.all] error:', (err as Error).message, 'sql:', pgSql.slice(0, 120));
             return [];
           }
         },
       };
     },
     async exec(sqlStr: string) {
-      const { error } = await getSupabase().rpc('exec_sql', { sql: sqlStr, params: [] } as any);
-      if (error) console.error('Exec error:', error.message);
-    },
-    pragma(_stmt: string) {
-      // No-op for Supabase
-    },
-    transaction<T>(fn: (..._args: unknown[]) => T) {
-      return (..._args: unknown[]): T => {
-        return fn(..._args);
-      };
+      try {
+        const { db: pgClient } = await import('@vercel/postgres');
+        await pgClient.query(toPostgresSQL(sqlStr));
+      } catch (err) {
+        console.error('[db.exec] error:', (err as Error).message);
+      }
     },
   };
 }
 
-function getSQLiteDb() {
+function getSQLiteDb(): DbInterface {
   const db = getSQLite();
 
   // Ensure tables exist
@@ -194,40 +202,35 @@ function getSQLiteDb() {
     prepare(sqlStr: string) {
       const stmt = db.prepare(sqlStr);
       return {
-        run(...params: unknown[]): StmtResult {
+        async run(...params: unknown[]): Promise<StmtResult> {
           const result = stmt.run(...params);
           return { changes: result.changes };
         },
-        get(...params: unknown[]): Record<string, unknown> | undefined {
+        async get(...params: unknown[]): Promise<Record<string, unknown> | undefined> {
           return stmt.get(...params) as Record<string, unknown> | undefined;
         },
-        all(...params: unknown[]): Record<string, unknown>[] {
+        async all(...params: unknown[]): Promise<Record<string, unknown>[]> {
           return stmt.all(...params) as Record<string, unknown>[];
         },
       };
     },
-    exec(sqlStr: string) {
+    async exec(sqlStr: string) {
       db.exec(sqlStr);
-    },
-    pragma(stmt: string) {
-      db.pragma(stmt);
-    },
-    transaction<T>(fn: (..._args: unknown[]) => T) {
-      return db.transaction(fn);
     },
   };
 }
 
 // Helper for direct queries
 export async function dbQuery(sqlStr: string, params: unknown[] = []): Promise<Record<string, unknown>[]> {
-  if (isSupabase) {
-    const { sql, values } = normalizeParams(sqlStr, params);
-    const { data, error } = await getSupabase().rpc('exec_sql', { sql, params: values } as any);
-    if (error) {
-      console.error('Query error:', error.message);
+  if (isProduction) {
+    try {
+      const { db: pgClient } = await import('@vercel/postgres');
+      const result = await pgClient.query(sqlStr, params);
+      return (result.rows || []) as Record<string, unknown>[];
+    } catch (err) {
+      console.error('[dbQuery] error:', (err as Error).message);
       return [];
     }
-    return (data || []) as Record<string, unknown>[];
   }
   const db = getSQLite();
   return db.prepare(sqlStr).all(...params) as Record<string, unknown>[];

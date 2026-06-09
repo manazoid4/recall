@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         itemParams.push(userId);
       }
       
-      const item = db
+      const item = await db
         .prepare(itemQuery)
         .get(...itemParams) as Record<string, unknown> | undefined;
 
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         rawData: item.raw_data as string | null,
       });
 
-      db.prepare(
+      await db.prepare(
         `INSERT OR REPLACE INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       ).run(
@@ -88,8 +88,8 @@ export async function POST(request: NextRequest) {
         itemsParams.push(userId);
       }
       itemsQuery += ' LIMIT 10';
-      
-      const items = db
+
+      const items = await db
         .prepare(itemsQuery)
         .all(...itemsParams) as Record<string, unknown>[];
 
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
             rawData: item.raw_data as string | null,
           });
 
-          db.prepare(
+          await db.prepare(
             `INSERT OR REPLACE INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
           ).run(

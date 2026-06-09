@@ -16,7 +16,7 @@ export async function GET(
     boardParams.push(userId);
   }
   
-  const board = db
+  const board = await db
     .prepare(boardQuery)
     .get(...boardParams) as Record<string, unknown> | undefined;
 
@@ -24,7 +24,7 @@ export async function GET(
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
-  const items = db
+  const items = await db
     .prepare(
       `SELECT si.*, e.summary, e.tags, e.entities
        FROM board_items bi

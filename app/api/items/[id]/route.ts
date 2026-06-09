@@ -19,7 +19,7 @@ export async function GET(
     queryParams.push(userId);
   }
   
-  const item = db.prepare(query).get(...queryParams) as Record<string, unknown> | undefined;
+  const item = await db.prepare(query).get(...queryParams) as Record<string, unknown> | undefined;
 
   if (!item) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -56,6 +56,6 @@ export async function DELETE(
     deleteParams.push(userId);
   }
   
-  db.prepare(deleteQuery).run(...deleteParams);
+  await db.prepare(deleteQuery).run(...deleteParams);
   return NextResponse.json({ success: true });
 }

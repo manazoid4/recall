@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         const db = getDb();
         const id = `purchase_${orderId}`;
         
-        db.prepare(
+        await db.prepare(
           `INSERT INTO purchases (id, email, order_id, variant_id, license_key, status, purchased_at)
            VALUES (?, ?, ?, ?, ?, ?, ?)
            ON CONFLICT(id) DO UPDATE SET
@@ -87,8 +87,8 @@ export async function POST(request: NextRequest) {
         const { getDb } = await import('@/lib/db');
         const db = getDb();
         
-        db.prepare(
-          `UPDATE purchases SET status = ?, updated_at = datetime('now') 
+        await db.prepare(
+          `UPDATE purchases SET status = ?, updated_at = datetime('now')
            WHERE email = ? OR order_id = ?`
         ).run('refunded', email, orderId);
         break;
