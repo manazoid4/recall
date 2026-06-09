@@ -74,19 +74,13 @@ export async function checkEntitlements(
 }
 
 async function checkIsPro(userId: string): Promise<boolean> {
-  // In production, this would query the database for purchase status
-  // For now, check if there's a purchase record in settings
   try {
     const { getDb } = await import('./db');
     const db = getDb();
     const purchase = await db
-      .prepare('SELECT value FROM settings WHERE key = ?')
-      .get(`purchase_${userId}`) as { value: string } | undefined;
-    if (purchase) {
-      const data = JSON.parse(purchase.value);
-      return data.status === 'active';
-    }
-    return false;
+      .prepare("SELECT id FROM purchases WHERE user_id = ? AND status = 'active' LIMIT 1")
+      .get(userId) as { id: string } | undefined;
+    return !!purchase;
   } catch {
     return false;
   }
