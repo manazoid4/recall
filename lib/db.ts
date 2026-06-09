@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import Database from 'better-sqlite3';
 import path from 'path';
 
 // Determine which database to use
@@ -20,11 +19,15 @@ export function getSupabaseClient() {
   return _supabase;
 }
 
-// SQLite instance (local dev only)
-let _sqlite: ReturnType<typeof Database> | null = null;
+// SQLite instance (local dev only) — loaded dynamically to avoid native module issues on Vercel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _sqlite: any = null;
 
-function getSQLite(): ReturnType<typeof Database> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getSQLite(): any {
   if (_sqlite) return _sqlite;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const Database = require('better-sqlite3');
   const dbPath = process.env.SQLITE_PATH || path.join(process.cwd(), 'data', 'saved-brain.sqlite');
   _sqlite = new Database(dbPath);
   _sqlite.pragma('journal_mode = WAL');
