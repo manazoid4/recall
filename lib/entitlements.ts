@@ -11,13 +11,17 @@ interface EntitlementCheck {
 const FREE_TIER = {
   maxItems: 50,
   maxBoards: 1,
-  features: ['basic_search', 'manual_import', 'graph_view'],
+  features: ['basic_search', 'manual_import'],
 };
 
 const PRO_TIER = {
   maxItems: Infinity,
   maxBoards: Infinity,
-  features: ['semantic_search', 'auto_sync', 'api_access', 'export', 'webhooks', 'digest'],
+  features: [
+    'basic_search', 'manual_import',
+    'enrichment', 'semantic_search', 'graph_view',
+    'auto_sync', 'api_access', 'export', 'webhooks', 'digest',
+  ],
 };
 
 export async function checkEntitlements(
@@ -92,8 +96,8 @@ async function getItemCount(userId: string): Promise<number> {
     const db = getDb();
     const row = await db
       .prepare('SELECT COUNT(*) as count FROM saved_items WHERE owner_id = ?')
-      .get(userId) as { count: number };
-    return row?.count || 0;
+      .get(userId) as { count: number | string };
+    return Number(row?.count ?? 0);
   } catch {
     return 0;
   }
@@ -105,8 +109,8 @@ async function getBoardCount(userId: string): Promise<number> {
     const db = getDb();
     const row = await db
       .prepare('SELECT COUNT(*) as count FROM boards WHERE owner_id = ?')
-      .get(userId) as { count: number };
-    return row?.count || 0;
+      .get(userId) as { count: number | string };
+    return Number(row?.count ?? 0);
   } catch {
     return 0;
   }

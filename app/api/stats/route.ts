@@ -4,19 +4,15 @@ import { auth } from '@clerk/nextjs/server';
 
 export async function GET() {
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
 
-  let itemsQuery = 'SELECT COUNT(*) as count FROM saved_items';
-  let enrichedQuery = 'SELECT COUNT(*) as count FROM enrichments';
-  let boardsQuery = 'SELECT COUNT(*) as count FROM boards';
-  const params: (string | null)[] = [];
-  
-  if (userId) {
-    itemsQuery += ' WHERE owner_id = ?';
-    enrichedQuery += ' e JOIN saved_items si ON si.id = e.item_id WHERE si.owner_id = ?';
-    boardsQuery += ' WHERE owner_id = ?';
-    params.push(userId);
-  }
+  const itemsQuery = 'SELECT COUNT(*) as count FROM saved_items WHERE owner_id = ?';
+  const enrichedQuery = 'SELECT COUNT(*) as count FROM enrichments e JOIN saved_items si ON si.id = e.item_id WHERE si.owner_id = ?';
+  const boardsQuery = 'SELECT COUNT(*) as count FROM boards WHERE owner_id = ?';
+  const params: (string | null)[] = [userId];
 
   const [itemsRow, enrichedRow, boardsRow] = await Promise.all([
     db.prepare(itemsQuery).get(...params),

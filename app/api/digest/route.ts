@@ -29,6 +29,9 @@ export async function GET(request: NextRequest) {
   if (rateLimitResult) return rateLimitResult;
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
 
   // Get items from the last 7 days
@@ -100,6 +103,9 @@ export async function POST(request: NextRequest) {
   if (rateLimitResult) return rateLimitResult;
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const body = await request.json();
   
