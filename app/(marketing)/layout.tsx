@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import { ClerkProvider } from '@clerk/nextjs';
-import '../globals.css';
 
 export const metadata: Metadata = {
   title: 'Recall — Capture everything. Find anything. Think faster.',
@@ -13,14 +11,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="min-h-screen bg-surface text-ink antialiased">
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
