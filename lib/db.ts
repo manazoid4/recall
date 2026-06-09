@@ -192,10 +192,11 @@ function getSQLiteDb(): DbInterface {
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS settings (
-      key TEXT PRIMARY KEY,
+      key TEXT NOT NULL,
       value TEXT NOT NULL,
-      owner_id TEXT,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      owner_id TEXT NOT NULL DEFAULT '',
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (key, owner_id)
     );
   `);
 
