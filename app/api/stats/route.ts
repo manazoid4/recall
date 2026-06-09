@@ -18,15 +18,17 @@ export async function GET() {
     params.push(userId);
   }
 
-  const items = await db.prepare(itemsQuery).get(...params) as { count: number };
-  const enriched = await db.prepare(enrichedQuery).get(...params) as { count: number };
-  const boards = await db.prepare(boardsQuery).get(...params) as { count: number };
+  const [itemsRow, enrichedRow, boardsRow] = await Promise.all([
+    db.prepare(itemsQuery).get(...params),
+    db.prepare(enrichedQuery).get(...params),
+    db.prepare(boardsQuery).get(...params),
+  ]);
 
   return NextResponse.json({
     data: {
-      items: items.count,
-      enriched: enriched.count,
-      boards: boards.count,
+      items: Number((itemsRow as { count?: unknown })?.count ?? 0),
+      enriched: Number((enrichedRow as { count?: unknown })?.count ?? 0),
+      boards: Number((boardsRow as { count?: unknown })?.count ?? 0),
     },
   });
 }
