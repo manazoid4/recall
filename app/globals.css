@@ -2,25 +2,240 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   RECALL DESIGN SYSTEM — v2.0
+   Semantic tokens in HSL channel format (Tailwind opacity support)
+   Dark mode: .dark class on <html>
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Light mode tokens ─────────────────────────────────────────────────── */
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New';
-  --ink: #0f172a;
-  --line: #e2e8f0;
-  --muted: #64748b;
-  --yellow: #f59e0b;
-  --orange: #f97316;
-  --surface: #f8fafc;
-  --panel: #ffffff;
+  /* Fonts */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Surfaces — background layering system */
+  --surface: 240 9% 98%;          /* zinc-50  — page background          */
+  --panel:   0   0% 100%;         /* white    — card / sidebar            */
+  --overlay: 240 4.8% 95.9%;      /* zinc-100 — hover bg, nested sections */
+
+  /* Text — three-level hierarchy */
+  --ink:   240 10% 3.9%;          /* zinc-950 — headings, body text       */
+  --muted: 240 3.8% 46.1%;        /* zinc-500 — secondary labels          */
+  --dim:   240 5% 64.9%;          /* zinc-400 — placeholders, timestamps  */
+
+  /* Borders */
+  --line: 240 5.9% 90%;           /* zinc-200 — subtle dividers           */
+
+  /* Focus ring */
+  --ring: 38 92% 50%;             /* amber-500                            */
 }
 
-html, body {
-  background: var(--surface);
-  color: var(--ink);
+/* ─── Dark mode tokens ──────────────────────────────────────────────────── */
+.dark {
+  /* Surfaces */
+  --surface: 240 10% 3.9%;        /* zinc-950 — page background           */
+  --panel:   240 5.9% 10%;        /* zinc-900 — card / sidebar            */
+  --overlay: 240 3.7% 15.9%;      /* zinc-800 — hover bg                  */
+
+  /* Text */
+  --ink:   0   0% 98%;            /* zinc-50  — body text                 */
+  --muted: 240 5% 64.9%;          /* zinc-400 — secondary labels          */
+  --dim:   240 3.7% 33.3%;        /* zinc-600 — placeholders              */
+
+  /* Borders */
+  --line: 240 4% 20%;             /* ~zinc-800/750 — subtle dividers      */
 }
 
-body {
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE LAYER
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    tab-size: 4;
+  }
+
+  html,
+  body {
+    background-color: hsl(var(--surface));
+    color: hsl(var(--ink));
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    min-height: 100dvh;
+  }
+
+  /* ─── Selection highlight ──────────────────────────────────────────────── */
+  ::selection {
+    background-color: rgba(245, 158, 11, 0.22);
+    color: hsl(var(--ink));
+  }
+
+  /* ─── Custom scrollbar (Webkit) ────────────────────────────────────────── */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--line));
+    border-radius: 999px;
+    border: 2px solid hsl(var(--surface));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted));
+  }
+
+  /* ─── Typography ───────────────────────────────────────────────────────── */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  /* ─── Form resets ──────────────────────────────────────────────────────── */
+  input,
+  textarea,
+  select {
+    color: hsl(var(--ink));
+    background-color: hsl(var(--panel));
+    border-color: hsl(var(--line));
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: hsl(var(--dim));
+  }
+
+  /* Browser autofill — prevent yellow bg flash */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: hsl(var(--ink));
+    -webkit-box-shadow: 0 0 0 1000px hsl(var(--panel)) inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
+  /* ─── Smooth theme transitions ─────────────────────────────────────────── */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+  }
+
+  /* Interactive elements get transform + shadow too, but faster */
+  a, button, [role="button"] {
+    transition-property: background-color, border-color, color, fill, stroke,
+                         opacity, box-shadow, transform;
+    transition-duration: 120ms;
+    transition-timing-function: ease;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENT LAYER
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  /* ─── Buttons ──────────────────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow/40
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-yellow text-white shadow-sm
+           hover:bg-orange hover:shadow-glow-amber
+           active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply btn border border-line bg-panel text-ink
+           hover:bg-overlay
+           active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply btn text-muted hover:bg-overlay hover:text-ink active:scale-95;
+  }
+
+  /* ─── Cards ────────────────────────────────────────────────────────────── */
+  .card {
+    @apply rounded-xl border border-line bg-panel shadow-card;
+  }
+
+  .card-hover {
+    @apply card transition-all hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* ─── Input ────────────────────────────────────────────────────────────── */
+  .input {
+    @apply w-full rounded-lg border border-line bg-panel px-3 py-2 text-sm text-ink
+           placeholder:text-dim outline-none
+           focus:border-yellow focus:ring-2 focus:ring-yellow/20;
+  }
+
+  /* ─── Gradient text (amber → orange) ──────────────────────────────────── */
+  .gradient-text {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 55%, #fb923c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY LAYER
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
+  /* Glassmorphism panel */
+  .glass {
+    background: hsl(var(--panel) / 0.75);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid hsl(var(--line) / 0.7);
+  }
+
+  /* Skeleton shimmer */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--overlay))   0%,
+      hsl(var(--line))      50%,
+      hsl(var(--overlay))   100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+  }
+
+  /* Text wrap balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hide scrollbar visually, keep scrolling */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
 }

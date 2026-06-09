@@ -108,7 +108,7 @@ export default function SearchBar({
         <button
           type="button"
           onClick={handleSearch}
-          className="rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-ink/80"
+          className="rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-panel transition-colors hover:opacity-80"
         >
           Search
         </button>

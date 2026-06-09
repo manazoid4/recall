@@ -13,17 +13,19 @@ import {
   Menu,
   X,
   Plus,
+  Crown,
 } from 'lucide-react';
 import { useState } from 'react';
 import { UserButton, useAuth } from '@clerk/nextjs';
+import ThemeToggle from './ThemeToggle';
 
 const navItems = [
-  { href: '/library', label: 'Library', icon: Library },
-  { href: '/boards', label: 'Boards', icon: LayoutGrid },
-  { href: '/capture', label: 'Capture', icon: Mic },
-  { href: '/graph', label: 'Graph', icon: GitBranch },
-  { href: '/upload', label: 'Upload', icon: Upload },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/library',  label: 'Library',  icon: Library    },
+  { href: '/boards',   label: 'Boards',   icon: LayoutGrid  },
+  { href: '/capture',  label: 'Capture',  icon: Mic         },
+  { href: '/graph',    label: 'Graph',    icon: GitBranch   },
+  { href: '/upload',   label: 'Upload',   icon: Upload      },
+  { href: '/settings', label: 'Settings', icon: Settings    },
 ];
 
 export default function Sidebar() {
@@ -36,16 +38,16 @@ export default function Sidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 rounded-lg border border-line bg-panel p-2 shadow-sm lg:hidden"
+        className="fixed left-4 top-4 z-50 rounded-lg border border-line bg-panel p-2 shadow-card lg:hidden"
         aria-label="Open menu"
       >
-        <Menu className="h-5 w-5 text-ink" />
+        <Menu className="h-5 w-5 text-muted" />
       </button>
 
       {/* Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -57,73 +59,89 @@ export default function Sidebar() {
         }`}
       >
         <div className="flex h-full flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-line px-6 py-5">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow">
-                <Brain className="h-5 w-5 text-white" />
+
+          {/* ── Header ─────────────────────────────────────────────────────── */}
+          <div className="flex items-center justify-between border-b border-line px-5 py-4">
+            <Link href="/" className="group flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow shadow-sm transition-transform group-hover:scale-105">
+                <Brain className="h-4 w-4 text-white" />
               </div>
-              <span className="text-lg font-bold text-ink">Recall</span>
+              <span className="text-[15px] font-bold tracking-tight text-ink">
+                Recall
+              </span>
             </Link>
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg p-1 text-muted hover:bg-surface lg:hidden"
-              aria-label="Close menu"
-            >
-              <X className="h-5 w-5" />
-            </button>
+
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted hover:bg-overlay hover:text-ink lg:hidden"
+                aria-label="Close menu"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
-          {/* Quick Add Button */}
-          <div className="px-3 pt-4">
+          {/* ── Quick Add ──────────────────────────────────────────────────── */}
+          <div className="px-3 pt-3">
             <Link
               href="/upload"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-lg bg-yellow px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange"
+              className="flex items-center justify-center gap-2 rounded-lg bg-yellow px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-orange hover:shadow-glow-amber active:scale-95"
             >
               <Plus className="h-4 w-4" />
               Add Content
             </Link>
           </div>
 
-          {/* Nav */}
-          <nav className="flex-1 space-y-1 px-3 py-4">
+          {/* ── Navigation ─────────────────────────────────────────────────── */}
+          <nav className="flex-1 space-y-0.5 px-2 py-3">
             {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              const isActive =
+                pathname === item.href || pathname.startsWith(item.href + '/');
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? 'border-l-4 border-yellow bg-yellow/10 text-ink'
-                      : 'text-muted hover:bg-surface hover:text-ink'
+                      ? 'bg-yellow/10 text-yellow'
+                      : 'text-muted hover:bg-overlay hover:text-ink'
                   }`}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon
+                    className={`h-4 w-4 shrink-0 ${isActive ? 'text-yellow' : ''}`}
+                  />
                   {item.label}
+                  {isActive && (
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-yellow" />
+                  )}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Footer */}
-          <div className="border-t border-line px-6 py-4 space-y-3">
+          {/* ── Footer ─────────────────────────────────────────────────────── */}
+          <div className="space-y-2 border-t border-line px-3 py-3">
             {isSignedIn && (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 rounded-lg px-2 py-1.5">
                 <UserButton />
                 <span className="text-sm text-muted">Account</span>
               </div>
             )}
+
             <Link
               href="/pricing"
               onClick={() => setMobileOpen(false)}
-              className="block rounded-lg bg-yellow px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-orange"
+              className="flex items-center gap-2 rounded-lg border border-yellow/30 bg-yellow/5 px-3 py-2 text-sm font-semibold text-yellow transition-all hover:border-yellow/50 hover:bg-yellow/10"
             >
+              <Crown className="h-4 w-4 shrink-0" />
               Upgrade to Pro
             </Link>
           </div>
+
         </div>
       </aside>
     </>

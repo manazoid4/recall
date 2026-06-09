@@ -79,7 +79,7 @@ export default function PostCard({
     sourceColors[source.toLowerCase()] || "bg-gray-100 text-gray-700";
 
   return (
-    <Link href={`/items/${id}`} className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-panel shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+    <Link href={`/items/${id}`} className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-panel shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5">
       {thumbnailUrl && !imgError ? (
         <div className="relative h-40 w-full overflow-hidden bg-surface">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -102,7 +102,7 @@ export default function PostCard({
         </div>
       ) : thumbnailUrl && imgError ? (
         <div className="flex h-40 w-full items-center justify-center bg-surface">
-          <ImageOff className="h-8 w-8 text-muted/40" />
+          <ImageOff className="h-8 w-8 text-dim" />
         </div>
       ) : null}
 
