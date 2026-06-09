@@ -1,14 +1,24 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  const { userId } = await auth();
   const db = getDb();
+  
+  let boardQuery = 'SELECT * FROM boards WHERE slug = ?';
+  const boardParams: (string | null)[] = [params.slug];
+  if (userId) {
+    boardQuery += ' AND (owner_id = ? OR is_public = 1)';
+    boardParams.push(userId);
+  }
+  
   const board = db
-    .prepare('SELECT * FROM boards WHERE slug = ?')
-    .get(params.slug) as Record<string, unknown> | undefined;
+    .prepare(boardQuery)
+    .get(...boardParams) as Record<string, unknown> | undefined;
 
   if (!board) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });

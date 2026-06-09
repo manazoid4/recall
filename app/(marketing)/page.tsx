@@ -67,12 +67,12 @@ export default function LandingPage() {
             <span>Your second brain is ready</span>
           </div>
           <h1 className="text-5xl font-black leading-tight tracking-tight text-ink sm:text-6xl lg:text-7xl">
-            Everything you've saved.
+            Everything you&apos;ve saved.
             <br />
             <span className="text-yellow">Finally searchable.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-xl text-muted">
-            You've saved thousands of posts across platforms. Most you'll never see again.
+            You&apos;ve saved thousands of posts across platforms. Most you&apos;ll never see again.
             Saved Brain pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -164,7 +164,7 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl rounded-2xl bg-ink p-12 text-center">
-          <h2 className="text-3xl font-black text-white">Stop losing what you've saved</h2>
+          <h2 className="text-3xl font-black text-white">Stop losing what you&apos;ve saved</h2>
           <p className="mt-4 text-lg text-white/70">
             Join thousands turning their saved posts into a searchable second brain.
           </p>

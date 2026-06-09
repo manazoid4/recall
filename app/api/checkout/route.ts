@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const storeId = process.env.LEMONSQUEEZY_STORE_ID;
   const productId = process.env.LEMONSQUEEZY_PRODUCT_ID;
 
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   const storeId = process.env.LEMONSQUEEZY_STORE_ID;
   const productId = process.env.LEMONSQUEEZY_PRODUCT_ID;
   const apiKey = process.env.LEMONSQUEEZY_API_KEY;

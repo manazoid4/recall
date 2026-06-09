@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { LayoutGrid, Loader2, ArrowLeft, Copy, Share2 } from 'lucide-react';
+import { LayoutGrid, Loader2, ArrowLeft, Copy, Share2, Brain } from 'lucide-react';
 import Link from 'next/link';
 import PostCard, { EntityChip } from '@/components/PostCard';
 
@@ -140,6 +140,23 @@ export default function BoardDetailPage() {
           ))}
         </div>
       )}
+
+      {/* Virality footer — shown on all public boards */}
+      <div className="mt-12 rounded-xl border border-line bg-panel px-6 py-8 text-center">
+        <div className="flex items-center justify-center gap-2 text-yellow">
+          <Brain className="h-5 w-5" />
+          <span className="font-bold text-ink">Built with Saved Brain</span>
+        </div>
+        <p className="mt-2 text-sm text-muted">
+          Turn everything you save on Instagram, X, and TikTok into a searchable, AI-enriched knowledge base.
+        </p>
+        <Link
+          href={`${process.env.NEXT_PUBLIC_APP_URL || ''}/sign-up`}
+          className="mt-4 inline-block rounded-lg bg-yellow px-6 py-2.5 font-bold text-white hover:bg-orange transition-colors"
+        >
+          Build your own brain →
+        </Link>
+      </div>
     </div>
   );
 }

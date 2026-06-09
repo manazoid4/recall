@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { Search, Globe, SlidersHorizontal, X } from "lucide-react";
 
 export interface SearchBarProps {
-  onSearch: (query: string, options: SearchOptions) => void;
+  onSearch: (_query: string, _options: SearchOptions) => void;
   sources?: string[];
   categories?: string[];
   tags?: string[];

@@ -22,12 +22,30 @@ interface GraphEdge {
 
 export default function GraphPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const animRef = useRef<number>(0);
   const nodesRef = useRef<GraphNode[]>([]);
+  const [canvasSize, setCanvasSize] = useState({ width: 900, height: 600 });
+
+  // Resize observer for responsive canvas
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        setCanvasSize({ width: Math.floor(width), height: Math.floor(height) });
+      }
+    });
+
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     const fetchGraph = async () => {
@@ -38,12 +56,12 @@ export default function GraphPage() {
         const rawEdges = json.data?.edges || [];
 
         const graphNodes: GraphNode[] = rawNodes.map(
-          (n: Record<string, unknown>, i: number) => ({
+          (n: Record<string, unknown>, _i: number) => ({
             id: String(n.id),
             label: String(n.label || n.title || 'Node'),
             type: String(n.type || 'item'),
-            x: 400 + (Math.random() - 0.5) * 300,
-            y: 300 + (Math.random() - 0.5) * 200,
+            x: canvasSize.width / 2 + (Math.random() - 0.5) * 300,
+            y: canvasSize.height / 2 + (Math.random() - 0.5) * 200,
             vx: 0,
             vy: 0,
             connections: 0,
@@ -75,7 +93,7 @@ export default function GraphPage() {
       }
     };
     fetchGraph();
-  }, []);
+  }, [canvasSize]);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -88,8 +106,10 @@ export default function GraphPage() {
     ctx.clearRect(0, 0, w, h);
 
     const currentNodes = nodesRef.current;
+    if (currentNodes.length === 0) return;
 
-    // Simple force simulation
+    // Simple force simulation with stop condition
+    let totalEnergy = 0;
     for (const node of currentNodes) {
       // Center gravity
       node.vx += (w / 2 - node.x) * 0.0005;
@@ -132,6 +152,7 @@ export default function GraphPage() {
       // Bounds
       node.x = Math.max(30, Math.min(w - 30, node.x));
       node.y = Math.max(30, Math.min(h - 30, node.y));
+      totalEnergy += Math.abs(node.vx) + Math.abs(node.vy);
     }
 
     // Draw edges
@@ -162,11 +183,13 @@ export default function GraphPage() {
       ctx.fillStyle = '#0f172a';
       ctx.font = '11px system-ui';
       ctx.textAlign = 'center';
-      const label = node.label.length > 20 ? node.label.slice(0, 18) + '…' : node.label;
-      ctx.fillText(label, node.x, node.y + r + 14);
+      ctx.fillText(node.label.substring(0, 20), node.x, node.y + r + 14);
     }
 
-    animRef.current = requestAnimationFrame(draw);
+    // Stop animation when energy is low (nodes settled)
+    if (totalEnergy > 0.01) {
+      animRef.current = requestAnimationFrame(draw);
+    }
   }, [edges, selectedNode]);
 
   useEffect(() => {
@@ -176,6 +199,13 @@ export default function GraphPage() {
     }
     return () => cancelAnimationFrame(animRef.current);
   }, [nodes, draw]);
+
+  // Restart animation when selected node changes
+  useEffect(() => {
+    if (nodes.length > 0 && animRef.current === 0) {
+      animRef.current = requestAnimationFrame(draw);
+    }
+  }, [selectedNode, nodes, draw]);
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -227,14 +257,14 @@ export default function GraphPage() {
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-4">
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3" ref={containerRef}>
             <div className="overflow-hidden rounded-xl border border-line bg-panel">
               <canvas
                 ref={canvasRef}
-                width={900}
-                height={600}
+                width={canvasSize.width}
+                height={canvasSize.height}
                 onClick={handleCanvasClick}
-                className="cursor-pointer"
+                className="cursor-pointer w-full"
               />
             </div>
           </div>

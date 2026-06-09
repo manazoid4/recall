@@ -1,19 +1,25 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const { userId } = await auth();
   const db = getDb();
-  const item = db
-    .prepare(
-      `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
+  
+  let query = `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
        FROM saved_items si
        LEFT JOIN enrichments e ON e.item_id = si.id
-       WHERE si.id = ?`
-    )
-    .get(params.id) as Record<string, unknown> | undefined;
+       WHERE si.id = ?`;
+  const queryParams: (string | null)[] = [params.id];
+  if (userId) {
+    query += ' AND si.owner_id = ?';
+    queryParams.push(userId);
+  }
+  
+  const item = db.prepare(query).get(...queryParams) as Record<string, unknown> | undefined;
 
   if (!item) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -40,7 +46,16 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const { userId } = await auth();
   const db = getDb();
-  db.prepare('DELETE FROM saved_items WHERE id = ?').run(params.id);
+  
+  let deleteQuery = 'DELETE FROM saved_items WHERE id = ?';
+  const deleteParams: (string | null)[] = [params.id];
+  if (userId) {
+    deleteQuery += ' AND owner_id = ?';
+    deleteParams.push(userId);
+  }
+  
+  db.prepare(deleteQuery).run(...deleteParams);
   return NextResponse.json({ success: true });
 }

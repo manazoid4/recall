@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   const webhookSecret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    console.error('LEMONSQUEEZY_WEBHOOK_SECRET not configured');
+    // Webhook secret not configured
     return NextResponse.json(
       { error: 'Webhook not configured' },
       { status: 500 }
@@ -19,8 +19,19 @@ export async function POST(request: NextRequest) {
     hmac.update(rawBody);
     const digest = hmac.digest('hex');
 
-    if (!signature || signature !== digest) {
-      console.error('Invalid webhook signature');
+    if (!signature) {
+      // Missing webhook signature
+      return NextResponse.json(
+        { error: 'Missing signature' },
+        { status: 401 }
+      );
+    }
+
+    // Use timingSafeEqual to prevent timing attacks
+    const signatureBuf = Buffer.from(signature);
+    const digestBuf = Buffer.from(digest);
+    if (signatureBuf.length !== digestBuf.length || !crypto.timingSafeEqual(signatureBuf, digestBuf)) {
+      // Invalid webhook signature
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 401 }
@@ -31,7 +42,7 @@ export async function POST(request: NextRequest) {
     const eventName = event.meta?.event_name;
     const data = event.data;
 
-    console.log(`LemonSqueezy webhook: ${eventName}`);
+    // Webhook received: eventName
 
     switch (eventName) {
       case 'order_created': {
@@ -39,24 +50,30 @@ export async function POST(request: NextRequest) {
         const email = data.attributes?.user_email;
         const orderId = data.attributes?.order_number;
         const variantId = data.attributes?.variant_id;
+        const licenseKey = data.attributes?.license_key?.key;
 
-        console.log(`Order created: ${orderId} for ${email} (variant: ${variantId})`);
+        // Order created: orderId for email
 
         // Store the purchase in our database
-        // For now, we'll use the settings table to track purchases
         const { getDb } = await import('@/lib/db');
         const db = getDb();
+        const id = `purchase_${orderId}`;
+        
         db.prepare(
-          `INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)`
+          `INSERT INTO purchases (id, email, order_id, variant_id, license_key, status, purchased_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(id) DO UPDATE SET
+             status = excluded.status,
+             license_key = COALESCE(excluded.license_key, purchases.license_key),
+             updated_at = datetime('now')`
         ).run(
-          `purchase_${email}`,
-          JSON.stringify({
-            email,
-            orderId,
-            variantId,
-            purchasedAt: new Date().toISOString(),
-            status: 'active',
-          })
+          id,
+          email,
+          orderId,
+          variantId,
+          licenseKey || null,
+          'active',
+          new Date().toISOString()
         );
 
         break;
@@ -64,43 +81,38 @@ export async function POST(request: NextRequest) {
 
       case 'order_refunded': {
         const email = data.attributes?.user_email;
-        console.log(`Order refunded for ${email}`);
+        const orderId = data.attributes?.order_number;
+        // Order refunded for email
 
         const { getDb } = await import('@/lib/db');
         const db = getDb();
+        
         db.prepare(
-          `INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)`
-        ).run(
-          `purchase_${email}`,
-          JSON.stringify({
-            email,
-            status: 'refunded',
-            refundedAt: new Date().toISOString(),
-          })
-        );
+          `UPDATE purchases SET status = ?, updated_at = datetime('now') 
+           WHERE email = ? OR order_id = ?`
+        ).run('refunded', email, orderId);
         break;
       }
 
       case 'subscription_created':
       case 'subscription_updated':
       case 'subscription_cancelled': {
-        // We don't use subscriptions, but log for completeness
-        console.log(`Subscription event: ${eventName}`);
+        // Subscription event received
         break;
       }
 
       case 'license_key_created': {
-        console.log('License key created');
+        // License key created
         break;
       }
 
       default:
-        console.log(`Unhandled event: ${eventName}`);
+        // Unhandled event: eventName
     }
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('Webhook error:', err);
+    // Webhook error: err
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }

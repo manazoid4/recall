@@ -32,6 +32,12 @@
       ]
     }
   ],
+  "crons": [
+    {
+      "path": "/api/digest",
+      "schedule": "0 0 * * 1"
+    }
+  ],
   "regions": ["iad1"],
   "rewrites": []
 }

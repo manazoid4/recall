@@ -9,6 +9,8 @@ import {
   BookmarkPlus,
   ImageOff,
 } from "lucide-react";
+import { formatRelativeDate } from "@/lib/date-utils";
+import Link from "next/link";
 
 export interface EntityChip {
   id: string;
@@ -29,9 +31,9 @@ export interface PostCardProps {
   savedAt: string;
   mediaType?: "image" | "video" | "text" | "audio" | "link";
   enrichmentScore?: number;
-  onTagClick?: (tag: string) => void;
-  onEntityClick?: (entity: EntityChip) => void;
-  onAddToBoard?: (id: string) => void;
+  onTagClick?: (_tag: string) => void;
+  onEntityClick?: (_entity: EntityChip) => void;
+  onAddToBoard?: (_id: string) => void;
 }
 
 const sourceColors: Record<string, string> = {
@@ -77,9 +79,10 @@ export default function PostCard({
     sourceColors[source.toLowerCase()] || "bg-gray-100 text-gray-700";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-panel shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+    <Link href={`/items/${id}`} className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-panel shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
       {thumbnailUrl && !imgError ? (
         <div className="relative h-40 w-full overflow-hidden bg-surface">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={thumbnailUrl}
             alt=""
@@ -112,7 +115,11 @@ export default function PostCard({
             {onAddToBoard && (
               <button
                 type="button"
-                onClick={() => onAddToBoard(id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onAddToBoard(id);
+                }}
                 className="rounded p-1 text-muted transition-colors hover:text-yellow"
                 aria-label="Add to board"
               >
@@ -138,7 +145,7 @@ export default function PostCard({
             {source}
           </span>
           <time className="text-xs text-muted" dateTime={savedAt}>
-            {savedAt}
+            {formatRelativeDate(savedAt)}
           </time>
         </div>
 
@@ -187,6 +194,6 @@ export default function PostCard({
           </div>
         )}
       </div>
-    </article>
+    </Link>
   );
 }

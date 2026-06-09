@@ -1,6 +1,10 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
+import { auth } from '@clerk/nextjs/server';
+import { createBoardSchema } from '@/lib/schemas';
+import { rateLimit } from '@/lib/rate-limit';
+import { checkEntitlements } from '@/lib/entitlements';
 
 function slugify(text: string): string {
   return text
@@ -11,16 +15,26 @@ function slugify(text: string): string {
 }
 
 export async function GET() {
+  const { userId } = await auth();
   const db = getDb();
+  
+  let where = '';
+  const params: (string | number)[] = [];
+  if (userId) {
+    where = 'WHERE b.owner_id = ?';
+    params.push(userId);
+  }
+  
   const rows = db
     .prepare(
       `SELECT b.*, COUNT(bi.item_id) as item_count
        FROM boards b
        LEFT JOIN board_items bi ON bi.board_id = b.id
+       ${where}
        GROUP BY b.id
        ORDER BY b.created_at DESC`
     )
-    .all() as Record<string, unknown>[];
+    .all(...params) as Record<string, unknown>[];
 
   const boards = rows.map((row) => ({
     id: row.id,
@@ -37,10 +51,36 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
+  const { userId } = await auth();
   const db = getDb();
+
+  const entitlement = await checkEntitlements(userId, 'create_board');
+  if (!entitlement.allowed) {
+    return NextResponse.json(
+      {
+        error: 'Entitlement limit reached',
+        reason: entitlement.reason,
+        upgrade: '/upgrade',
+        limit: entitlement.limit,
+        current: entitlement.current,
+      },
+      { status: 403 }
+    );
+  }
+
   const body = await request.json();
+  
+  const validated = createBoardSchema.safeParse(body);
+  if (!validated.success) {
+    return NextResponse.json({ error: 'Invalid request body', details: validated.error.flatten() }, { status: 400 });
+  }
+  
+  const data = validated.data;
   const id = uuid();
-  let slug = slugify(body.name);
+  let slug = slugify(data.name);
 
   // Ensure unique slug
   const existing = db.prepare('SELECT id FROM boards WHERE slug = ?').get(slug);
@@ -49,9 +89,9 @@ export async function POST(request: NextRequest) {
   }
 
   db.prepare(
-    `INSERT INTO boards (id, slug, name, description, is_public)
-     VALUES (?, ?, ?, ?, ?)`
-  ).run(id, slug, body.name, body.description || null, body.isPublic ? 1 : 0);
+    `INSERT INTO boards (id, slug, name, description, is_public, owner_id)
+     VALUES (?, ?, ?, ?, ?, ?)`
+  ).run(id, slug, data.name, data.description || null, data.isPublic ? 1 : 0, userId || null);
 
   return NextResponse.json({ data: { id, slug } }, { status: 201 });
 }

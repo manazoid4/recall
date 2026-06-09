@@ -11,8 +11,10 @@ import {
   Settings,
   Menu,
   X,
+  Plus,
 } from 'lucide-react';
 import { useState } from 'react';
+import { UserButton, useAuth } from '@clerk/nextjs';
 
 const navItems = [
   { href: '/library', label: 'Library', icon: Library },
@@ -25,6 +27,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isSignedIn } = useAuth();
 
   return (
     <>
@@ -69,6 +72,18 @@ export default function Sidebar() {
             </button>
           </div>
 
+          {/* Quick Add Button */}
+          <div className="px-3 pt-4">
+            <Link
+              href="/upload"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-lg bg-yellow px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange"
+            >
+              <Plus className="h-4 w-4" />
+              Add Content
+            </Link>
+          </div>
+
           {/* Nav */}
           <nav className="flex-1 space-y-1 px-3 py-4">
             {navItems.map((item) => {
@@ -92,7 +107,13 @@ export default function Sidebar() {
           </nav>
 
           {/* Footer */}
-          <div className="border-t border-line px-6 py-4">
+          <div className="border-t border-line px-6 py-4 space-y-3">
+            {isSignedIn && (
+              <div className="flex items-center gap-3">
+                <UserButton />
+                <span className="text-sm text-muted">Account</span>
+              </div>
+            )}
             <Link
               href="/pricing"
               onClick={() => setMobileOpen(false)}

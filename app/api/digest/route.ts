@@ -1,32 +1,76 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { digestSchema } from '@/lib/schemas';
+import { rateLimit } from '@/lib/rate-limit';
 
-export async function GET() {
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+function safeUrl(url: unknown): string {
+  if (typeof url !== 'string') return '#';
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return '#';
+    return escapeHtml(url);
+  } catch {
+    return '#';
+  }
+}
+
+export async function GET(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
+  const { userId } = await auth();
   const db = getDb();
 
   // Get items from the last 7 days
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  const items = db
-    .prepare(
-      `SELECT si.*, e.summary, e.tags, e.entities
+  let itemsQuery = `SELECT si.*, e.summary, e.tags, e.entities
        FROM saved_items si
        LEFT JOIN enrichments e ON e.item_id = si.id
-       WHERE si.created_at > ?
-       ORDER BY si.created_at DESC
-       LIMIT 20`
-    )
-    .all(oneWeekAgo.toISOString()) as Record<string, unknown>[];
+       WHERE si.created_at > ?`;
+  const itemsParams: (string | null)[] = [oneWeekAgo.toISOString()];
+  if (userId) {
+    itemsQuery += ' AND si.owner_id = ?';
+    itemsParams.push(userId);
+  }
+  itemsQuery += ' ORDER BY si.created_at DESC LIMIT 20';
 
-  const stats = db
-    .prepare(
-      `SELECT
-        (SELECT COUNT(*) FROM saved_items WHERE created_at > ?) as new_items,
-        (SELECT COUNT(*) FROM enrichments WHERE created_at > ?) as new_enrichments,
-        (SELECT COUNT(*) FROM saved_items) as total_items`
-    )
-    .get(oneWeekAgo.toISOString(), oneWeekAgo.toISOString()) as Record<string, unknown>;
+  const items = db.prepare(itemsQuery).all(...itemsParams) as Record<string, unknown>[];
+
+  let statsQuery = `SELECT
+        (SELECT COUNT(*) FROM saved_items WHERE created_at > ?`;
+  const statsParams: (string | null)[] = [oneWeekAgo.toISOString()];
+  if (userId) {
+    statsQuery += ' AND owner_id = ?';
+    statsParams.push(userId);
+  }
+  statsQuery += `) as new_items,
+        (SELECT COUNT(*) FROM enrichments e JOIN saved_items si ON si.id = e.item_id WHERE e.created_at > ?`;
+  statsParams.push(oneWeekAgo.toISOString());
+  if (userId) {
+    statsQuery += ' AND si.owner_id = ?';
+    statsParams.push(userId);
+  }
+  statsQuery += `) as new_enrichments,
+        (SELECT COUNT(*) FROM saved_items`;
+  if (userId) {
+    statsQuery += ' WHERE owner_id = ?';
+    statsParams.push(userId);
+  }
+  statsQuery += `) as total_items`;
+
+  const stats = db.prepare(statsQuery).get(...statsParams) as Record<string, unknown>;
 
   const digest = {
     period: '7 days',
@@ -52,27 +96,35 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
+  const { userId } = await auth();
   const db = getDb();
   const body = await request.json();
-  const email = body.email;
-
-  if (!email) {
-    return NextResponse.json({ error: 'Email required' }, { status: 400 });
+  
+  const validated = digestSchema.safeParse(body);
+  if (!validated.success) {
+    return NextResponse.json({ error: 'Invalid email', details: validated.error.flatten() }, { status: 400 });
   }
+  
+  const { email } = validated.data;
 
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  const items = db
-    .prepare(
-      `SELECT si.*, e.summary, e.tags
+  let itemsQuery = `SELECT si.*, e.summary, e.tags
        FROM saved_items si
        LEFT JOIN enrichments e ON e.item_id = si.id
-       WHERE si.created_at > ?
-       ORDER BY si.created_at DESC
-       LIMIT 20`
-    )
-    .all(oneWeekAgo.toISOString()) as Record<string, unknown>[];
+       WHERE si.created_at > ?`;
+  const itemsParams: (string | null)[] = [oneWeekAgo.toISOString()];
+  if (userId) {
+    itemsQuery += ' AND si.owner_id = ?';
+    itemsParams.push(userId);
+  }
+  itemsQuery += ' ORDER BY si.created_at DESC LIMIT 20';
+
+  const items = db.prepare(itemsQuery).all(...itemsParams) as Record<string, unknown>[];
 
   // Try to send via Resend if configured
   const resendKey = process.env.RESEND_API_KEY;
@@ -82,15 +134,19 @@ export async function POST(request: NextRequest) {
       const resend = new Resend(resendKey);
 
       const htmlItems = items
-        .map(
-          (item) => `
+        .map((item) => {
+          const url = safeUrl(item.url);
+          const title = escapeHtml(String(item.title || 'Untitled'));
+          const summary = escapeHtml(String(item.summary || ''));
+          const platform = escapeHtml(String(item.platform || 'web'));
+          const author = escapeHtml(String(item.author || 'unknown'));
+          return `
         <div style="margin-bottom: 16px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
-          <h3 style="margin: 0 0 8px 0;"><a href="${item.url}" style="color: #f59e0b; text-decoration: none;">${item.title || 'Untitled'}</a></h3>
-          <p style="margin: 0; color: #64748b; font-size: 14px;">${item.summary || ''}</p>
-          <p style="margin: 8px 0 0 0; font-size: 12px; color: #94a3b8;">${item.platform || 'web'} • ${item.author || 'unknown'}</p>
-        </div>
-      `
-        )
+          <h3 style="margin: 0 0 8px 0;"><a href="${url}" style="color: #f59e0b; text-decoration: none;">${title}</a></h3>
+          <p style="margin: 0; color: #64748b; font-size: 14px;">${summary}</p>
+          <p style="margin: 8px 0 0 0; font-size: 12px; color: #94a3b8;">${platform} • ${author}</p>
+        </div>`;
+        })
         .join('');
 
       await resend.emails.send({

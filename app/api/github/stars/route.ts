@@ -1,8 +1,10 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuid } from 'uuid';
+
+import { auth } from '@clerk/nextjs/server';
 
 export async function GET(request: NextRequest) {
+  const { userId } = await auth();
   const { searchParams } = new URL(request.url);
   const username = searchParams.get('username');
   const token = searchParams.get('token');
@@ -61,6 +63,7 @@ export async function GET(request: NextRequest) {
         username,
         count: items.length,
         items,
+        userId: userId || null,
       },
     });
   } catch (err) {
@@ -72,6 +75,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const { userId } = await auth();
   const db = getDb();
   const body = await request.json();
   const { username, token } = body;
@@ -119,38 +123,33 @@ export async function POST(request: NextRequest) {
     let skipped = 0;
 
     const insertStmt = db.prepare(
-      `INSERT INTO saved_items (id, url, title, author, saved_at, platform, raw_data)
-       VALUES (?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO saved_items (id, url, title, author, saved_at, platform, raw_data, owner_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(url) DO UPDATE SET
          title = COALESCE(excluded.title, saved_items.title),
          raw_data = COALESCE(excluded.raw_data, saved_items.raw_data),
          updated_at = datetime('now')`
     );
 
-    const transaction = db.transaction((...args: unknown[]) => {
-      const repos = args[0] as typeof stars;
-      for (const repo of repos) {
-        const id = `github-${repo.id}`;
-        const url = repo.html_url;
-        const title = repo.full_name;
-        const author = repo.owner.login;
-        const savedAt = repo.created_at;
-        const rawData = `Description: ${repo.description || 'No description'}\nLanguage: ${repo.language || 'Unknown'}\nStars: ${repo.stargazers_count}`;
+    for (const repo of stars) {
+      const id = `github-${repo.id}`;
+      const url = repo.html_url;
+      const title = repo.full_name;
+      const author = repo.owner.login;
+      const savedAt = repo.created_at;
+      const rawData = `Description: ${repo.description || 'No description'}\nLanguage: ${repo.language || 'Unknown'}\nStars: ${repo.stargazers_count}`;
 
-        try {
-          const result = insertStmt.run(id, url, title, author, savedAt, 'github', rawData);
-          if (result.changes > 0) {
-            ingested++;
-          } else {
-            skipped++;
-          }
-        } catch {
+      try {
+        const result = await insertStmt.run(id, url, title, author, savedAt, 'github', rawData, userId || null);
+        if (result.changes > 0) {
+          ingested++;
+        } else {
           skipped++;
         }
+      } catch {
+        skipped++;
       }
-    });
-
-    transaction(stars);
+    }
 
     return NextResponse.json({
       data: {

@@ -1,19 +1,40 @@
 import { getDb } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { checkEntitlements } from '@/lib/entitlements';
 
 export async function GET() {
+  const { userId } = await auth();
+
+  const entitlement = await checkEntitlements(userId, 'use_feature', 'graph_view');
+  if (!entitlement.allowed) {
+    return NextResponse.json(
+      {
+        error: 'Pro feature required',
+        reason: entitlement.reason,
+        upgrade: '/upgrade',
+      },
+      { status: 403 }
+    );
+  }
+
   const db = getDb();
 
   // Get items with entities for graph nodes
-  const items = db
-    .prepare(
-      `SELECT si.id, si.title, si.url, si.platform, e.entities
+  let query = `SELECT si.id, si.title, si.url, si.platform, e.entities
        FROM saved_items si
        JOIN enrichments e ON e.item_id = si.id
-       WHERE e.entities != '[]'
-       LIMIT 100`
-    )
-    .all() as Array<{ id: string; title: string | null; url: string; platform: string | null; entities: string }>;
+       WHERE e.entities != '[]'`;
+  const params: (string | null)[] = [];
+  if (userId) {
+    query += ' AND si.owner_id = ?';
+    params.push(userId);
+  }
+  query += ' LIMIT 100';
+
+  const items = db
+    .prepare(query)
+    .all(...params) as Array<{ id: string; title: string | null; url: string; platform: string | null; entities: string }>;
 
   // Build edges based on shared entities
   const edgeMap = new Map<string, { source: string; target: string; relation: string }>();

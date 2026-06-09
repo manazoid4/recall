@@ -1,19 +1,13 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 50);
-}
+import { auth } from '@clerk/nextjs/server';
 
 export async function POST(
   _request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  const { userId } = await auth();
   const db = getDb();
   const originalSlug = params.slug;
 
@@ -43,9 +37,9 @@ export async function POST(
 
   // Insert clone board
   db.prepare(
-    `INSERT INTO boards (id, slug, name, description, is_public, clone_count)
-     VALUES (?, ?, ?, ?, ?, ?)`
-  ).run(cloneId, cloneSlug, cloneName, cloneDescription, 0, 0);
+    `INSERT INTO boards (id, slug, name, description, is_public, clone_count, owner_id)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`
+  ).run(cloneId, cloneSlug, cloneName, cloneDescription, 0, 0, userId || null);
 
   // Copy board items
   const originalItems = db

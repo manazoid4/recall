@@ -1,5 +1,8 @@
 import { getDb } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { rateLimit } from '@/lib/rate-limit';
+import { checkEntitlements } from '@/lib/entitlements';
 
 function escapeYaml(str: string): string {
   if (/[:#\n|>&*!?\[\]{},'`"]/.test(str)) {
@@ -73,17 +76,37 @@ function slugify(title: string): string {
     .slice(0, 50) || 'untitled';
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
+  const { userId } = await auth();
+
+  const entitlement = await checkEntitlements(userId, 'use_feature', 'export');
+  if (!entitlement.allowed) {
+    return NextResponse.json(
+      {
+        error: 'Pro feature required',
+        reason: entitlement.reason,
+        upgrade: '/upgrade',
+      },
+      { status: 403 }
+    );
+  }
+
   const db = getDb();
 
-  const items = db
-    .prepare(
-      `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
+  let query = `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
        FROM saved_items si
-       LEFT JOIN enrichments e ON e.item_id = si.id
-       ORDER BY si.created_at DESC`
-    )
-    .all() as Record<string, unknown>[];
+       LEFT JOIN enrichments e ON e.item_id = si.id`;
+  const params: (string | null)[] = [];
+  if (userId) {
+    query += ' WHERE si.owner_id = ?';
+    params.push(userId);
+  }
+  query += ' ORDER BY si.created_at DESC';
+
+  const items = db.prepare(query).all(...params) as Record<string, unknown>[];
 
   if (items.length === 0) {
     return NextResponse.json({ error: 'No items to export' }, { status: 400 });
@@ -109,17 +132,37 @@ export async function GET() {
   });
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
+  const { userId } = await auth();
+
+  const entitlement = await checkEntitlements(userId, 'use_feature', 'export');
+  if (!entitlement.allowed) {
+    return NextResponse.json(
+      {
+        error: 'Pro feature required',
+        reason: entitlement.reason,
+        upgrade: '/upgrade',
+      },
+      { status: 403 }
+    );
+  }
+
   const db = getDb();
 
-  const items = db
-    .prepare(
-      `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
+  let query = `SELECT si.*, e.summary, e.tags, e.sentiment, e.topics, e.entities, e.quality_score
        FROM saved_items si
-       LEFT JOIN enrichments e ON e.item_id = si.id
-       ORDER BY si.created_at DESC`
-    )
-    .all() as Record<string, unknown>[];
+       LEFT JOIN enrichments e ON e.item_id = si.id`;
+  const params: (string | null)[] = [];
+  if (userId) {
+    query += ' WHERE si.owner_id = ?';
+    params.push(userId);
+  }
+  query += ' ORDER BY si.created_at DESC';
+
+  const items = db.prepare(query).all(...params) as Record<string, unknown>[];
 
   if (items.length === 0) {
     return NextResponse.json({ error: 'No items to export' }, { status: 400 });
