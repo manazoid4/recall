@@ -11,28 +11,26 @@ export async function GET(request: NextRequest) {
   if (rateLimitResult) return rateLimitResult;
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const { searchParams } = new URL(request.url);
-  
+
   const queryData = Object.fromEntries(searchParams.entries());
   const validated = itemQuerySchema.safeParse(queryData);
   if (!validated.success) {
     return NextResponse.json({ error: 'Invalid query parameters', details: validated.error.flatten() }, { status: 400 });
   }
-  
+
   const search = validated.data.search || '';
   const source = validated.data.source || '';
   const tag = validated.data.tag || '';
   const limit = parseInt(validated.data.limit || '50');
   const offset = parseInt(validated.data.offset || '0');
 
-  let where = 'WHERE 1=1';
-  const params: (string | number)[] = [];
-
-  if (userId) {
-    where += ' AND si.owner_id = ?';
-    params.push(userId);
-  }
+  let where = 'WHERE si.owner_id = ?';
+  const params: (string | number)[] = [userId];
 
   if (search) {
     where += ' AND (si.title LIKE ? OR si.url LIKE ? OR si.raw_data LIKE ?)';
@@ -113,6 +111,9 @@ export async function POST(request: NextRequest) {
   if (rateLimitResult) return rateLimitResult;
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
 
   const entitlement = await checkEntitlements(userId, 'create_item');

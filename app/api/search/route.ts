@@ -10,6 +10,9 @@ export async function POST(request: NextRequest) {
   if (rateLimitResult) return rateLimitResult;
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const body = await request.json();
   
@@ -41,13 +44,8 @@ export async function POST(request: NextRequest) {
   let baseQuery = `SELECT si.*, e.summary, e.tags, e.entities
          FROM saved_items si
          LEFT JOIN enrichments e ON e.item_id = si.id
-         WHERE (si.title LIKE ? OR si.url LIKE ? OR si.raw_data LIKE ?)`;
-  const params: (string | number | null)[] = [`%${query}%`, `%${query}%`, `%${query}%`];
-  
-  if (userId) {
-    baseQuery += ' AND si.owner_id = ?';
-    params.push(userId);
-  }
+         WHERE si.owner_id = ? AND (si.title LIKE ? OR si.url LIKE ? OR si.raw_data LIKE ?)`;
+  const params: (string | number | null)[] = [userId, `%${query}%`, `%${query}%`, `%${query}%`];
   baseQuery += ' ORDER BY si.created_at DESC LIMIT ?';
   params.push(limit);
 
