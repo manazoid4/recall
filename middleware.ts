@@ -9,6 +9,7 @@ const isProtectedRoute = createRouteMatcher([
   '/upload(.*)',
   '/settings(.*)',
   '/connect-extension(.*)',
+  '/onboarding(.*)',
   '/api/extension(.*)',
   '/api/items(.*)',
   '/api/boards(.*)',
@@ -18,6 +19,10 @@ const isProtectedRoute = createRouteMatcher([
   '/api/export(.*)',
   '/api/digest(.*)',
   '/api/graph(.*)',
+  '/api/settings(.*)',
+  '/api/stats(.*)',
+  '/api/github/stars(.*)',
+  '/api/license/verify(.*)',
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
