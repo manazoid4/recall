@@ -51,8 +51,8 @@ async function handleScrapeComplete(items: SavedItem[]): Promise<void> {
 
 async function triggerSync(): Promise<void> {
   const config = await getConfig();
-  if (!config.backendUrl) {
-    await updateStatus({ error: "Backend URL not configured", syncing: false });
+  if (!config.apiToken) {
+    await updateStatus({ error: "Not connected — open the extension to connect your account", syncing: false });
     return;
   }
 
@@ -69,7 +69,7 @@ async function triggerSync(): Promise<void> {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : {}),
+        ...(config.apiToken ? { Authorization: `Bearer ${config.apiToken}` } : {}),
       },
       body: JSON.stringify(pending),
     });
@@ -93,12 +93,15 @@ async function triggerSync(): Promise<void> {
   }
 }
 
+const DEFAULT_BACKEND_URL = "https://userecall.app";
+
 async function getConfig(): Promise<SyncConfig> {
   return new Promise((resolve) => {
-    chrome.storage.sync.get({ backendUrl: "", apiKey: "" }, (result) => {
+    chrome.storage.local.get(["config"], (result) => {
+      const cfg = result.config || {};
       resolve({
-        backendUrl: result.backendUrl || "",
-        apiKey: result.apiKey || "",
+        backendUrl: cfg.backendUrl || DEFAULT_BACKEND_URL,
+        apiToken: cfg.apiToken || "",
       });
     });
   });

@@ -38,6 +38,32 @@ function isSecretKey(key: string): boolean {
   );
 }
 
+// Env var fallback for LLM API keys — server-side key overrides empty DB setting
+const ENV_KEY_MAP: Record<string, string> = {
+  llm_api_key: 'LLM_API_KEY',
+  openai_api_key: 'OPENAI_API_KEY',
+  anthropic_api_key: 'ANTHROPIC_API_KEY',
+  google_api_key: 'GOOGLE_API_KEY',
+  groq_api_key: 'GROQ_API_KEY',
+  together_api_key: 'TOGETHER_API_KEY',
+  deepseek_api_key: 'DEEPSEEK_API_KEY',
+  mistral_api_key: 'MISTRAL_API_KEY',
+  cohere_api_key: 'COHERE_API_KEY',
+  openrouter_api_key: 'OPENROUTER_API_KEY',
+};
+
+const PROVIDER_ENV_MAP: Record<string, string> = {
+  openai: 'OPENAI_API_KEY',
+  anthropic: 'ANTHROPIC_API_KEY',
+  google: 'GOOGLE_API_KEY',
+  groq: 'GROQ_API_KEY',
+  together: 'TOGETHER_API_KEY',
+  deepseek: 'DEEPSEEK_API_KEY',
+  mistral: 'MISTRAL_API_KEY',
+  cohere: 'COHERE_API_KEY',
+  openrouter: 'OPENROUTER_API_KEY',
+};
+
 export function getSetting(key: string, defaultValue: string = '', ownerId?: string): Promise<string> {
   const db = getDb();
   let query = 'SELECT value FROM settings WHERE key = ?';
@@ -47,7 +73,7 @@ export function getSetting(key: string, defaultValue: string = '', ownerId?: str
     params.push(ownerId);
   }
   const row = db.prepare(query).get(...params) as { value: string } | undefined;
-  let value = row?.value ?? defaultValue;
+  let value = row?.value ?? '';
   // Decrypt secret values when reading
   if (isSecretKey(key) && value && isEncrypted(value)) {
     try {
@@ -56,7 +82,18 @@ export function getSetting(key: string, defaultValue: string = '', ownerId?: str
       // If decryption fails, return the raw value
     }
   }
-  return Promise.resolve(value);
+  // Fall through to env vars when DB value empty
+  if (!value) {
+    const envKey = ENV_KEY_MAP[key.toLowerCase()];
+    if (envKey) value = process.env[envKey] ?? '';
+    // llm_api_key: also check provider-specific env var
+    if (!value && key === 'llm_api_key') {
+      const provider = (process.env.DEFAULT_LLM_PROVIDER ?? 'openai').toLowerCase();
+      const envName = PROVIDER_ENV_MAP[provider];
+      if (envName) value = process.env[envName] ?? '';
+    }
+  }
+  return Promise.resolve(value || defaultValue);
 }
 
 export function setSetting(key: string, value: string, ownerId?: string): Promise<void> {

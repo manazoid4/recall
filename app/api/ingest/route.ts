@@ -4,12 +4,26 @@ import { v4 as uuid } from 'uuid';
 import { auth } from '@clerk/nextjs/server';
 import { ingestSchema } from '@/lib/schemas';
 import { rateLimit } from '@/lib/rate-limit';
+import { verifyExtensionToken } from '@/lib/extension-token';
 
 export async function POST(request: NextRequest) {
   const rateLimitResult = rateLimit(request);
   if (rateLimitResult) return rateLimitResult;
 
-  const { userId } = await auth();
+  // Support both Clerk session (web) and extension Bearer tokens
+  let userId: string | null = null;
+  const authHeader = request.headers.get('authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    const tokenPayload = await verifyExtensionToken(authHeader.slice(7));
+    if (!tokenPayload) {
+      return NextResponse.json({ error: 'Invalid extension token' }, { status: 401 });
+    }
+    userId = tokenPayload.userId;
+  } else {
+    const session = await auth();
+    userId = session.userId;
+  }
+
   const db = getDb();
   const items = await request.json();
 

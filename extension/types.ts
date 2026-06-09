@@ -11,7 +11,7 @@ export interface SavedItem {
 
 export interface SyncConfig {
   backendUrl: string;
-  apiKey: string;
+  apiToken: string;
 }
 
 export interface SyncStatus {

@@ -30,7 +30,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.4.3",
+    "@clerk/nextjs": "^6.39.5",
     "@supabase/supabase-js": "^2.108.0",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",

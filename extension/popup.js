@@ -1,26 +1,53 @@
-const backendUrlInput = document.getElementById('backendUrl');
-const apiKeyInput = document.getElementById('apiKey');
-const syncBtn = document.getElementById('syncBtn');
-const saveBtn = document.getElementById('saveBtn');
+const DEFAULT_BACKEND = 'https://userecall.app';
+
 const statusEl = document.getElementById('status');
 const messageEl = document.getElementById('message');
+const notConnected = document.getElementById('notConnected');
+const connectedState = document.getElementById('connectedState');
+const apiTokenInput = document.getElementById('apiToken');
+const backendUrlInput = document.getElementById('backendUrl');
+const advancedConfig = document.getElementById('advancedConfig');
+const connectBtn = document.getElementById('connectBtn');
+const advancedBtn = document.getElementById('advancedBtn');
+const syncBtn = document.getElementById('syncBtn');
+const disconnectBtn = document.getElementById('disconnectBtn');
 
-// Load saved config
+let showAdvanced = false;
+
+// Load saved config and render correct state
 chrome.storage.local.get(['config'], (result) => {
   const config = result.config || {};
-  backendUrlInput.value = config.backendUrl || 'http://localhost:3000';
-  apiKeyInput.value = config.apiKey || '';
+  if (config.apiToken) {
+    showConnected();
+  } else {
+    showNotConnected();
+  }
   updateStatus();
 });
 
-// Save config
-saveBtn.addEventListener('click', () => {
-  const config = {
-    backendUrl: backendUrlInput.value.trim(),
-    apiKey: apiKeyInput.value.trim(),
-  };
+// Toggle advanced URL field
+advancedBtn.addEventListener('click', () => {
+  showAdvanced = !showAdvanced;
+  advancedConfig.style.display = showAdvanced ? 'block' : 'none';
+  advancedBtn.textContent = showAdvanced ? 'Hide Advanced' : 'Advanced';
+  chrome.storage.local.get(['config'], (r) => {
+    backendUrlInput.value = r.config?.backendUrl || DEFAULT_BACKEND;
+  });
+});
+
+// Connect account
+connectBtn.addEventListener('click', () => {
+  const token = apiTokenInput.value.trim();
+  if (!token) {
+    showMessage('Paste your API token first.', 'error');
+    return;
+  }
+  const backendUrl = (backendUrlInput.value.trim() || DEFAULT_BACKEND).replace(/\/$/, '');
+  const config = { apiToken: token, backendUrl };
   chrome.storage.local.set({ config }, () => {
-    showMessage('Settings saved!', 'success');
+    showMessage('Connected!', 'success');
+    showConnected();
+    updateStatus();
   });
 });
 
@@ -35,19 +62,38 @@ syncBtn.addEventListener('click', () => {
       showMessage('Sync complete!', 'success');
       updateStatus();
     } else {
-      showMessage('Sync failed. Check console.', 'error');
+      showMessage('Sync failed — check your token.', 'error');
     }
   });
 });
+
+// Disconnect
+disconnectBtn.addEventListener('click', () => {
+  chrome.storage.local.remove('config', () => {
+    showNotConnected();
+    showMessage('Disconnected.', 'success');
+    statusEl.textContent = 'Not connected';
+  });
+});
+
+function showConnected() {
+  notConnected.style.display = 'none';
+  connectedState.style.display = 'block';
+}
+
+function showNotConnected() {
+  notConnected.style.display = 'block';
+  connectedState.style.display = 'none';
+}
 
 function updateStatus() {
   chrome.runtime.sendMessage({ type: 'sync-status' }, (response) => {
     const status = response?.status;
     if (!status) {
-      statusEl.textContent = 'Not configured';
+      statusEl.textContent = 'Not connected';
+      statusEl.style.color = '#94a3b8';
       return;
     }
-
     if (status.error) {
       statusEl.textContent = `Error: ${status.error}`;
       statusEl.style.color = '#dc2626';
@@ -68,7 +114,5 @@ function updateStatus() {
 function showMessage(text, type) {
   messageEl.textContent = text;
   messageEl.className = type;
-  setTimeout(() => {
-    messageEl.textContent = '';
-  }, 3000);
+  setTimeout(() => { messageEl.textContent = ''; }, 3000);
 }

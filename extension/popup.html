@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Saved Brain</title>
+  <title>Recall</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { width: 320px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #0f172a; }
@@ -11,39 +11,68 @@
     .status { padding: 12px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; font-size: 13px; }
     .status-label { color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
     .status-value { font-weight: 600; margin-top: 4px; }
+    .connected-bar { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; margin-bottom: 12px; }
+    .connected-dot { width: 8px; height: 8px; background: #16a34a; border-radius: 50%; flex-shrink: 0; }
+    .connected-text { font-size: 12px; color: #166534; font-weight: 600; flex: 1; }
     .config { margin-bottom: 12px; }
     .config label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; color: #64748b; }
     .config input { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; outline: none; }
     .config input:focus { border-color: #f59e0b; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
+    .hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
     button { width: 100%; padding: 10px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.2s; }
     button:hover { background: #f97316; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-secondary { background: white; color: #0f172a; border: 1px solid #e2e8f0; margin-top: 8px; }
     .btn-secondary:hover { background: #f8fafc; }
+    .btn-danger { background: white; color: #dc2626; border: 1px solid #fecaca; margin-top: 8px; }
+    .btn-danger:hover { background: #fff5f5; }
     .error { color: #dc2626; font-size: 12px; margin-top: 8px; }
     .success { color: #16a34a; font-size: 12px; margin-top: 8px; }
+    a { color: #f59e0b; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .setup-guide { font-size: 12px; color: #64748b; padding: 10px 12px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; line-height: 1.6; }
   </style>
 </head>
 <body>
-  <h1><span class="logo">🧠</span> Saved Brain</h1>
+  <h1><span class="logo">🧠</span> Recall</h1>
 
   <div class="status">
-    <div class="status-label">Status</div>
+    <div class="status-label">Sync Status</div>
     <div class="status-value" id="status">Checking...</div>
   </div>
 
-  <div class="config">
-    <label>Backend URL</label>
-    <input type="text" id="backendUrl" placeholder="http://localhost:3000">
+  <!-- Not connected state -->
+  <div id="notConnected">
+    <div class="setup-guide">
+      <strong>Connect your account:</strong><br>
+      1. Sign in at <a href="https://userecall.app" id="appLink" target="_blank">userecall.app</a><br>
+      2. Go to <a href="https://userecall.app/connect-extension" id="connectLink" target="_blank">Settings → Connect Extension</a><br>
+      3. Generate and copy your token<br>
+      4. Paste it below
+    </div>
+    <div class="config">
+      <label>API Token</label>
+      <input type="password" id="apiToken" placeholder="Paste your token here…">
+      <div class="hint">Get your token at userecall.app/connect-extension</div>
+    </div>
+    <div class="config" id="advancedConfig" style="display:none">
+      <label>Backend URL (advanced)</label>
+      <input type="text" id="backendUrl" placeholder="https://userecall.app">
+      <div class="hint">Leave blank to use userecall.app</div>
+    </div>
+    <button id="connectBtn">Connect Account</button>
+    <button id="advancedBtn" class="btn-secondary">Advanced</button>
   </div>
 
-  <div class="config">
-    <label>API Key (optional)</label>
-    <input type="password" id="apiKey" placeholder="Your API key">
+  <!-- Connected state -->
+  <div id="connectedState" style="display:none">
+    <div class="connected-bar">
+      <div class="connected-dot"></div>
+      <div class="connected-text">Connected to Recall</div>
+    </div>
+    <button id="syncBtn">Sync Now</button>
+    <button id="disconnectBtn" class="btn-danger">Disconnect</button>
   </div>
-
-  <button id="syncBtn">Sync Now</button>
-  <button id="saveBtn" class="btn-secondary">Save Settings</button>
 
   <div id="message"></div>
 
