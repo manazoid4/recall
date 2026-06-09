@@ -100,8 +100,9 @@ export async function setSetting(key: string, value: string, ownerId?: string): 
   if (isSecretKey(key) && value) {
     try {
       storedValue = encrypt(value);
-    } catch {
-      // If encryption fails, store the raw value
+    } catch (err) {
+      // KEY_ENCRYPTION_SECRET not set — store raw value but warn loudly
+      console.error('[settings.setSetting] encryption failed, storing raw value. Set KEY_ENCRYPTION_SECRET env var.', (err as Error).message);
       storedValue = value;
     }
   }
