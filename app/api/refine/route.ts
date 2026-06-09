@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   const rateLimitResult = rateLimit(request);
   if (rateLimitResult) return rateLimitResult;
 
-  await auth();
+  const { userId } = await auth();
 
   const body = await request.json();
   const validated = refineSchema.safeParse(body);
@@ -39,7 +39,7 @@ Transcript:
 ${transcript}`;
 
   try {
-    const raw = await callLLM(prompt, { provider, model, temperature: 0.2, maxTokens: 2000 });
+    const raw = await callLLM(prompt, { provider, model, temperature: 0.2, maxTokens: 2000, userId: userId || undefined });
 
     // Strip markdown code fences if present
     const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();

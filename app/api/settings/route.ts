@@ -61,6 +61,7 @@ const ALLOWED_KEYS = new Set([
   'avatar_url',
   'linked_sources',
   'daily_sync_time',
+  'onboarding_complete',
 ]);
 
 function isSecretKey(key: string): boolean {

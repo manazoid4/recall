@@ -3,6 +3,7 @@ import { callLLM } from './providers';
 
 export async function enrichItem(
   item: { title: string | null; url: string; rawData: string | null },
+  userId?: string,
 ): Promise<{
   summary: string;
   tags: string[];
@@ -13,8 +14,8 @@ export async function enrichItem(
   provider: string;
   model: string;
 }> {
-  const provider = await getSetting('llm_provider', 'openai');
-  const model = await getSetting('llm_model', 'gpt-4o-mini');
+  const provider = await getSetting('llm_provider', 'openai', userId);
+  const model = await getSetting('llm_model', 'gpt-4o-mini', userId);
 
   const prompt = `Analyze the following saved content and return a JSON object with:
 - summary: 2-3 sentence summary
@@ -30,7 +31,7 @@ Content: ${item.rawData || '(no content available)'}
 
 Return ONLY valid JSON.`;
 
-  const result = await callLLM(prompt, { provider, model, temperature: 0.3, maxTokens: 500 });
+  const result = await callLLM(prompt, { provider, model, temperature: 0.3, maxTokens: 500, userId });
 
   try {
     const jsonStr = result.replace(/```json\s*|\s*```/g, '').trim();
@@ -61,6 +62,7 @@ Return ONLY valid JSON.`;
 
 export async function enrichBatch(
   items: Array<{ id: string; title: string | null; url: string; rawData: string | null }>,
+  userId?: string,
 ): Promise<Record<string, Awaited<ReturnType<typeof enrichItem>>>> {
   const results: Record<string, Awaited<ReturnType<typeof enrichItem>>> = {};
   const concurrency = 3;
@@ -68,7 +70,7 @@ export async function enrichBatch(
   for (let i = 0; i < items.length; i += concurrency) {
     const batch = items.slice(i, i + concurrency);
     const promises = batch.map(async (item) => {
-      results[item.id] = await enrichItem(item);
+      results[item.id] = await enrichItem(item, userId);
     });
     await Promise.all(promises);
   }

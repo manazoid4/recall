@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         title: item.title as string | null,
         url: item.url as string,
         rawData: item.raw_data as string | null,
-      });
+      }, userId || undefined);
 
       await db.prepare(
         `INSERT OR REPLACE INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
             title: item.title as string | null,
             url: item.url as string,
             rawData: item.raw_data as string | null,
-          });
+          }, userId || undefined);
 
           await db.prepare(
             `INSERT OR REPLACE INTO enrichments (id, item_id, summary, tags, sentiment, topics, entities, quality_score, provider, model)

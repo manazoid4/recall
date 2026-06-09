@@ -5,6 +5,7 @@ interface CallLLMOptions {
   model: string;
   temperature?: number;
   maxTokens?: number;
+  userId?: string;
 }
 
 const PROVIDER_ENDPOINTS: Record<string, string> = {
@@ -33,25 +34,25 @@ export async function callLLM(
   prompt: string,
   options: CallLLMOptions,
 ): Promise<string> {
-  const { provider, model, temperature = 0.3, maxTokens = 1000 } = options;
+  const { provider, model, temperature = 0.3, maxTokens = 1000, userId } = options;
 
   if (provider === 'ollama') {
-    return callOllama(prompt, { model, temperature, maxTokens });
+    return callOllama(prompt, { model, temperature, maxTokens, userId });
   }
 
   if (provider === 'anthropic') {
-    return callAnthropic(prompt, { model, temperature, maxTokens });
+    return callAnthropic(prompt, { model, temperature, maxTokens, userId });
   }
 
   if (provider === 'google') {
-    return callGoogle(prompt, { model, temperature, maxTokens });
+    return callGoogle(prompt, { model, temperature, maxTokens, userId });
   }
 
   if (provider === 'cohere') {
-    return callCohere(prompt, { model, temperature, maxTokens });
+    return callCohere(prompt, { model, temperature, maxTokens, userId });
   }
 
-  return callOpenAICompatible(prompt, { provider, model, temperature, maxTokens });
+  return callOpenAICompatible(prompt, { provider, model, temperature, maxTokens, userId });
 }
 
 // Block private IPs, localhost (except for Ollama dev), link-local, and cloud metadata
@@ -124,9 +125,9 @@ function isBlockedUrl(url: string): boolean {
 
 async function callOllama(
   prompt: string,
-  opts: { model: string; temperature: number; maxTokens: number },
+  opts: { model: string; temperature: number; maxTokens: number; userId?: string },
 ): Promise<string> {
-  const baseUrl = await getSetting('ollama_url', 'http://localhost:11434');
+  const baseUrl = await getSetting('ollama_url', 'http://localhost:11434', opts.userId);
 
   // SSRF protection: validate URL before making request
   if (isBlockedUrl(baseUrl)) {
@@ -153,9 +154,9 @@ async function callOllama(
 
 async function callAnthropic(
   prompt: string,
-  opts: { model: string; temperature: number; maxTokens: number },
+  opts: { model: string; temperature: number; maxTokens: number; userId?: string },
 ): Promise<string> {
-  const apiKey = await getSetting('llm_api_key', '');
+  const apiKey = await getSetting('llm_api_key', '', opts.userId);
   const res = await fetchWithTimeout('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -179,9 +180,9 @@ async function callAnthropic(
 
 async function callGoogle(
   prompt: string,
-  opts: { model: string; temperature: number; maxTokens: number },
+  opts: { model: string; temperature: number; maxTokens: number; userId?: string },
 ): Promise<string> {
-  const apiKey = await getSetting('llm_api_key', '');
+  const apiKey = await getSetting('llm_api_key', '', opts.userId);
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${opts.model}:generateContent?key=${apiKey}`;
   const res = await fetchWithTimeout(url, {
     method: 'POST',
@@ -200,9 +201,9 @@ async function callGoogle(
 
 async function callCohere(
   prompt: string,
-  opts: { model: string; temperature: number; maxTokens: number },
+  opts: { model: string; temperature: number; maxTokens: number; userId?: string },
 ): Promise<string> {
-  const apiKey = await getSetting('llm_api_key', '');
+  const apiKey = await getSetting('llm_api_key', '', opts.userId);
   const res = await fetchWithTimeout('https://api.cohere.ai/v1/chat', {
     method: 'POST',
     headers: {
@@ -224,9 +225,9 @@ async function callCohere(
 
 async function callOpenAICompatible(
   prompt: string,
-  opts: { provider: string; model: string; temperature: number; maxTokens: number },
+  opts: { provider: string; model: string; temperature: number; maxTokens: number; userId?: string },
 ): Promise<string> {
-  const apiKey = await getSetting('llm_api_key', '');
+  const apiKey = await getSetting('llm_api_key', '', opts.userId);
   const endpoint = PROVIDER_ENDPOINTS[opts.provider];
   if (!endpoint) throw new Error(`Unknown provider: ${opts.provider}`);
 

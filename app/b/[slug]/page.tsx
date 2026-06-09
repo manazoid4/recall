@@ -71,8 +71,8 @@ export default function BoardDetailPage() {
     return (
       <div className="rounded-xl border border-line bg-panel p-12 text-center">
         <h2 className="text-lg font-bold text-ink">Board not found</h2>
-        <Link href="/boards" className="mt-4 inline-block text-yellow hover:underline">
-          ← Back to boards
+        <Link href="/" className="mt-4 inline-block text-yellow hover:underline">
+          ← Back to home
         </Link>
       </div>
     );

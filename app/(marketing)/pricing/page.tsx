@@ -37,7 +37,7 @@ const objections = [
   ],
   [
     'Is my data safe?',
-    'Everything runs locally with SQLite. Your data never leaves your machine unless you explicitly export it. No tracking, no analytics on your content.',
+    'Your data is stored in a private Supabase database secured by Postgres Row Level Security — only you can access your content. Your LLM API key is encrypted at rest and never logged or shared. No advertising, no selling your data.',
   ],
   [
     'What if I want a refund?',

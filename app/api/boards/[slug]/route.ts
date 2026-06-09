@@ -9,11 +9,14 @@ export async function GET(
   const { userId } = await auth();
   const db = getDb();
   
-  let boardQuery = 'SELECT * FROM boards WHERE slug = ?';
+  let boardQuery: string;
   const boardParams: (string | null)[] = [params.slug];
   if (userId) {
-    boardQuery += ' AND (owner_id = ? OR is_public = 1)';
+    boardQuery = 'SELECT * FROM boards WHERE slug = ? AND (owner_id = ? OR is_public = 1)';
     boardParams.push(userId);
+  } else {
+    // Unauthenticated: only return public boards
+    boardQuery = 'SELECT * FROM boards WHERE slug = ? AND is_public = 1';
   }
   
   const board = await db
