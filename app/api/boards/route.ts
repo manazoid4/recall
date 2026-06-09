@@ -16,25 +16,21 @@ function slugify(text: string): string {
 
 export async function GET() {
   const { userId } = await auth();
-  const db = getDb();
-  
-  let where = '';
-  const params: (string | number)[] = [];
-  if (userId) {
-    where = 'WHERE b.owner_id = ?';
-    params.push(userId);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  
+  const db = getDb();
+
   const rows = await db
     .prepare(
       `SELECT b.*, COUNT(bi.item_id) as item_count
        FROM boards b
        LEFT JOIN board_items bi ON bi.board_id = b.id
-       ${where}
+       WHERE b.owner_id = ?
        GROUP BY b.id
        ORDER BY b.created_at DESC`
     )
-    .all(...params) as Record<string, unknown>[];
+    .all(userId) as Record<string, unknown>[];
 
   const boards = rows.map((row) => ({
     id: row.id,
@@ -55,6 +51,9 @@ export async function POST(request: NextRequest) {
   if (rateLimitResult) return rateLimitResult;
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
 
   const entitlement = await checkEntitlements(userId, 'create_board');

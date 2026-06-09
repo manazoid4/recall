@@ -7,6 +7,9 @@ export async function POST(
   { params }: { params: { slug: string } }
 ) {
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const body = await request.json();
   const { itemId } = body;
@@ -15,18 +18,13 @@ export async function POST(
     return NextResponse.json({ error: 'itemId is required' }, { status: 400 });
   }
 
-  // Find the board by slug
+  // Find the board by slug — must be owned by the requesting user
   const board = await db
-    .prepare('SELECT * FROM boards WHERE slug = ?')
-    .get(params.slug) as Record<string, unknown> | undefined;
+    .prepare('SELECT * FROM boards WHERE slug = ? AND owner_id = ?')
+    .get(params.slug, userId) as Record<string, unknown> | undefined;
 
   if (!board) {
     return NextResponse.json({ error: 'Board not found' }, { status: 404 });
-  }
-
-  // Check ownership
-  if (board.owner_id && board.owner_id !== userId) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const boardId = board.id as string;
@@ -55,6 +53,9 @@ export async function DELETE(
   { params }: { params: { slug: string } }
 ) {
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const { searchParams } = new URL(request.url);
   const itemId = searchParams.get('itemId');
@@ -63,18 +64,13 @@ export async function DELETE(
     return NextResponse.json({ error: 'itemId is required' }, { status: 400 });
   }
 
-  // Find the board by slug
+  // Find the board by slug — must be owned by the requesting user
   const board = await db
-    .prepare('SELECT * FROM boards WHERE slug = ?')
-    .get(params.slug) as Record<string, unknown> | undefined;
+    .prepare('SELECT * FROM boards WHERE slug = ? AND owner_id = ?')
+    .get(params.slug, userId) as Record<string, unknown> | undefined;
 
   if (!board) {
     return NextResponse.json({ error: 'Board not found' }, { status: 404 });
-  }
-
-  // Check ownership
-  if (board.owner_id && board.owner_id !== userId) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const boardId = board.id as string;
