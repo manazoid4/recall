@@ -9,7 +9,7 @@ export async function GET(_request: NextRequest) {
     return NextResponse.json({
       valid: true,
       tier: 'free',
-      features: ['basic_search', 'manual_import', 'graph_view'],
+      features: ['basic_search', 'manual_import'],
       reason: 'anonymous user',
     });
   }
@@ -71,7 +71,7 @@ export async function GET(_request: NextRequest) {
   return NextResponse.json({
     valid: true,
     tier: 'free',
-    features: ['basic_search', 'manual_import', 'graph_view'],
+    features: ['basic_search', 'manual_import'],
     limits: {
       maxItems: 50,
       maxBoards: 1,

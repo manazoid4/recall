@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings as SettingsIcon, Loader2, Check, Save, Key, Trash2, Sparkles, Puzzle } from 'lucide-react';
+import { Settings as SettingsIcon, Loader2, Check, Save, Key, Trash2, Sparkles, Puzzle, Crown } from 'lucide-react';
 import Link from 'next/link';
 import { PROVIDERS } from '@/lib/types';
 
@@ -11,18 +11,25 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [stats, setStats] = useState({ items: 0, enriched: 0, boards: 0 });
+  const [tier, setTier] = useState<'free' | 'pro'>('free');
+  const [licenseKey, setLicenseKey] = useState('');
+  const [licenseError, setLicenseError] = useState('');
+  const [licenseActivating, setLicenseActivating] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const [settingsRes, statsRes] = await Promise.all([
+        const [settingsRes, statsRes, licenseRes] = await Promise.all([
           fetch('/api/settings'),
           fetch('/api/stats'),
+          fetch('/api/license/verify'),
         ]);
         const settingsJson = await settingsRes.json();
         const statsJson = await statsRes.json();
+        const licenseJson = await licenseRes.json();
         setSettings(settingsJson.data || {});
         setStats(statsJson.data || { items: 0, enriched: 0, boards: 0 });
+        setTier(licenseJson.tier === 'pro' ? 'pro' : 'free');
       } catch {
         // handled
       } finally {
@@ -63,6 +70,30 @@ export default function SettingsPage() {
       // handled
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleActivateLicense = async () => {
+    if (!licenseKey.trim()) return;
+    setLicenseActivating(true);
+    setLicenseError('');
+    try {
+      const res = await fetch('/api/license/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ licenseKey: licenseKey.trim() }),
+      });
+      const json = await res.json();
+      if (json.valid && json.tier === 'pro') {
+        setTier('pro');
+        setLicenseKey('');
+      } else {
+        setLicenseError(json.error || 'Invalid license key');
+      }
+    } catch {
+      setLicenseError('Failed to verify license. Try again.');
+    } finally {
+      setLicenseActivating(false);
     }
   };
 
@@ -199,6 +230,52 @@ export default function SettingsPage() {
           <Puzzle className="h-4 w-4" />
           Connect Chrome Extension
         </Link>
+      </div>
+
+      {/* Pro License */}
+      <div className={`rounded-xl border p-6 ${tier === 'pro' ? 'border-yellow bg-yellow/5' : 'border-line bg-panel'}`}>
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Crown className="h-5 w-5 text-yellow" />
+            <h2 className="text-lg font-bold text-ink">Pro License</h2>
+          </div>
+          <span className={`rounded-full px-3 py-1 text-xs font-bold ${tier === 'pro' ? 'bg-yellow text-white' : 'bg-surface text-muted'}`}>
+            {tier === 'pro' ? 'PRO ACTIVE' : 'FREE TIER'}
+          </span>
+        </div>
+        {tier === 'pro' ? (
+          <p className="text-sm text-muted">
+            Pro features active: AI enrichment, semantic search, knowledge graph, unlimited items & boards, Obsidian export.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted">
+              Enter your license key from your purchase confirmation email to unlock Pro features.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={licenseKey}
+                onChange={(e) => setLicenseKey(e.target.value)}
+                placeholder="RECALL-XXXX-XXXX-XXXX"
+                className="flex-1 rounded-lg border border-line bg-panel px-4 py-2.5 text-sm outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/20"
+              />
+              <button
+                onClick={handleActivateLicense}
+                disabled={licenseActivating || !licenseKey.trim()}
+                className="flex items-center gap-2 rounded-lg bg-yellow px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange disabled:opacity-50"
+              >
+                {licenseActivating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Activate'}
+              </button>
+            </div>
+            {licenseError && (
+              <p className="text-sm text-red-600">{licenseError}</p>
+            )}
+            <Link href="/pricing" className="text-xs text-yellow hover:underline">
+              Don&apos;t have a key? Get lifetime access →
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Actions */}
