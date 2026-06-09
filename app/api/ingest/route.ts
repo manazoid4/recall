@@ -25,13 +25,14 @@ export async function POST(request: NextRequest) {
   }
 
   const db = getDb();
-  const items = await request.json();
+  const body = await request.json();
 
-  const validated = ingestSchema.safeParse(items);
+  const validated = ingestSchema.safeParse(body);
   if (!validated.success) {
     return NextResponse.json({ error: 'Invalid items array', details: validated.error.flatten() }, { status: 400 });
   }
 
+  const items = validated.data;
   let ingested = 0;
   let skipped = 0;
 
@@ -44,22 +45,17 @@ export async function POST(request: NextRequest) {
   );
 
   for (const item of items) {
-    const id = (item.id as string) || uuid();
-    const url = item.url as string;
-    if (!url) {
-      skipped++;
-      continue;
-    }
+    const id = item.id || uuid();
 
     try {
       const result = await insertStmt.run(
         id,
-        url,
-        (item.title as string) || null,
-        (item.author as string) || null,
-        (item.timestamp as string) || (item.savedAt as string) || new Date().toISOString(),
-        (item.source as string) || (item.platform as string) || 'manual',
-        (item.rawData as string) || null,
+        item.url,
+        item.title || null,
+        item.author || null,
+        item.timestamp || item.savedAt || new Date().toISOString(),
+        item.source || item.platform || 'manual',
+        item.rawData || null,
         userId || null
       );
       if (result.changes > 0) {
