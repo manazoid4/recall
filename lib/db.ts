@@ -64,7 +64,19 @@ function toPostgresSQL(sqlStr: string): string {
   return result;
 }
 
-// Postgres adapter using @vercel/postgres (uses DATABASE_URL env var)
+// Lazily create Postgres pool from DATABASE_URL
+let _pgPool: import('@vercel/postgres').VercelPool | null = null;
+
+async function getPgPool(): Promise<import('@vercel/postgres').VercelPool> {
+  if (_pgPool) return _pgPool;
+  const { createPool } = await import('@vercel/postgres');
+  const connectionString = databaseUrl;
+  if (!connectionString) throw new Error('DATABASE_URL env var not set');
+  _pgPool = createPool({ connectionString });
+  return _pgPool;
+}
+
+// Postgres adapter using @vercel/postgres createPool (uses DATABASE_URL)
 function getPostgresDb(): DbInterface {
   return {
     prepare(sqlStr: string) {
@@ -72,8 +84,8 @@ function getPostgresDb(): DbInterface {
       return {
         async run(...params: unknown[]): Promise<StmtResult> {
           try {
-            const { db: pgClient } = await import('@vercel/postgres');
-            await pgClient.query(pgSql, params as unknown[]);
+            const pool = await getPgPool();
+            await pool.query(pgSql, params as unknown[]);
             return { changes: 1 };
           } catch (err) {
             console.error('[db.run] error:', (err as Error).message, 'sql:', pgSql.slice(0, 120));
@@ -82,8 +94,8 @@ function getPostgresDb(): DbInterface {
         },
         async get(...params: unknown[]): Promise<Record<string, unknown> | undefined> {
           try {
-            const { db: pgClient } = await import('@vercel/postgres');
-            const result = await pgClient.query(pgSql, params as unknown[]);
+            const pool = await getPgPool();
+            const result = await pool.query(pgSql, params as unknown[]);
             if (!result.rows || result.rows.length === 0) return undefined;
             return result.rows[0] as Record<string, unknown>;
           } catch (err) {
@@ -93,8 +105,8 @@ function getPostgresDb(): DbInterface {
         },
         async all(...params: unknown[]): Promise<Record<string, unknown>[]> {
           try {
-            const { db: pgClient } = await import('@vercel/postgres');
-            const result = await pgClient.query(pgSql, params as unknown[]);
+            const pool = await getPgPool();
+            const result = await pool.query(pgSql, params as unknown[]);
             return (result.rows || []) as Record<string, unknown>[];
           } catch (err) {
             console.error('[db.all] error:', (err as Error).message, 'sql:', pgSql.slice(0, 120));
@@ -105,8 +117,8 @@ function getPostgresDb(): DbInterface {
     },
     async exec(sqlStr: string) {
       try {
-        const { db: pgClient } = await import('@vercel/postgres');
-        await pgClient.query(toPostgresSQL(sqlStr));
+        const pool = await getPgPool();
+        await pool.query(toPostgresSQL(sqlStr));
       } catch (err) {
         console.error('[db.exec] error:', (err as Error).message);
       }
@@ -226,8 +238,8 @@ function getSQLiteDb(): DbInterface {
 export async function dbQuery(sqlStr: string, params: unknown[] = []): Promise<Record<string, unknown>[]> {
   if (isProduction) {
     try {
-      const { db: pgClient } = await import('@vercel/postgres');
-      const result = await pgClient.query(sqlStr, params);
+      const pool = await getPgPool();
+      const result = await pool.query(toPostgresSQL(sqlStr), params);
       return (result.rows || []) as Record<string, unknown>[];
     } catch (err) {
       console.error('[dbQuery] error:', (err as Error).message);
