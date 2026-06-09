@@ -1,4 +1,4 @@
-# Indie Hackers Launch — Saved Brain
+# Indie Hackers Launch — Recall
 
 ---
 
@@ -12,7 +12,7 @@ Everything you've saved. Finally searchable.
 
 You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit. Most you'll never see again.
 
-Saved Brain pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
+Recall pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
 
 **What it does:**
 - Import saved posts from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more
@@ -36,7 +36,7 @@ Saved Brain pulls them together, enriches them with AI, and makes them findable 
 
 ### Title
 
-Launched Saved Brain — £49 lifetime, no subscriptions, BYO LLM key
+Launched Recall — £49 lifetime, no subscriptions, BYO LLM key
 
 ### Body
 
@@ -46,7 +46,7 @@ Launched Saved Brain — £49 lifetime, no subscriptions, BYO LLM key
 
 **What I built:**
 
-Saved Brain — a local-first app that pulls your saved content together, enriches it with AI, and makes it searchable by meaning.
+Recall — a local-first app that pulls your saved content together, enriches it with AI, and makes it searchable by meaning.
 
 **Key features:**
 - Semantic search (meaning, not keywords)
@@ -111,11 +111,11 @@ Priority is driven by user feedback, not my assumptions.
 
 ### Title
 
-Saved Brain — [X] days since launch: [number] sales, [number] GitHub stars
+Recall — [X] days since launch: [number] sales, [number] GitHub stars
 
 ### Body
 
-Quick update on Saved Brain since launch:
+Quick update on Recall since launch:
 
 **Sales:** [number] (£[amount] revenue)
 **GitHub stars:** [number]

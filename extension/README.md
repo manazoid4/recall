@@ -1,6 +1,6 @@
-# Saved Brain - Chrome Extension
+# Recall - Chrome Extension
 
-A Chrome extension that scrapes saved/bookmarked posts from Instagram and X/Twitter and syncs them to your Saved Brain backend.
+A Chrome extension that scrapes saved/bookmarked posts from Instagram and X/Twitter and syncs them to your Recall backend.
 
 ## Installation (Developer Mode)
 

@@ -1,6 +1,6 @@
-# Saved Brain — Marketing Content
+# Recall — Marketing Content
 
-Complete marketing toolkit for launching Saved Brain across all platforms.
+Complete marketing toolkit for launching Recall across all platforms.
 
 ---
 
@@ -8,7 +8,7 @@ Complete marketing toolkit for launching Saved Brain across all platforms.
 
 **Tagline**: "Everything you've saved. Finally searchable."
 
-**Elevator Pitch**: You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit. Most you'll never see again. Saved Brain pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
+**Elevator Pitch**: You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit. Most you'll never see again. Recall pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
 
 **Key Benefits**:
 - Stop losing what you've saved
@@ -25,14 +25,14 @@ Complete marketing toolkit for launching Saved Brain across all platforms.
 
 ### Post 1: Problem/Solution
 
-**Visual**: Split screen — left side shows chaotic bookmarks across platforms, right side shows clean Saved Brain interface
+**Visual**: Split screen — left side shows chaotic bookmarks across platforms, right side shows clean Recall interface
 
 **Caption**:
 You've got 2,347 saved posts scattered across Instagram, YouTube, X, Reddit, TikTok...
 
 When was the last time you actually found something you saved?
 
-Saved Brain pulls everything together. AI enriches it. You search by meaning.
+Recall pulls everything together. AI enriches it. You search by meaning.
 
 £49 lifetime. No subscriptions.
 
@@ -50,7 +50,7 @@ Link in bio. 🧠
 **Caption**:
 Remember that thing you saved 3 months ago but can't remember where?
 
-Saved Brain's semantic search finds it by meaning, not just keywords.
+Recall's semantic search finds it by meaning, not just keywords.
 
 Type "that video about Mars colonization" → finds the Elon tweet you saved in February.
 
@@ -68,7 +68,7 @@ Type "that video about Mars colonization" → finds the Elon tweet you saved in 
 **Caption**:
 "I saved a Rust programming video, a Reddit thread about memory safety, and a tweet from a systems engineer.
 
-Saved Brain's knowledge graph connected them all.
+Recall's knowledge graph connected them all.
 
 I didn't know I was building a learning path on systems programming."
 
@@ -110,7 +110,7 @@ Link in bio. 🧠
 
 **Story 2**: "When was the last time you actually found something you saved?" (Text overlay on frustrated face)
 
-**Story 3**: Screen recording of Saved Brain in action (5 seconds)
+**Story 3**: Screen recording of Recall in action (5 seconds)
 
 **Story 4**: "£49 lifetime. No subscriptions. Link in bio." (CTA)
 
@@ -127,7 +127,7 @@ Like many of you, I've got thousands of saved posts scattered across platforms. 
 
 The problem? I never actually find them again. Searching within each platform is painful, and there's no way to search across all of them.
 
-So I built Saved Brain.
+So I built Recall.
 
 **What it does**:
 - Pulls saved content from Instagram, YouTube, X, TikTok, Reddit, Pocket
@@ -210,7 +210,7 @@ Would love feedback on the AI features. What other enrichment would be useful?
 **Body**:
 I use Obsidian for my knowledge base, but I've got thousands of saved posts scattered across Instagram, YouTube, X, Reddit.
 
-So I built Saved Brain to bridge the gap.
+So I built Recall to bridge the gap.
 
 **Workflow**:
 1. Import saved content from social platforms
@@ -245,12 +245,12 @@ Working on two-way sync next. Would love feedback from Obsidian users.
 - Scrolling through YouTube bookmarks (2 sec)
 - Scrolling through X bookmarks (2 sec)
 - Frustrated face (2 sec)
-- Saved Brain interface (5 sec)
+- Recall interface (5 sec)
 - Text overlay: "£49 lifetime. No subscriptions." (2 sec)
 
 **Audio**: Trending audio or voiceover: "You've saved 2,000 posts across 5 platforms. When's the last time you actually found one?"
 
-**Text overlay**: "Saved Brain — Everything you've saved. Finally searchable."
+**Text overlay**: "Recall — Everything you've saved. Finally searchable."
 
 **Caption**: Stop losing what you've saved. £49 lifetime. No subscriptions. Link in bio. #SecondBrain #AI #Productivity #SavedBrain
 
@@ -265,7 +265,7 @@ Working on two-way sync next. Would love feedback from Obsidian users.
 - Knowledge graph showing connections (5 sec)
 - Text: "£49 lifetime" (5 sec)
 
-**Voiceover**: "Saved Brain pulls your saved posts from Instagram, YouTube, X, Reddit. AI enriches them with summaries and tags. Search by meaning — type 'that video about Mars' and it finds the Elon tweet you saved in February. Knowledge graph shows connections. £49 lifetime. No subscriptions."
+**Voiceover**: "Recall pulls your saved posts from Instagram, YouTube, X, Reddit. AI enriches them with summaries and tags. Search by meaning — type 'that video about Mars' and it finds the Elon tweet you saved in February. Knowledge graph shows connections. £49 lifetime. No subscriptions."
 
 **Caption**: Your second brain is here. #AI #ProductivityHack #SecondBrain #SavedBrain #TechTools
 
@@ -278,7 +278,7 @@ Working on two-way sync next. Would love feedback from Obsidian users.
 - "LIFETIME"
 - "NO SUBSCRIPTIONS"
 - "NO FEATURE GATES"
-- Saved Brain logo
+- Recall logo
 
 **Audio**: Trending audio
 
@@ -288,13 +288,13 @@ Working on two-way sync next. Would love feedback from Obsidian users.
 
 ### Video 4: Use Case (20 seconds)
 
-**Visual**: Split screen — top shows person saving posts on phone, bottom shows Saved Brain interface
+**Visual**: Split screen — top shows person saving posts on phone, bottom shows Recall interface
 
 **Text overlay**: 
 - "You save 50 posts a week"
 - "You never look at them again"
 - "Until now"
-- Saved Brain demo
+- Recall demo
 - "£49 lifetime"
 
 **Caption**: Stop the scroll. Start building your second brain. #DigitalMinimalism #SecondBrain #SavedBrain #AI
@@ -309,7 +309,7 @@ You've saved 2,347 posts across Instagram, YouTube, X, Reddit, TikTok.
 
 When's the last time you actually found one?
 
-Built Saved Brain to fix this.
+Built Recall to fix this.
 
 AI enrichment. Semantic search. Knowledge graph.
 
@@ -329,7 +329,7 @@ https://github.com/manazoid4/saved-brain
 - Each platform's search is terrible
 - No way to search across all of them
 
-2/ The solution: Saved Brain
+2/ The solution: Recall
 - Pulls from Instagram, YouTube, X, TikTok, Reddit, Pocket
 - AI enriches each item (summaries, tags, entities)
 - Semantic search — find by meaning
@@ -379,7 +379,7 @@ https://github.com/manazoid4/saved-brain
 
 Remember that thing you saved 3 months ago but can't remember where?
 
-Saved Brain's semantic search finds it by meaning.
+Recall's semantic search finds it by meaning.
 
 Type "that video about Mars colonization" → finds the Elon tweet you saved in February.
 
@@ -417,7 +417,7 @@ You've saved thousands of posts across Instagram, YouTube, X, Reddit, TikTok.
 
 When's the last time you actually found one?
 
-I built Saved Brain to fix this.
+I built Recall to fix this.
 
 **What it does**:
 - Pulls saved content from all your platforms

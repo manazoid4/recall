@@ -150,17 +150,17 @@ export async function POST(request: NextRequest) {
         .join('');
 
       await resend.emails.send({
-        from: process.env.DIGEST_EMAIL || 'digest@saved-brain.app',
+        from: process.env.DIGEST_EMAIL || 'digest@userecall.app',
         to: email,
-        subject: `Your Saved Brain Weekly Digest — ${items.length} new items`,
+        subject: `Your Recall Weekly Digest — ${items.length} new items`,
         html: `
           <div style="max-width: 600px; margin: 0 auto; font-family: system-ui, sans-serif;">
-            <h1 style="color: #0f172a;">Your Weekly Saved Brain Digest</h1>
+            <h1 style="color: #0f172a;">Your Weekly Recall Digest</h1>
             <p style="color: #64748b;">Here is what you saved this week:</p>
             ${htmlItems || '<p style="color: #64748b;">No new items this week.</p>'}
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
             <p style="font-size: 12px; color: #94a3b8;">
-              Sent by Saved Brain. <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/settings">Manage preferences</a>
+              Sent by Recall. <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/settings">Manage preferences</a>
             </p>
           </div>
         `,

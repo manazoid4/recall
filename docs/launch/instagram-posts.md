@@ -1,4 +1,4 @@
-# Instagram Launch Posts — Saved Brain
+# Instagram Launch Posts — Recall
 
 ---
 
@@ -13,8 +13,8 @@
 **Text**: "Scattered across five platforms. Lost forever."
 
 ### Slide 3
-**Visual**: Clean Saved Brain dashboard showing all imports in one place
-**Text**: "Saved Brain pulls everything together."
+**Visual**: Clean Recall dashboard showing all imports in one place
+**Text**: "Recall pulls everything together."
 
 ### Slide 4
 **Visual**: Screen recording of semantic search in action
@@ -34,7 +34,7 @@ You've got thousands of saved posts across Instagram, YouTube, X, TikTok, Reddit
 
 When was the last time you actually found something you saved?
 
-Saved Brain pulls everything together. AI enriches it. You search by meaning.
+Recall pulls everything together. AI enriches it. You search by meaning.
 
 £49 lifetime. No subscriptions.
 
@@ -73,7 +73,7 @@ Link in bio. 🧠
 
 Remember that thing you saved 3 months ago but can't remember where?
 
-Saved Brain's semantic search finds it by meaning, not just keywords.
+Recall's semantic search finds it by meaning, not just keywords.
 
 Type "that video about Mars colonization" → finds the Elon tweet you saved in February.
 
@@ -115,7 +115,7 @@ Link in bio.
 
 "I saved a Rust programming video, a Reddit thread about memory safety, and a tweet from a systems engineer.
 
-Saved Brain's knowledge graph connected them all.
+Recall's knowledge graph connected them all.
 
 I didn't know I was building a learning path on systems programming."
 
@@ -190,7 +190,7 @@ Link in bio. 🧠
 **Text**: "Click the extension."
 
 ### Slide 4
-**Visual**: Post appearing in Saved Brain dashboard
+**Visual**: Post appearing in Recall dashboard
 **Text**: "It's in your brain. Enriched. Searchable."
 
 ### Slide 5
@@ -205,7 +205,7 @@ Link in bio. 🧠
 
 The Chrome extension is the game-changer.
 
-Save on Instagram → it's in Saved Brain, enriched with AI, ready to find.
+Save on Instagram → it's in Recall, enriched with AI, ready to find.
 
 Save on X → same thing. No manual exports. No CSV juggling.
 
@@ -231,8 +231,8 @@ Link in bio.
 
 ## Story/Reel Ideas
 
-1. **"Day in the life"**: Show saving 5 posts throughout the day, then finding them all in Saved Brain in the evening
-2. **Before/After**: Split screen of "searching bookmarks" vs "semantic search in Saved Brain"
+1. **"Day in the life"**: Show saving 5 posts throughout the day, then finding them all in Recall in the evening
+2. **Before/After**: Split screen of "searching bookmarks" vs "semantic search in Recall"
 3. **Knowledge graph timelapse**: Watch your graph grow as you import more saves
 4. **Quick tip**: 15-second demo of semantic search with one surprising result
 5. **FAQ series**: 3 stories answering "Do I need an LLM key?", "Is my data safe?", "What's the free tier?"

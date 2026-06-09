@@ -1,8 +1,10 @@
-# Saved Brain 🧠
+# Recall
 
-**Turn everything you've saved into a searchable, AI-enriched knowledge base.**
+**Capture everything. Find anything. Think faster.**
 
-You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit, and more. Most of them you'll never see again. Saved Brain pulls them all together, enriches them with AI, and makes them findable by meaning — not just keywords.
+Turn everything you save and say into usable knowledge. Your AI-powered knowledge layer — save from social, capture with voice, find anything with semantic search.
+
+You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit, and more. Most of them you'll never see again. Recall pulls them all together, enriches them with AI, and makes them findable by meaning — not just keywords.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
@@ -30,8 +32,8 @@ You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit, an
 
 ```bash
 # Clone the repo
-git clone https://github.com/manazoid4/saved-brain.git
-cd saved-brain
+git clone https://github.com/manazoid4/recall.git
+cd recall
 
 # Install dependencies
 npm install
@@ -46,7 +48,7 @@ npm run db:seed
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your Saved Brain.
+Open [http://localhost:3000](http://localhost:3000) to see your Recall.
 
 ### Windows Users
 
@@ -89,7 +91,7 @@ Double-click `start.bat` — it handles everything automatically.
 ## 📁 Project Structure
 
 ```
-saved-brain/
+recall/
 ├── app/                    # Next.js app router
 │   ├── api/               # API routes
 │   ├── boards/            # Boards management
@@ -186,4 +188,4 @@ Built with Next.js, Tailwind CSS, and a lot of coffee.
 
 ---
 
-**Stop losing what you've saved. Start building your second brain.**
+**Stop losing what you've saved. Start using Recall.**

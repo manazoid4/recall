@@ -92,7 +92,7 @@ export default function PricingPage() {
               <span className="text-muted">/forever</span>
             </div>
             <p className="mt-3 text-sm text-muted">
-              Get started with 50 items. See if Saved Brain works for you.
+              Get started with 50 items. See if Recall works for you.
             </p>
           </div>
           <ul className="mb-8 space-y-3">

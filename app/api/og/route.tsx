@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const title = searchParams.get('title') || 'Saved Brain Board';
+  const title = searchParams.get('title') || 'Recall Board';
   const itemCount = searchParams.get('count') || '0';
   const description = searchParams.get('desc') || '';
 
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
             🧠
           </div>
           <span style={{ fontSize: '24px', fontWeight: '700', color: '#f59e0b' }}>
-            Saved Brain
+            Recall
           </span>
         </div>
 
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
             color: '#64748b',
           }}
         >
-          saved-brain.app
+          userecall.app
         </div>
       </div>
     ),

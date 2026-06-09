@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Saved Brain",
+  "name": "Recall",
   "version": "1.0.0",
   "description": "Scrape saved/bookmarked posts from Instagram and X/Twitter and sync to your backend.",
   "permissions": [
@@ -38,6 +38,6 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Saved Brain"
+    "default_title": "Recall"
   }
 }

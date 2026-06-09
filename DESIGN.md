@@ -1,4 +1,4 @@
-# Saved Brain — Design System
+# Recall — Design System
 
 ## Product Context
 **Type:** Product (app UI, dashboard, tool)  

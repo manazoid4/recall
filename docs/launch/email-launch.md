@@ -1,4 +1,4 @@
-# Launch Email Sequence — Saved Brain
+# Launch Email Sequence — Recall
 
 ---
 
@@ -6,7 +6,7 @@
 
 ### Subject Line Options
 
-1. Saved Brain is live — everything you've saved, finally searchable
+1. Recall is live — everything you've saved, finally searchable
 2. It's here: your saved posts, actually findable
 3. Launch day: £49 lifetime, no subscriptions
 
@@ -22,7 +22,7 @@ You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit.
 
 When was the last time you actually found one?
 
-Today I'm launching **Saved Brain** — an AI-enriched knowledge base that pulls your saved content together and makes it findable by meaning, not just keywords.
+Today I'm launching **Recall** — an AI-enriched knowledge base that pulls your saved content together and makes it findable by meaning, not just keywords.
 
 **What it does:**
 - Import from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more
@@ -39,7 +39,7 @@ Today I'm launching **Saved Brain** — an AI-enriched knowledge base that pulls
 
 Free tier: 50 items, full-text search, 1 board. Try before you buy.
 
-[**Get Saved Brain →**]
+[**Get Recall →**]
 
 [**Try Free Tier →**]
 
@@ -49,7 +49,7 @@ I'm here if you have questions. Just reply to this email.
 
 — [Your name]
 
-P.S. The knowledge graph is my favourite feature. I saved a Rust video, a Reddit thread on memory safety, and a systems engineering tweet. Saved Brain connected all three into a learning path I didn't know I was building.
+P.S. The knowledge graph is my favourite feature. I saved a Rust video, a Reddit thread on memory safety, and a systems engineering tweet. Recall connected all three into a learning path I didn't know I was building.
 
 ---
 
@@ -69,7 +69,7 @@ Early users are finding saves they forgot they had.
 
 **Hi [First Name],**
 
-Saved Brain has been live for three days. Here's what's happening:
+Recall has been live for three days. Here's what's happening:
 
 **Early user feedback:**
 
@@ -117,7 +117,7 @@ After tonight, the launch discount expires.
 
 **Hi [First Name],**
 
-Launch week for Saved Brain ends tonight at midnight GMT.
+Launch week for Recall ends tonight at midnight GMT.
 
 After that, the price moves to £79 lifetime.
 
@@ -143,7 +143,7 @@ Launch week was for early adopters — the people who trust a product before it 
 - Content creators: organising inspiration and references into shareable boards
 - Product managers: tracking competitor mentions and feature discussions
 
-[**Get Saved Brain (£49 lifetime) →**]
+[**Get Recall (£49 lifetime) →**]
 
 [**Try Free Tier First →**]
 
@@ -179,7 +179,7 @@ P.S. If £49 isn't right for you right now, no worries. The free tier stays free
 
 ## Post-Launch Nurture (Optional)
 
-**Week 2**: "How I use Saved Brain" — personal workflow walkthrough
+**Week 2**: "How I use Recall" — personal workflow walkthrough
 **Week 3**: "Knowledge graph deep dive" — tutorial on getting the most from connections
 **Week 4**: "Customer spotlight" — real user story (with permission)
 **Monthly**: Product updates, new features, tips and tricks

@@ -1,4 +1,4 @@
-# Contributing to Saved Brain
+# Contributing to Recall
 
 Thank you for your interest in contributing! This document outlines how to work on the project.
 

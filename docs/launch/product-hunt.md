@@ -1,4 +1,4 @@
-# Product Hunt Launch Post — Saved Brain
+# Product Hunt Launch Post — Recall
 
 ---
 
@@ -12,7 +12,7 @@ Everything you've saved. Finally searchable.
 
 You've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit. Most you'll never see again.
 
-Saved Brain pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
+Recall pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
 
 **What it does:**
 - Import saved posts from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more
@@ -35,13 +35,13 @@ Built with Next.js 14, React, Tailwind, TypeScript. Open source.
 
 ## Maker Comment
 
-Hey Product Hunt — I'm the solo dev behind Saved Brain.
+Hey Product Hunt — I'm the solo dev behind Recall.
 
 I built this because I had a problem: 2,000+ saved posts across five platforms and I couldn't find anything. I'd remember saving something about Rust memory safety, but was it on Reddit? YouTube? Twitter? Gone.
 
-Saved Brain is local-first. Your data lives in a JSON file on your machine. We don't host it, we don't mine it, we don't lose it when we get acquired. You bring your own OpenAI/Anthropic key for AI enrichment — that means zero cost to us, which is why we can charge £49 once instead of $15/month forever.
+Recall is local-first. Your data lives in a JSON file on your machine. We don't host it, we don't mine it, we don't lose it when we get acquired. You bring your own OpenAI/Anthropic key for AI enrichment — that means zero cost to us, which is why we can charge £49 once instead of $15/month forever.
 
-The knowledge graph is my favourite feature. I saved a Rust video, a Reddit thread on memory safety, and a tweet from a systems engineer. Saved Brain connected all three. I didn't know I was building a learning path.
+The knowledge graph is my favourite feature. I saved a Rust video, a Reddit thread on memory safety, and a tweet from a systems engineer. Recall connected all three. I didn't know I was building a learning path.
 
 Happy to answer questions. Fire away.
 
@@ -55,7 +55,7 @@ Thanks for the upvotes everyone. A few questions coming in about the LLM key —
 
 ### Comment 2 (Maker, responding to "how is this different from Pocket?")
 
-Great question. Pocket is a read-later app — you save articles, you read them later. Saved Brain is a knowledge base for everything you've already saved across every platform. The semantic search and knowledge graph are the difference: Pocket can't connect your Instagram save to your Reddit thread to your YouTube video. Saved Brain can.
+Great question. Pocket is a read-later app — you save articles, you read them later. Recall is a knowledge base for everything you've already saved across every platform. The semantic search and knowledge graph are the difference: Pocket can't connect your Instagram save to your Reddit thread to your YouTube video. Recall can.
 
 ### Comment 3 (Maker, responding to "is it really local-first?")
 

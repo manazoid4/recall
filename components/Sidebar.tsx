@@ -61,7 +61,7 @@ export default function Sidebar() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow">
                 <Brain className="h-5 w-5 text-white" />
               </div>
-              <span className="text-lg font-bold text-ink">Saved Brain</span>
+              <span className="text-lg font-bold text-ink">Recall</span>
             </Link>
             <button
               onClick={() => setMobileOpen(false)}

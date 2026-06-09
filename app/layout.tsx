@@ -3,12 +3,12 @@ import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Saved Brain — Turn your saved posts into a searchable AI knowledge base',
+  title: 'Recall — Capture everything. Find anything. Think faster.',
   description:
-    'Pull everything you\'ve saved across Instagram, YouTube, X, TikTok, Reddit. AI-enrich it. Search by meaning. Share boards. Export to Obsidian.',
+    'Your AI-powered knowledge layer — save from social, capture with voice, find anything with semantic search.',
   openGraph: {
-    title: 'Saved Brain',
-    description: 'Turn your saved posts into a searchable AI knowledge base',
+    title: 'Recall',
+    description: 'Capture everything. Find anything. Think faster.',
     type: 'website',
   },
 };

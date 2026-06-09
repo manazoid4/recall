@@ -62,7 +62,7 @@ function itemToMarkdown(item: Record<string, unknown>): string {
     ...(summary ? [`## Summary`, ``, summary, ``] : []),
     ...(rawData ? [`## Raw Content`, ``, rawData, ``] : []),
     `---`,
-    `*Exported from Saved Brain*`,
+    `*Exported from Recall*`,
   ].join('\n');
 
   return body;

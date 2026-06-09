@@ -4,7 +4,7 @@ import '../globals.css';
 import Sidebar from '@/components/Sidebar';
 
 export const metadata: Metadata = {
-  title: 'Saved Brain — Your Knowledge Base',
+  title: 'Recall — Your Knowledge Base',
   description: 'Search, organize, and enrich your saved content.',
 };
 

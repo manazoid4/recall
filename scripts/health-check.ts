@@ -143,7 +143,7 @@ function checkApiRoutes(): void {
 
 // Main execution
 async function main(): Promise<void> {
-  console.log('🧠 Saved Brain - Health Check\n')
+  console.log('🧠 Recall - Health Check\n')
   console.log('Checking environment variables...')
   checkEnvVars()
   console.log('Checking TypeScript...')

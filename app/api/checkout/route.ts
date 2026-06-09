@@ -51,9 +51,9 @@ export async function POST(_request: NextRequest) {
             },
             product_options: {
               redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://saved-brain.vercel.app'}/library?upgrade=success`,
-              receipt_button_text: 'Go to your Saved Brain',
+              receipt_button_text: 'Go to your Recall',
               receipt_link_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://saved-brain.vercel.app'}/library`,
-              receipt_thank_you_note: 'Thanks for upgrading to Saved Brain Pro! Your lifetime access is now active.',
+              receipt_thank_you_note: 'Thanks for upgrading to Recall Pro! Your lifetime access is now active.',
             },
           },
           relationships: {

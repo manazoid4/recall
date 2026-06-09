@@ -1,6 +1,6 @@
 # Launch Checklist
 
-A comprehensive pre-launch checklist for Saved Brain. Run through each section before deployment.
+A comprehensive pre-launch checklist for Recall. Run through each section before deployment.
 
 ---
 

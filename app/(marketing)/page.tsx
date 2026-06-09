@@ -64,7 +64,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-5xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-panel px-4 py-1.5 text-sm text-muted">
             <Brain className="h-4 w-4 text-yellow" />
-            <span>Your second brain is ready</span>
+            <span>Your AI knowledge layer is ready</span>
           </div>
           <h1 className="text-5xl font-black leading-tight tracking-tight text-ink sm:text-6xl lg:text-7xl">
             Everything you&apos;ve saved.
@@ -73,7 +73,7 @@ export default function LandingPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-xl text-muted">
             You&apos;ve saved thousands of posts across platforms. Most you&apos;ll never see again.
-            Saved Brain pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
+            Recall pulls them together, enriches them with AI, and makes them findable by meaning — not just keywords.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
@@ -172,7 +172,7 @@ export default function LandingPage() {
             href="/onboarding"
             className="mt-8 inline-flex items-center gap-2 rounded-xl bg-yellow px-8 py-4 text-lg font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-orange"
           >
-            Start Building Your Brain
+            Start Using Recall
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
@@ -183,14 +183,14 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-yellow" />
-            <span className="font-bold text-ink">Saved Brain</span>
+            <span className="font-bold text-ink">Recall</span>
           </div>
           <div className="flex gap-6 text-sm text-muted">
             <Link href="/pricing" className="hover:text-ink">Pricing</Link>
             <Link href="/privacy" className="hover:text-ink">Privacy</Link>
             <Link href="/terms" className="hover:text-ink">Terms</Link>
           </div>
-          <p className="text-sm text-muted">© 2026 Saved Brain</p>
+          <p className="text-sm text-muted">© 2026 Recall</p>
         </div>
       </footer>
     </div>

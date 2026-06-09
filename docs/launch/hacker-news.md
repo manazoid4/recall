@@ -1,10 +1,10 @@
-# Hacker News "Show HN" Launch Post — Saved Brain
+# Hacker News "Show HN" Launch Post — Recall
 
 ---
 
 ## Title
 
-Show HN: Saved Brain — AI-enriched knowledge base for everything you've saved
+Show HN: Recall — AI-enriched knowledge base for everything you've saved
 
 ---
 
@@ -12,7 +12,7 @@ Show HN: Saved Brain — AI-enriched knowledge base for everything you've saved
 
 I've saved thousands of posts across Instagram, YouTube, X, TikTok, Reddit. I never found any of them again.
 
-So I built Saved Brain — a local-first app that pulls your saved content together, enriches it with AI, and makes it searchable by meaning, not just keywords.
+So I built Recall — a local-first app that pulls your saved content together, enriches it with AI, and makes it searchable by meaning, not just keywords.
 
 **What it does:**
 - Import from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more
@@ -39,7 +39,7 @@ Would love feedback from anyone else drowning in saved posts they can't find.
 
 ### Response to "Why not just use bookmarks?"
 
-Bookmarks save URLs. They don't tell you what's inside, they don't connect related content across platforms, and they don't let you search by meaning. Saved Brain extracts the actual content, summarises it, tags it, and builds a graph of connections. A bookmark is a pointer. Saved Brain is a library.
+Bookmarks save URLs. They don't tell you what's inside, they don't connect related content across platforms, and they don't let you search by meaning. Recall extracts the actual content, summarises it, tags it, and builds a graph of connections. A bookmark is a pointer. Recall is a library.
 
 ### Response to "£49 is steep for a side project"
 
@@ -70,6 +70,6 @@ Your data lives in a JSON file on your machine. The app runs locally. The only e
 
 ## Backup Title Options
 
-1. Show HN: Saved Brain — local-first AI knowledge base for your saved posts
+1. Show HN: Recall — local-first AI knowledge base for your saved posts
 2. Show HN: I built a searchable brain for everything I've saved across social media
-3. Show HN: Saved Brain — semantic search for your Instagram, Reddit, YouTube saves
+3. Show HN: Recall — semantic search for your Instagram, Reddit, YouTube saves

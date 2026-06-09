@@ -11,7 +11,7 @@ export default function PrivacyPage() {
         <div className="mx-auto max-w-4xl px-4 py-4">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
             <ArrowLeft className="h-4 w-4" />
-            Back to Saved Brain
+            Back to Recall
           </Link>
         </div>
       </header>
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold">Contact</h2>
             <p className="mt-2 text-muted">
-              Questions? Email us at hello@saved-brain.app
+              Questions? Email us at hello@userecall.app
             </p>
           </section>
         </div>

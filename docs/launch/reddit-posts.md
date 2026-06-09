@@ -1,4 +1,4 @@
-# Reddit Launch Posts — Saved Brain
+# Reddit Launch Posts — Recall
 
 ---
 
@@ -12,7 +12,7 @@ I built an app that actually finds your saved posts across all platforms — sem
 
 I've got 2,000+ saved posts across Instagram, YouTube, X, TikTok, Reddit. I never found any of them again.
 
-So I built Saved Brain. It pulls your saved content from every platform into one place, enriches it with AI, and makes it searchable by meaning — not just keywords.
+So I built Recall. It pulls your saved content from every platform into one place, enriches it with AI, and makes it searchable by meaning — not just keywords.
 
 **What that means in practice:**
 - Type "that video about Mars colonization" → find the Elon tweet from February
@@ -36,13 +36,13 @@ GitHub: https://github.com/manazoid4/saved-brain
 
 ### Title
 
-Saved Brain — local-first AI knowledge base for your saved posts. JSON storage, BYO LLM key, £49 lifetime.
+Recall — local-first AI knowledge base for your saved posts. JSON storage, BYO LLM key, £49 lifetime.
 
 ### Body
 
 Self-hosters, this one's for you.
 
-Saved Brain is a local-first app that turns your saved posts (Instagram, YouTube, X, TikTok, Reddit, Pocket) into a searchable, AI-enriched knowledge base.
+Recall is a local-first app that turns your saved posts (Instagram, YouTube, X, TikTok, Reddit, Pocket) into a searchable, AI-enriched knowledge base.
 
 **Why it's self-hoster friendly:**
 - Data lives in a JSON file on your machine. No database server required.
@@ -109,7 +109,7 @@ GitHub: https://github.com/manazoid4/saved-brain
 
 **The problem:** I had 2,000+ saved posts across five platforms. Couldn't find anything.
 
-**The solution:** Saved Brain — pulls saved content together, AI-enriches it, makes it searchable by meaning.
+**The solution:** Recall — pulls saved content together, AI-enriches it, makes it searchable by meaning.
 
 **Key features:**
 - Semantic search ("that video about Mars colonization" → finds the Elon tweet)
@@ -148,7 +148,7 @@ Happy to answer questions about the build, pricing model, or launch strategy.
 
 ### "How is this different from Notion?"
 
-Notion is a general-purpose workspace. Saved Brain is purpose-built for saved social media content. The semantic search understands "that video about Mars colonization" — Notion's search doesn't. The knowledge graph auto-connects related saves — Notion requires manual linking. And Saved Brain is local-first with JSON storage, not cloud-dependent.
+Notion is a general-purpose workspace. Recall is purpose-built for saved social media content. The semantic search understands "that video about Mars colonization" — Notion's search doesn't. The knowledge graph auto-connects related saves — Notion requires manual linking. And Recall is local-first with JSON storage, not cloud-dependent.
 
 ### "Why do I need to pay if it's open source?"
 

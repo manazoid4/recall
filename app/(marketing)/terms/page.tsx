@@ -11,7 +11,7 @@ export default function TermsPage() {
         <div className="mx-auto max-w-4xl px-4 py-4">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
             <ArrowLeft className="h-4 w-4" />
-            Back to Saved Brain
+            Back to Recall
           </Link>
         </div>
       </header>
@@ -31,7 +31,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold">1. Service Description</h2>
             <p className="mt-2 text-muted">
-              Saved Brain is a content aggregation and knowledge management tool. You can save URLs,
+              Recall is a content aggregation and knowledge management tool. You can save URLs,
               import bookmarks, and use AI to enrich and search your content. The service is provided
               &quot;as is&quot; with no warranties.
             </p>
@@ -81,7 +81,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold">7. Contact</h2>
             <p className="mt-2 text-muted">
-              Questions? Email us at hello@saved-brain.app
+              Questions? Email us at hello@userecall.app
             </p>
           </section>
         </div>

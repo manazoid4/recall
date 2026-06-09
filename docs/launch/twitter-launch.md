@@ -1,4 +1,4 @@
-# Twitter/X Launch Thread — Saved Brain
+# Twitter/X Launch Thread — Recall
 
 ---
 
@@ -25,7 +25,7 @@ I built something to fix that. 🧵
 
 ## Tweet 2 (The Product)
 
-Saved Brain pulls all your saved content into one place.
+Recall pulls all your saved content into one place.
 
 AI enriches it with summaries, tags, and entities.
 
@@ -41,7 +41,7 @@ My favourite feature: the knowledge graph.
 
 I saved a Rust video, a Reddit thread on memory safety, and a tweet from a systems engineer.
 
-Saved Brain connected all three.
+Recall connected all three.
 
 I didn't know I was building a learning path on systems programming.
 
@@ -178,4 +178,4 @@ A: Not yet. It's a web app (Next.js) so it works on mobile browsers. Native apps
 - **Day 1 (Launch day)**: Post full thread at 09:00 GMT
 - **Day 2**: Pin the thread, post standalone tweet with knowledge graph screenshot
 - **Day 3**: Quote-tweet thread with "24 hours later: [number] signups, [number] GitHub stars"
-- **Day 7**: Follow-up thread: "7 things I learned launching Saved Brain"
+- **Day 7**: Follow-up thread: "7 things I learned launching Recall"

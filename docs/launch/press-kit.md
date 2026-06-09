@@ -1,4 +1,4 @@
-# Press Kit — Saved Brain
+# Press Kit — Recall
 
 ---
 
@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **Product** | Saved Brain |
+| **Product** | Recall |
 | **Tagline** | Everything you've saved. Finally searchable. |
 | **What it does** | AI-enriched knowledge base for saved social media posts |
 | **Launch date** | [Date] |
@@ -30,7 +30,7 @@ The average knowledge worker has saved content scattered across 5+ platforms —
 
 ### The Solution
 
-Saved Brain pulls saved content from every platform into a single, searchable knowledge base. AI enrichment generates summaries, tags, and extracts entities. Semantic search finds content by meaning — not just keywords. A knowledge graph surfaces connections between saves the user didn't know existed.
+Recall pulls saved content from every platform into a single, searchable knowledge base. AI enrichment generates summaries, tags, and extracts entities. Semantic search finds content by meaning — not just keywords. A knowledge graph surfaces connections between saves the user didn't know existed.
 
 ### The Differentiator
 
@@ -58,9 +58,9 @@ Saved Brain pulls saved content from every platform into a single, searchable kn
 
 ### From the Maker
 
-> "I built Saved Brain because I had 2,000 saved posts across five platforms and I couldn't find anything. I'd remember saving something about Rust memory safety, but was it on Reddit? YouTube? Twitter? Gone."
+> "I built Recall because I had 2,000 saved posts across five platforms and I couldn't find anything. I'd remember saving something about Rust memory safety, but was it on Reddit? YouTube? Twitter? Gone."
 
-> "The knowledge graph is my favourite feature. I saved a Rust video, a Reddit thread on memory safety, and a tweet from a systems engineer. Saved Brain connected all three. I didn't know I was building a learning path."
+> "The knowledge graph is my favourite feature. I saved a Rust video, a Reddit thread on memory safety, and a tweet from a systems engineer. Recall connected all three. I didn't know I was building a learning path."
 
 > "We're not building a subscription farm. You pay once, you own it. No surprise price hikes, no feature gating. Bring your own LLM key means zero inference cost to us — that's why we can charge £49 once instead of $15 a month forever."
 
@@ -101,7 +101,7 @@ Saved Brain pulls saved content from every platform into a single, searchable kn
 
 ### Logo
 
-- **Primary:** Brain icon + "Saved Brain" wordmark
+- **Primary:** Brain icon + "Recall" wordmark
 - **Icon only:** Brain icon (for favicon, app icon, social avatars)
 - **Formats:** SVG, PNG (512x512, 1024x1024)
 - **Colours:** [Primary colour], [Secondary colour]
@@ -133,7 +133,7 @@ Saved Brain pulls saved content from every platform into a single, searchable kn
 
 ## About the Maker
 
-[Your name] is a solo developer building tools for knowledge workers. Saved Brain was born from a personal frustration — thousands of saved posts across platforms, none of them findable. The project is open source (MIT) and funded by lifetime purchases, not venture capital.
+[Your name] is a solo developer building tools for knowledge workers. Recall was born from a personal frustration — thousands of saved posts across platforms, none of them findable. The project is open source (MIT) and funded by lifetime purchases, not venture capital.
 
 **Previous projects:** [If applicable]
 **Location:** [City, Country]
@@ -145,32 +145,32 @@ Saved Brain pulls saved content from every platform into a single, searchable kn
 
 ### Angle 1: The Anti-Subscription
 
-In an era of $15/month SaaS tools, Saved Brain charges £49 once. The "bring your own LLM key" model is a genuine alternative to the subscription treadmill. Profile the maker's philosophy on sustainable pricing.
+In an era of $15/month SaaS tools, Recall charges £49 once. The "bring your own LLM key" model is a genuine alternative to the subscription treadmill. Profile the maker's philosophy on sustainable pricing.
 
 ### Angle 2: Local-First Renaissance
 
-Saved Brain stores everything in local JSON files. No cloud required. No data breaches possible. No vendor lock-in. Part of a growing movement of local-first software that puts user control above convenience.
+Recall stores everything in local JSON files. No cloud required. No data breaches possible. No vendor lock-in. Part of a growing movement of local-first software that puts user control above convenience.
 
 ### Angle 3: The Knowledge Graph for Everyone
 
-Knowledge graphs have been enterprise tools for years. Saved Brain brings them to personal content — connecting your Instagram saves to your Reddit threads to your YouTube videos. The "learning path you didn't know you were building."
+Knowledge graphs have been enterprise tools for years. Recall brings them to personal content — connecting your Instagram saves to your Reddit threads to your YouTube videos. The "learning path you didn't know you were building."
 
 ### Angle 4: Solo Dev Speed
 
-One person, one month, one product. Saved Brain is a case study in shipping fast with modern tools (Next.js 14, Tailwind, TypeScript) and listening to users from day one.
+One person, one month, one product. Recall is a case study in shipping fast with modern tools (Next.js 14, Tailwind, TypeScript) and listening to users from day one.
 
 ---
 
 ## Boilerplate
 
 **Short (50 words):**
-Saved Brain is an AI-enriched knowledge base for saved social media posts. It pulls content from Instagram, YouTube, X, TikTok, Reddit, and more, then makes it searchable by meaning — not just keywords. Local-first, open source, and £49 lifetime.
+Recall is an AI-enriched knowledge base for saved social media posts. It pulls content from Instagram, YouTube, X, TikTok, Reddit, and more, then makes it searchable by meaning — not just keywords. Local-first, open source, and £49 lifetime.
 
 **Medium (100 words):**
-Saved Brain turns scattered saved posts into a searchable knowledge base. Import from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more. AI enrichment generates summaries, tags, and entities. Semantic search finds content by meaning. A knowledge graph surfaces hidden connections. Your data stays local in JSON files. Built with Next.js 14, React, Tailwind, and TypeScript. Open source (MIT). £49 lifetime, no subscriptions.
+Recall turns scattered saved posts into a searchable knowledge base. Import from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more. AI enrichment generates summaries, tags, and entities. Semantic search finds content by meaning. A knowledge graph surfaces hidden connections. Your data stays local in JSON files. Built with Next.js 14, React, Tailwind, and TypeScript. Open source (MIT). £49 lifetime, no subscriptions.
 
 **Long (150 words):**
-Saved Brain is an AI-enriched knowledge base for everything you've saved across social media. Import from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more. AI generates summaries, tags, and extracts entities (bring your own LLM key). Semantic search finds content by meaning — type "that video about Mars colonization" and find the Elon tweet from February. A knowledge graph surfaces connections between saves you didn't know existed. Organise into shareable boards. Export to Obsidian markdown. Chrome extension auto-syncs from Instagram and X. Your data stays on your machine in JSON files — no cloud lock-in. Built with Next.js 14, React, Tailwind, and TypeScript. Open source under MIT license. £49 lifetime, no subscriptions, no feature gates.
+Recall is an AI-enriched knowledge base for everything you've saved across social media. Import from Instagram, YouTube, X, TikTok, Reddit, Pocket, and more. AI generates summaries, tags, and extracts entities (bring your own LLM key). Semantic search finds content by meaning — type "that video about Mars colonization" and find the Elon tweet from February. A knowledge graph surfaces connections between saves you didn't know existed. Organise into shareable boards. Export to Obsidian markdown. Chrome extension auto-syncs from Instagram and X. Your data stays on your machine in JSON files — no cloud lock-in. Built with Next.js 14, React, Tailwind, and TypeScript. Open source under MIT license. £49 lifetime, no subscriptions, no feature gates.
 
 ---
 

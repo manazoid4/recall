@@ -145,7 +145,7 @@ export default function BoardDetailPage() {
       <div className="mt-12 rounded-xl border border-line bg-panel px-6 py-8 text-center">
         <div className="flex items-center justify-center gap-2 text-yellow">
           <Brain className="h-5 w-5" />
-          <span className="font-bold text-ink">Built with Saved Brain</span>
+          <span className="font-bold text-ink">Built with Recall</span>
         </div>
         <p className="mt-2 text-sm text-muted">
           Turn everything you save on Instagram, X, and TikTok into a searchable, AI-enriched knowledge base.

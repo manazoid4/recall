@@ -1,7 +1,7 @@
 {
   "name": "saved-brain",
   "version": "1.0.0",
-  "description": "Turn everything you've saved into a searchable, AI-enriched knowledge base",
+  "description": "Your AI-powered knowledge layer — save from social, capture with voice, find anything with semantic search.",
   "private": true,
   "author": "manazoid4",
   "license": "MIT",
