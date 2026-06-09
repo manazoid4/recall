@@ -26,7 +26,7 @@ const SECRET_KEYS = new Set([
   'clerk_webhook_secret',
 ]);
 
-// Allowlist of keys that can be set via POST (non-secret settings only)
+// Allowlist of keys that can be set via POST
 const ALLOWED_KEYS = new Set([
   'theme',
   'language',
@@ -39,6 +39,10 @@ const ALLOWED_KEYS = new Set([
   'sync_sources',
   'ollama_url',
   'ollama_model',
+  'ollama_api_key',
+  'llm_provider',
+  'llm_model',
+  'llm_api_key',
   'default_provider',
   'default_model',
   'temperature',
@@ -89,8 +93,8 @@ export async function POST(request: NextRequest) {
   const { userId } = await auth();
   const body = await request.json();
   for (const [key, value] of Object.entries(body)) {
-    // Only allow setting non-secret, allowlisted keys
-    if (ALLOWED_KEYS.has(key) && !isSecretKey(key)) {
+    // Allow allowlisted keys — secrets are encrypted at rest by setSetting
+    if (ALLOWED_KEYS.has(key)) {
       await setSetting(key, String(value), userId || undefined);
     }
   }

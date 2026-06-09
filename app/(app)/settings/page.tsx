@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings as SettingsIcon, Loader2, Check, Save, Key, Trash2, Sparkles } from 'lucide-react';
+import { Settings as SettingsIcon, Loader2, Check, Save, Key, Trash2, Sparkles, Puzzle } from 'lucide-react';
+import Link from 'next/link';
 import { PROVIDERS } from '@/lib/types';
 
 export default function SettingsPage() {
@@ -180,6 +181,24 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Chrome Extension */}
+      <div className="rounded-xl border border-line bg-panel p-6">
+        <div className="mb-4 flex items-center gap-2">
+          <Puzzle className="h-5 w-5 text-yellow" />
+          <h2 className="text-lg font-bold text-ink">Chrome Extension</h2>
+        </div>
+        <p className="mb-4 text-sm text-muted">
+          Save Instagram and Twitter bookmarks directly from your browser.
+        </p>
+        <Link
+          href="/connect-extension"
+          className="inline-flex items-center gap-2 rounded-lg bg-yellow px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange"
+        >
+          <Puzzle className="h-4 w-4" />
+          Connect Chrome Extension
+        </Link>
       </div>
 
       {/* Actions */}
