@@ -1,16 +1,23 @@
 import { getDb } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
-
 import { auth } from '@clerk/nextjs/server';
+import { githubStarsSchema } from '@/lib/schemas';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function GET(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const { searchParams } = new URL(request.url);
   const username = searchParams.get('username');
   const token = searchParams.get('token');
 
-  if (!username) {
-    return NextResponse.json({ error: 'GitHub username required' }, { status: 400 });
+  if (!username || !/^[a-zA-Z0-9]([a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/.test(username)) {
+    return NextResponse.json({ error: 'Valid GitHub username required' }, { status: 400 });
   }
 
   try {
@@ -75,13 +82,24 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const rateLimitResult = rateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const db = getDb();
   const body = await request.json();
-  const { username, token } = body;
 
-  if (!username) {
-    return NextResponse.json({ error: 'GitHub username required' }, { status: 400 });
+  const validated = githubStarsSchema.safeParse(body);
+  if (!validated.success) {
+    return NextResponse.json({ error: 'Invalid request', details: validated.error.flatten() }, { status: 400 });
+  }
+  const { username, token } = validated.data;
+
+  if (!/^[a-zA-Z0-9]([a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/.test(username)) {
+    return NextResponse.json({ error: 'Invalid GitHub username format' }, { status: 400 });
   }
 
   try {
