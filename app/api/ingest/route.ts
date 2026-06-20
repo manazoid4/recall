@@ -5,6 +5,11 @@ import { auth } from '@clerk/nextjs/server';
 import { ingestSchema } from '@/lib/schemas';
 import { rateLimit } from '@/lib/rate-limit';
 import { verifyExtensionToken } from '@/lib/extension-token';
+import {
+  normalizeSocialIngestion,
+  serializeIngestionMetadata,
+  serializeRawMetadata,
+} from '@/lib/social-ingestion';
 
 export async function POST(request: NextRequest) {
   const rateLimitResult = rateLimit(request);
@@ -24,7 +29,10 @@ export async function POST(request: NextRequest) {
     userId = session.userId;
   }
 
-  const db = getDb();
+  if (!userId) {
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+
   const body = await request.json();
 
   const validated = ingestSchema.safeParse(body);
@@ -33,40 +41,58 @@ export async function POST(request: NextRequest) {
   }
 
   const items = validated.data;
+  const db = getDb();
   let ingested = 0;
   let skipped = 0;
+  const acceptedIds: string[] = [];
+  const failedIds: string[] = [];
 
   const insertStmt = db.prepare(
     `INSERT INTO saved_items (id, url, title, author, saved_at, platform, raw_data, owner_id)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-     ON CONFLICT(url) DO UPDATE SET
+     ON CONFLICT(url, owner_id) DO UPDATE SET
        title = COALESCE(excluded.title, saved_items.title),
+       author = COALESCE(excluded.author, saved_items.author),
+       saved_at = COALESCE(excluded.saved_at, saved_items.saved_at),
+       platform = COALESCE(excluded.platform, saved_items.platform),
+       raw_data = excluded.raw_data,
        updated_at = datetime('now')`
   );
 
   for (const item of items) {
-    const id = item.id || uuid();
+    const queueId = item.id || uuid();
 
     try {
+      const platform = item.source || item.platform || 'manual';
+      const normalized = platform === 'instagram'
+        ? normalizeSocialIngestion(item)
+        : null;
+      const url = normalized?.url ?? item.url;
+      const rawData = normalized
+        ? serializeIngestionMetadata(normalized)
+        : serializeRawMetadata(item.rawData);
       const result = await insertStmt.run(
-        id,
-        item.url,
+        uuid(),
+        url,
         item.title || null,
         item.author || null,
         item.timestamp || item.savedAt || new Date().toISOString(),
-        item.source || item.platform || 'manual',
-        item.rawData || null,
-        userId || null
+        platform,
+        rawData,
+        userId
       );
       if (result.changes > 0) {
         ingested++;
+        acceptedIds.push(queueId);
       } else {
         skipped++;
+        failedIds.push(queueId);
       }
     } catch {
       skipped++;
+      failedIds.push(queueId);
     }
   }
 
-  return NextResponse.json({ ingested, skipped });
+  return NextResponse.json({ ingested, skipped, acceptedIds, failedIds });
 }

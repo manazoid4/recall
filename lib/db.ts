@@ -149,7 +149,7 @@ function getSQLiteDb(): DbInterface {
     CREATE TABLE IF NOT EXISTS saved_items (
       id TEXT PRIMARY KEY,
       source_id TEXT,
-      url TEXT NOT NULL UNIQUE,
+      url TEXT NOT NULL,
       title TEXT,
       author TEXT,
       saved_at TEXT,
@@ -157,7 +157,8 @@ function getSQLiteDb(): DbInterface {
       raw_data TEXT,
       owner_id TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(url, owner_id)
     );
     CREATE TABLE IF NOT EXISTS enrichments (
       id TEXT PRIMARY KEY,

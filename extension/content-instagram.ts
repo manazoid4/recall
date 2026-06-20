@@ -1,4 +1,5 @@
 import type { SavedItem, ScrapeMessage } from "./types";
+import { buildInstagramRecord } from "./social-record";
 
 const SESSION_KEY = "saved-brain-instagram-session";
 const MAX_ITEMS_PER_BATCH = 50;
@@ -15,29 +16,29 @@ function extractSavedItems(): SavedItem[] {
     if (!href || seen.has(href)) continue;
     seen.add(href);
 
-    const url = href.startsWith("/")
-      ? `https://www.instagram.com${href}`
-      : href;
-
     const article = anchor.closest("article") || anchor.closest("div[role]");
     const img = article?.querySelector("img") ?? anchor.querySelector("img");
     const thumbnailUrl = img?.getAttribute("src") ?? null;
+    const caption = img?.getAttribute("alt") ?? article?.getAttribute("aria-label") ?? null;
 
     const timeEl = article?.querySelector("time") ?? anchor.closest("article")?.querySelector("time");
     const timestamp = timeEl?.getAttribute("datetime") ?? null;
 
-    const id = href.split("/").filter(Boolean).find((s) => s.startsWith("C") || /^\d+$/.test(s)) ?? href;
+    const authorLink = article?.querySelector<HTMLAnchorElement>('a[href^="/"][href$="/"]');
+    const author = authorLink?.textContent ?? authorLink?.getAttribute("href")?.split("/").filter(Boolean)[0] ?? null;
 
-    items.push({
-      id,
-      url,
-      source: "instagram",
-      title: null,
-      author: null,
-      timestamp,
-      thumbnailUrl,
-      scrapedAt: new Date().toISOString(),
-    });
+    try {
+      items.push(buildInstagramRecord({
+        href,
+        caption,
+        author,
+        timestamp,
+        thumbnailUrl,
+        accessClass: "user_session_visible",
+      }));
+    } catch {
+      continue;
+    }
 
     if (items.length >= MAX_ITEMS_PER_BATCH) break;
   }

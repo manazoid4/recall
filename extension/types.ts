@@ -1,3 +1,15 @@
+export type AccessClass = "public" | "user_session_visible";
+
+export interface SocialProvenance {
+  schemaVersion: 1;
+  platform: "instagram";
+  platformItemId: string;
+  sourceUrl: string;
+  capturedAt: string;
+  captureMethod: "browser_extension";
+  accessClass: AccessClass;
+}
+
 export interface SavedItem {
   id: string;
   url: string;
@@ -7,6 +19,8 @@ export interface SavedItem {
   timestamp: string | null;
   thumbnailUrl: string | null;
   scrapedAt: string;
+  provenance?: SocialProvenance;
+  rawData?: Record<string, unknown>;
 }
 
 export interface SyncConfig {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { checkEntitlements } from '../lib/entitlements';
-import { encrypt, decrypt, isEncrypted } from '../lib/encryption';
-import { cosineSimilarity } from '../lib/semantic-search';
+import { checkEntitlements } from '../../lib/entitlements';
+import { encrypt, decrypt, isEncrypted } from '../../lib/encryption';
+import { cosineSimilarity } from '../../lib/semantic-search';
 
 describe('Encryption', () => {
   it('should encrypt and decrypt a string', () => {
