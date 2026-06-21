@@ -3,6 +3,8 @@
 import { useState, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Upload, Link as LinkIcon, FileJson, Loader2, Check, AlertCircle, Github } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import InstagramPublicImport from '@/components/InstagramPublicImport';
 
 export default function UploadPage() {
   return (
@@ -16,7 +18,7 @@ function UploadContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [mode, setMode] = useState<'select' | 'file' | 'url' | 'paste' | 'github'>(
+  const [mode, setMode] = useState<'select' | 'file' | 'url' | 'paste' | 'github' | 'instagram'>(
     searchParams.get('url') ? 'url' : 'select'
   );
   const [uploading, setUploading] = useState(false);
@@ -189,6 +191,21 @@ function UploadContent() {
       {mode === 'select' && (
         <div className="space-y-3">
           <button
+            onClick={() => setMode('instagram')}
+            className="flex w-full items-center gap-4 border-2 border-ink bg-panel p-6 text-left shadow-[4px_4px_0_hsl(var(--ink))] transition-transform hover:-translate-y-0.5"
+          >
+            <div className="flex h-12 w-12 items-center justify-center border-2 border-ink bg-pink-500 text-white">
+              <Instagram className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="font-black text-ink">Import a public Instagram account</div>
+              <div className="text-sm text-muted">
+                Preview and select posts from a public Business or Creator account
+              </div>
+            </div>
+          </button>
+
+          <button
             onClick={() => setMode('file')}
             className="flex w-full items-center gap-4 rounded-xl border border-line bg-panel p-6 text-left transition-all hover:border-yellow/50 hover:shadow-sm"
           >
@@ -240,6 +257,16 @@ function UploadContent() {
             </div>
           </button>
         </div>
+      )}
+
+      {mode === 'instagram' && (
+        <InstagramPublicImport
+          onBack={() => setMode('select')}
+          onImported={(message) => {
+            setSuccess(message);
+            setTimeout(() => router.push('/library'), 2000);
+          }}
+        />
       )}
 
       {mode === 'file' && (
