@@ -26,19 +26,25 @@
 **Files:**
 - Create: `app/(app)/router/page.tsx`
 - Modify: `components/Sidebar.tsx`
+- Modify: `middleware.ts`
 
 - [ ] Build the form using the routing module and existing semantic tokens.
 - [ ] Add browser-only draft persistence with guarded storage access.
 - [ ] Add accessible copy controls and inline validation.
 - [ ] Add the Router navigation entry and verify active-route behavior.
+- [ ] Protect `/router` through the existing authentication route matcher.
 - [ ] Run `npx tsc --noEmit`.
 
-### Task 3: Product metadata
+### Task 3: Revenue journey and product metadata
 
 **Files:**
+- Modify: `app/(marketing)/page.tsx`
+- Modify: `app/(marketing)/pricing/page.tsx`
 - Modify: `README.md`
 - Modify: `package.json`
 
+- [ ] Surface the working Router from the landing page without displacing Recall's creative-intelligence promise.
+- [ ] Replace dead pilot CTAs with a working pre-addressed enquiry link and state the £500 credited pilot offer.
 - [ ] Replace stale Saved Brain and consumer-second-brain language with concise Recall Signals positioning.
 - [ ] Correct repository metadata to `manazoid4/recall`.
 - [ ] Include Execution Router in the feature list without claiming agent execution or team persistence.

@@ -20,6 +20,18 @@ The first release must produce something immediately useful without requiring mo
    - one complete, copyable prompt per agent.
 6. The latest input is retained in browser storage for the same browser.
 
+## Revenue path
+
+The Router is a product-led acquisition surface:
+
+- the landing page promotes a concrete working outcome: route the next client brief;
+- the free authenticated workspace proves the workflow before a sales conversation;
+- generated plans end with a clearly labelled founding-pilot offer;
+- pricing links to a working pre-addressed email enquiry rather than a dead or misleading checkout;
+- the pilot is £500 for four weeks and is credited against the first three paid months after conversion.
+
+The page may describe shared routing history, reusable agency templates, permissions, and outcome tracking as paid-plan capabilities only when marked **Agency pilot** or **Coming next**.
+
 ## Routing model
 
 Routing is deterministic and transparent.
@@ -37,6 +49,8 @@ The generated plan orders research and design work before implementation, and im
 - `lib/execution-router.ts` contains all domain types, scoring, ordering, and prompt generation.
 - `app/(app)/router/page.tsx` is a small client boundary for form state, browser persistence, clipboard actions, and rendering.
 - `components/Sidebar.tsx` gains a Router navigation entry.
+- `app/(marketing)/page.tsx` surfaces the Router as the strongest product demonstration.
+- `app/(marketing)/pricing/page.tsx` uses a working pilot enquiry path.
 - `tests/unit/execution-router.test.ts` proves routing, fallback, ordering, and prompt completeness.
 
 No API route, database table, dependency, or AI provider is added.
@@ -88,4 +102,5 @@ The interface includes:
 - Generated prompts include objective, owned tasks, dependencies, boundaries, verification, and handoff expectations.
 - The page works on mobile and desktop with keyboard navigation.
 - Inputs are not transmitted to the server.
+- Landing and pricing pages provide working routes into the feature and pilot enquiry.
 - Unit tests, type checking, lint, and production build pass.
