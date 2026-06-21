@@ -10,6 +10,7 @@ import {
   Shield,
   Sparkles,
   Upload,
+  Route,
 } from 'lucide-react';
 
 const workflow = [
@@ -76,6 +77,9 @@ export default function LandingPage() {
             <span className="text-sm font-bold tracking-tight text-ink">Recall Signals</span>
           </Link>
           <nav className="flex items-center gap-3 sm:gap-6">
+            <Link href="/router" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
+              Router
+            </Link>
             <Link href="/pricing" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
               Pricing
             </Link>
@@ -186,6 +190,47 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section className="px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-6xl overflow-hidden border-2 border-ink bg-panel shadow-[8px_8px_0_hsl(var(--ink))] lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="border-b-2 border-ink bg-yellow p-8 text-white lg:border-b-0 lg:border-r-2 lg:p-12">
+              <div className="flex h-12 w-12 items-center justify-center border-2 border-white">
+                <Route className="h-6 w-6" />
+              </div>
+              <p className="mt-8 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/75">
+                Working now
+              </p>
+              <h2 className="mt-3 text-balance text-4xl font-black leading-none tracking-[-0.04em]">
+                Route the insight into action.
+              </h2>
+              <p className="mt-5 text-base leading-relaxed text-white/80">
+                Turn a client objective into an ordered execution plan with clear ownership,
+                dependencies, verification, and complete prompts for Claude, Codex, and OpenCode.
+              </p>
+              <Link
+                href="/router"
+                className="mt-8 inline-flex min-h-12 items-center gap-2 border-2 border-white bg-ink px-6 text-sm font-black text-white hover:bg-white hover:text-ink"
+              >
+                Route your next client brief
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid gap-px bg-line sm:grid-cols-2">
+              {[
+                ['01', 'Disjoint ownership', 'Give every task one accountable owner.'],
+                ['02', 'Dependency order', 'Research and design unblock implementation and QA.'],
+                ['03', 'Copy-ready prompts', 'Move from planning to execution without rewriting the brief.'],
+                ['04', 'Private by design', 'The first release routes work locally in your browser.'],
+              ].map(([number, title, copy]) => (
+                <article key={number} className="bg-panel p-7">
+                  <span className="font-mono text-xs font-black text-yellow">{number}</span>
+                  <h3 className="mt-5 text-xl font-black text-ink">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{copy}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="border-y border-line bg-panel px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -285,6 +330,7 @@ export default function LandingPage() {
             <span className="text-sm font-bold text-ink">Recall Signals</span>
           </div>
           <nav className="flex gap-5 text-sm text-muted">
+            <Link href="/router" className="transition-colors hover:text-ink">Router</Link>
             <Link href="/pricing" className="transition-colors hover:text-ink">Pricing</Link>
             <Link href="/privacy" className="transition-colors hover:text-ink">Privacy</Link>
             <Link href="/terms" className="transition-colors hover:text-ink">Terms</Link>

@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { ArrowRight, Brain, Check, Shield, Sparkles } from 'lucide-react';
 
+const pilotHref =
+  'mailto:hello@userecall.app?subject=Recall%20Founding%20Agency%20Pilot&body=Tell%20us%20about%20your%20agency%2C%20team%20size%2C%20and%20one%20client%20workflow%20you%20want%20to%20run%20through%20Recall.';
+
 const plans = [
   {
     name: 'Trial',
@@ -12,10 +15,11 @@ const plans = [
       'AI enrichment with your own model key',
       'Full-text search',
       '1 intelligence board',
+      'Execution Router',
       'Source-linked sharing',
     ],
-    cta: 'Build your first intelligence board',
-    href: '/onboarding',
+    cta: 'Route your first brief',
+    href: '/router',
     available: 'Available now',
   },
   {
@@ -29,9 +33,10 @@ const plans = [
       'Semantic search and knowledge graph',
       'Up to 5 team seats',
       'Shared workspace and collaborative boards',
+      'Shared routing templates and history',
     ],
     cta: 'Join the agency pilot',
-    href: '#pilot',
+    href: pilotHref,
     available: 'Pilot plan',
   },
   {
@@ -44,10 +49,11 @@ const plans = [
       'Up to 15 team seats',
       'Client-separated workspaces',
       'Automated cited brief exports',
+      'Client-scoped routing and approvals',
       'Priority pilot support',
     ],
     cta: 'Join the agency pilot',
-    href: '#pilot',
+    href: pilotHref,
     available: 'Pilot plan',
     featured: true,
   },
@@ -61,10 +67,11 @@ const plans = [
       'Up to 40 team seats',
       'Roles and permissions',
       'Workspace templates',
+      'Outcome tracking across client work',
       'Guided onboarding and roadmap access',
     ],
     cta: 'Join the agency pilot',
-    href: '#pilot',
+    href: pilotHref,
     available: 'Pilot plan',
   },
 ];
@@ -72,13 +79,16 @@ const plans = [
 const upcomingFeatures = new Set([
   'Up to 5 team seats',
   'Shared workspace and collaborative boards',
+  'Shared routing templates and history',
   'Up to 15 team seats',
   'Client-separated workspaces',
   'Automated cited brief exports',
+  'Client-scoped routing and approvals',
   'Priority pilot support',
   'Up to 40 team seats',
   'Roles and permissions',
   'Workspace templates',
+  'Outcome tracking across client work',
   'Guided onboarding and roadmap access',
 ]);
 
@@ -102,14 +112,14 @@ export default function PricingPage() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/onboarding"
+              href="/router"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow px-8 py-4 text-base font-black text-white transition-all hover:-translate-y-0.5 hover:bg-orange"
             >
-              Build your first intelligence board
+              Route your first client brief
               <ArrowRight className="h-5 w-5" />
             </Link>
             <a
-              href="#pilot"
+              href={pilotHref}
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-8 py-4 text-base font-bold text-white transition-colors hover:bg-white/10"
             >
               Join the agency pilot
@@ -225,16 +235,15 @@ export default function PricingPage() {
             Join before the team product is generally available.
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            Pilot agencies start with the live individual product, receive hands-on workflow
-            support, and help prioritize team workspaces, permissions, collaborative boards, and
-            cited brief exports. Paid team plans begin only when the agreed pilot workflow is
-            usable.
+            Four weeks, one real client workflow, up to five users, an initial corpus import, and a
+            source-backed intelligence board with cited recommendations. The £500 fee is credited
+            against the first three paid months after conversion.
           </p>
           <Link
-            href="/onboarding"
+            href={pilotHref}
             className="mt-8 inline-flex items-center gap-2 rounded-xl bg-yellow px-8 py-3.5 text-base font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-orange hover:shadow-glow-amber"
           >
-            Join the agency pilot
+            Apply for the £500 pilot
             <ArrowRight className="h-4 w-4" />
           </Link>
           <p className="mt-4 text-xs text-muted">

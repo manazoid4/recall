@@ -43,6 +43,9 @@ Thumbs.db
 
 # Database (keep structure, not data)
 data/*.json
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
 !data/.gitkeep
 
 # Chrome extension build
