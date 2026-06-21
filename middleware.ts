@@ -23,6 +23,7 @@ const isProtectedRoute = createRouteMatcher([
   '/api/settings(.*)',
   '/api/stats(.*)',
   '/api/github/stars(.*)',
+  '/api/instagram(.*)',
   '/api/license/verify(.*)',
 ]);
 
