@@ -3,11 +3,9 @@
 import { useState, useRef, useCallback } from 'react';
 import { Mic, MicOff, Loader2, Sparkles, Copy, Check, Save } from 'lucide-react';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 type SR = any;
 type SREvent = any;
 type SRErrorEvent = any;
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 interface VoiceCaptureProps {
   onSave?: (title: string, transcript: string, refined: string) => void;
@@ -28,7 +26,6 @@ export default function VoiceCapture({ onSave }: VoiceCaptureProps) {
   const recognitionRef = useRef<SR | null>(null);
 
   const startRecording = useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const w = window as any;
     const SR = w.SpeechRecognition || w.webkitSpeechRecognition;
 

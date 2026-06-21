@@ -20,13 +20,10 @@ export function getSupabaseClient() {
 }
 
 // SQLite instance (local dev only) — loaded dynamically to avoid native module issues on Vercel
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let _sqlite: any = null;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getSQLite(): any {
   if (_sqlite) return _sqlite;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const Database = require('better-sqlite3');
   const dbPath = process.env.SQLITE_PATH || path.join(process.cwd(), 'data', 'saved-brain.sqlite');
   _sqlite = new Database(dbPath);
@@ -149,7 +146,7 @@ function getSQLiteDb(): DbInterface {
     CREATE TABLE IF NOT EXISTS saved_items (
       id TEXT PRIMARY KEY,
       source_id TEXT,
-      url TEXT NOT NULL UNIQUE,
+      url TEXT NOT NULL,
       title TEXT,
       author TEXT,
       saved_at TEXT,
@@ -157,7 +154,8 @@ function getSQLiteDb(): DbInterface {
       raw_data TEXT,
       owner_id TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(url, owner_id)
     );
     CREATE TABLE IF NOT EXISTS enrichments (
       id TEXT PRIMARY KEY,

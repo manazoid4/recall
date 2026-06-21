@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { socialProvenanceSchema } from './social-ingestion';
 
 // Item schemas
 export const createItemSchema = z.object({
@@ -60,7 +61,24 @@ export const ingestSchema = z.array(
     savedAt: z.string().optional().nullable(),
     source: z.string().optional().nullable(),
     platform: z.string().optional().nullable(),
-    rawData: z.string().optional().nullable(),
+    rawData: z.unknown().optional().nullable(),
+    provenance: socialProvenanceSchema.optional(),
+  }).superRefine((item, ctx) => {
+    const platform = item.source ?? item.platform;
+    if (platform === 'instagram' && !item.provenance) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['provenance'],
+        message: 'Instagram ingestion requires provenance',
+      });
+    }
+    if (item.provenance && platform !== 'instagram') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['source'],
+        message: 'Social provenance platform must match the item source',
+      });
+    }
   })
 );
 

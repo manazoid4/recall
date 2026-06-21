@@ -1,19 +1,19 @@
 {
-  "name": "saved-brain",
+  "name": "recall-signals",
   "version": "1.0.0",
-  "description": "Your AI-powered knowledge layer — save from social, capture with voice, find anything with semantic search.",
+  "description": "Creative intelligence from the posts your team saves.",
   "private": true,
   "author": "manazoid4",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/manazoid4/saved-brain.git"
+    "url": "https://github.com/manazoid4/recall.git"
   },
   "keywords": [
     "knowledge-base",
     "ai",
-    "bookmark-manager",
-    "second-brain",
+    "creative-intelligence",
+    "agency-workflow",
     "nextjs"
   ],
   "scripts": {

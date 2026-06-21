@@ -14,6 +14,7 @@ import {
   X,
   Plus,
   Crown,
+  Route,
 } from 'lucide-react';
 import { useState } from 'react';
 import { UserButton, useAuth } from '@clerk/nextjs';
@@ -23,6 +24,7 @@ const navItems = [
   { href: '/library',  label: 'Library',  icon: Library    },
   { href: '/boards',   label: 'Boards',   icon: LayoutGrid  },
   { href: '/capture',  label: 'Capture',  icon: Mic         },
+  { href: '/router',    label: 'Router',   icon: Route       },
   { href: '/graph',    label: 'Graph',    icon: GitBranch   },
   { href: '/upload',   label: 'Upload',   icon: Upload      },
   { href: '/settings', label: 'Settings', icon: Settings    },

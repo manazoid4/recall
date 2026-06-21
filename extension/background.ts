@@ -1,4 +1,5 @@
 import type { SavedItem, SyncConfig, SyncStatus, ScrapeMessage, SyncMessage } from "./types";
+import { remainingPendingItems } from "./social-record";
 
 const STORAGE_KEY_ITEMS = "saved-brain-pending-items";
 const STORAGE_KEY_STATUS = "saved-brain-status";
@@ -78,11 +79,16 @@ async function triggerSync(): Promise<void> {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    await setPendingItems([]);
+    const result = await response.json() as {
+      acceptedIds?: string[];
+      failedIds?: string[];
+    };
+    const remaining = remainingPendingItems(pending, result.acceptedIds);
+    await setPendingItems(remaining);
     await updateStatus({
       lastSync: new Date().toISOString(),
-      itemCount: pending.length,
-      error: null,
+      itemCount: result.acceptedIds?.length ?? 0,
+      error: remaining.length > 0 ? `${remaining.length} item(s) pending retry` : null,
       syncing: false,
     });
   } catch (err) {

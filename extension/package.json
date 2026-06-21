@@ -7,7 +7,7 @@
     "build": "tsc && node scripts/copy-assets.js",
     "clean": "rm -rf dist",
     "zip": "npm run build && node scripts/package.js",
-    "test": "tsc --noEmit"
+    "test": "node ../node_modules/vitest/vitest.mjs run --config vitest.config.ts"
   },
   "devDependencies": {
     "typescript": "^5.5.3",
