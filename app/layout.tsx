@@ -11,12 +11,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Recall — Capture everything. Find anything. Think faster.',
-  description:
-    'Your AI-powered knowledge layer — save from social, capture with voice, find anything with semantic search.',
+  title: 'Recall Signals — Creative intelligence for agencies',
+  description: 'Creative intelligence from the posts your team saves.',
   openGraph: {
-    title: 'Recall',
-    description: 'Capture everything. Find anything. Think faster.',
+    title: 'Recall Signals',
+    description: 'Creative intelligence from the posts your team saves.',
     type: 'website',
   },
 };

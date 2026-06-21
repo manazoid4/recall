@@ -10,6 +10,8 @@ jobs:
   lint-and-build:
     name: Lint and Build
     runs-on: ${{ matrix.os }}
+    env:
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
     strategy:
       matrix:
