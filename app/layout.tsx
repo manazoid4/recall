@@ -11,11 +11,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Recall Signals — Creative intelligence for agencies',
-  description: 'Creative intelligence from the posts your team saves.',
+  title: 'Recall - Personal Intelligence Layer',
+  description: 'A private memory graph and agent brain built from user-owned evidence.',
   openGraph: {
-    title: 'Recall Signals',
-    description: 'Creative intelligence from the posts your team saves.',
+    title: 'Recall',
+    description: 'A private memory graph and agent brain built from user-owned evidence.',
     type: 'website',
   },
 };

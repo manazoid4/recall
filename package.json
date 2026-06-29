@@ -1,7 +1,7 @@
 {
   "name": "recall-signals",
   "version": "1.0.0",
-  "description": "Creative intelligence from the posts your team saves.",
+  "description": "A private personal intelligence layer and agent memory OS.",
   "private": true,
   "author": "manazoid4",
   "license": "MIT",
@@ -12,8 +12,8 @@
   "keywords": [
     "knowledge-base",
     "ai",
-    "creative-intelligence",
-    "agency-workflow",
+    "personal-intelligence",
+    "agent-memory",
     "nextjs"
   ],
   "scripts": {
