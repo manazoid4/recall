@@ -6,3 +6,4 @@ out/
 .vercel/
 temp.json
 recall-3030.log
+tsconfig.tsbuildinfo

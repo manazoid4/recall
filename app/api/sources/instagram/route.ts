@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { appendRecall } from '../../../../lib/recallVault';
 
 function canonical(raw: unknown) {
   if (typeof raw !== 'string') return null;
@@ -21,5 +22,6 @@ export async function POST(req: Request) {
     privacy_level: 'private_to_owner',
   }));
   if (!sources.length) return NextResponse.json({ error: 'No valid URLs' }, { status: 400 });
-  return NextResponse.json({ imported_count: sources.length, skipped_count: 0, failed_count: 0, sources });
+  const vault_path = await appendRecall(sources.map((s) => `- [ ] ${s.canonical_url} #recall #instagram imported:${new Date().toISOString().slice(0, 10)}`));
+  return NextResponse.json({ imported_count: sources.length, skipped_count: 0, failed_count: 0, vault_path, sources });
 }
