@@ -1,5 +1,10 @@
-import InstagramImporter from '../InstagramImporter';
+import { DashboardView } from './components/RouteViews';
+import { RecallShell } from './components/RecallShell';
 
 export default function Page() {
-  return <main style={{ maxWidth: 760, margin: '0 auto', padding: 24 }}><InstagramImporter /></main>;
+  return (
+    <RecallShell>
+      <DashboardView />
+    </RecallShell>
+  );
 }

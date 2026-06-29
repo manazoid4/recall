@@ -5,3 +5,4 @@ out/
 !.env.example
 .vercel/
 temp.json
+recall-3030.log
