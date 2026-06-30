@@ -11,6 +11,7 @@
 
 - Capture URLs, manual thoughts, reasons saved, platform, and type.
 - Preserve existing authorised Instagram/YouTube import routes.
+- Add Instagram Inbox concept: shared Recall-owned professional inbox, user routing codes, webhook verification, and DM normalization.
 - Add placeholders for uploads, Obsidian, GitHub, social exports, browser extension, and wearable data.
 - Run deterministic intake, transcript, vision, meaning, privacy, and prompt mock agents.
 
@@ -39,6 +40,7 @@
 
 ## Phase 5: Browser Extension and Social Import
 
+- Instagram DM inbox capture.
 - Browser extension capture.
 - Instagram official export parser.
 - TikTok export and link enrichment.

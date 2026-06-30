@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   createAgentPrompt,
+  createInstagramInboxProvision,
   inferIntent,
+  normalizeInstagramInboxMessage,
   normalizeInput,
   processMemoryItem,
   updateProfileFromMemory,
@@ -63,5 +65,34 @@ describe('Recall personal intelligence agents', () => {
     expect(intent.relatedProject).toBe('Recall');
     expect(prompt.prompt).toContain('Use evidence from Recall memory');
     expect(prompt.evidenceMemoryIds).toContain(item.id);
+  });
+
+  it('provisions an Instagram inbox identity without impersonating the user', () => {
+    const inbox = createInstagramInboxProvision({
+      userId: 'user_123',
+      recallHandle: 'recall.inbox',
+      userDisplayName: 'Manaz',
+    });
+
+    expect(inbox.routingCode).toMatch(/^RCL-/);
+    expect(inbox.instagramHandle).toBe('recall.inbox');
+    expect(inbox.mode).toBe('shared_recall_inbox');
+    expect(inbox.complianceNotes.join(' ')).toContain('No personal-account bot');
+  });
+
+  it('turns an Instagram DM into a Recall memory capture', () => {
+    const capture = normalizeInstagramInboxMessage({
+      userId: 'user_123',
+      instagramSenderId: 'ig_sender_1',
+      messageText: 'RCL-MANAZ-9Q2 https://instagram.com/reel/demo This is the AI taste I want.',
+      attachments: [],
+      receivedAt: '2026-06-30T10:00:00.000Z',
+    });
+
+    expect(capture.type).toBe('social');
+    expect(capture.platform).toBe('instagram');
+    expect(capture.sourceUrl).toBe('https://instagram.com/reel/demo');
+    expect(capture.reasonSaved).toContain('sent this to their Recall Instagram inbox');
+    expect(capture.userNote).toContain('This is the AI taste I want.');
   });
 });

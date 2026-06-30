@@ -1,5 +1,6 @@
 import type {
   AgentPrompt,
+  InstagramInboxProvision,
   IntentNode,
   MemoryItem,
   ProfileInsight,
@@ -12,6 +13,37 @@ const now = '2026-06-29T09:00:00.000Z';
 const userId = 'demo_user';
 
 export const demoMemoryItems: MemoryItem[] = [
+  {
+    id: 'mem_instagram_inbox_dm',
+    userId,
+    type: 'social',
+    platform: 'instagram',
+    sourceUrl: 'https://instagram.com/reel/private-ai-memory',
+    title: 'DM to Recall inbox about private AI memory',
+    creator: 'instagram:demo_sender',
+    rawContent: 'RCL-MANAZ-9Q2 https://instagram.com/reel/private-ai-memory This is exactly the future agent UX I want.',
+    transcript: '',
+    extractedText: '',
+    summary: 'A high-intent Instagram DM capture showing the user wants agent memory to feel as easy as messaging a person.',
+    reasonSaved: 'Sent directly to the Recall Instagram inbox.',
+    userNote: 'This is exactly the future agent UX I want.',
+    tags: ['demo', 'instagram-inbox', 'high-intent-save'],
+    topics: ['AI agents', 'personal memory', 'Instagram inbox capture'],
+    values: ['Autonomy', 'Low-friction capture', 'Privacy'],
+    emotions: ['clarity', 'excitement'],
+    aesthetics: ['native messaging UX'],
+    people: [],
+    tools: ['Instagram Messaging API', 'Recall Inbox'],
+    projects: ['Recall'],
+    traitsSuggested: ['captures in the flow of life', 'future-facing builder'],
+    importanceScore: 95,
+    profileImpactScore: 92,
+    confidence: 0.88,
+    status: 'added_to_profile',
+    sensitive: false,
+    createdAt: now,
+    updatedAt: now,
+  },
   {
     id: 'mem_ai_agents_reel',
     userId,
@@ -493,7 +525,32 @@ export const demoPrompts: AgentPrompt[] = [
   },
 ];
 
+export const demoInstagramInbox: InstagramInboxProvision = {
+  id: 'ig_inbox_demo_user',
+  userId,
+  mode: 'shared_recall_inbox',
+  instagramHandle: 'recall.inbox',
+  routingCode: 'RCL-MANAZ-9Q2',
+  displayName: "Manaz's Recall Inbox",
+  status: 'ready',
+  setupSteps: [
+    'Follow @recall.inbox',
+    'Send posts, reels, screenshots, links, voice notes, or thoughts by DM',
+    'Include RCL-MANAZ-9Q2 once so Recall routes the thread to the right account',
+    'Reply with why you saved it when Recall asks for context',
+  ],
+  complianceNotes: [
+    'Shared Recall-owned inbox with private routing code.',
+    'No personal-account bot creation, impersonation, password collection, or scraping.',
+    'Connected professional account mode can come later for creators and teams.',
+  ],
+  createdAt: now,
+};
+
 export const futureIntegrations = [
+  'Instagram DM inbox capture',
+  'Meta webhook verification',
+  'Instagram thread routing codes',
   'browser extension capture',
   'Instagram export parser',
   'TikTok export/link enrichment',

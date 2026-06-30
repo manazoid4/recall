@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 const navItems = [
   ['Dashboard', '/dashboard'],
   ['Capture', '/capture'],
+  ['Instagram Inbox', '/instagram-inbox'],
   ['Inbox', '/inbox'],
   ['Profile', '/profile'],
   ['Personality', '/personality'],

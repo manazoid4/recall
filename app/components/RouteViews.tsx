@@ -7,6 +7,7 @@ import {
 } from '../../lib/agents';
 import {
   demoInsights,
+  demoInstagramInbox,
   demoIntentNodes,
   demoMemoryItems,
   demoProfile,
@@ -90,6 +91,69 @@ export function CaptureView() {
         description="Paste a URL, add a manual thought, include why you saved it, and preview how it becomes structured memory."
       />
       <CaptureConsole />
+      <Section title="Message-first capture moat" eyebrow="Instagram Inbox">
+        <div className="wide-card">
+          <div>
+            <h2>Capture should feel like sending a DM</h2>
+            <p>
+              The strongest Recall habit is not opening a dashboard. It is sending a reel, thought,
+              screenshot, or voice note to a private Recall inbox and letting the system ask for context.
+            </p>
+          </div>
+          <div>
+            <a className="primary-button" href="/instagram-inbox">Set up Instagram Inbox</a>
+          </div>
+        </div>
+      </Section>
+    </>
+  );
+}
+
+export function InstagramInboxView() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Capture Habit Moat"
+        title="DM anything to your Recall inbox"
+        description="Make feeding Recall feel like messaging a trusted person on Instagram: send a post, reel, screenshot, voice note, link, or thought and Recall turns it into structured memory."
+      />
+      <div className="two-column">
+        <Section title="Your inbox identity" eyebrow="Provisioned demo">
+          <div className="panel">
+            <span className="eyebrow">{demoInstagramInbox.mode.replaceAll('_', ' ')}</span>
+            <h2>@{demoInstagramInbox.instagramHandle}</h2>
+            <p className="lead">{demoInstagramInbox.displayName}</p>
+            <Metric label="Routing code" value={demoInstagramInbox.routingCode} detail={demoInstagramInbox.status} />
+          </div>
+        </Section>
+        <Section title="How it works">
+          <div className="stack">
+            {demoInstagramInbox.setupSteps.map((step, index) => (
+              <div className="mini-card" key={step}>
+                <strong>{index + 1}. {step}</strong>
+              </div>
+            ))}
+          </div>
+        </Section>
+      </div>
+      <Section title="Why this is unique">
+        <div className="card-grid">
+          {[
+            ['Capture habit moat', 'Recall owns the reflex: send it to the inbox when something matters.'],
+            ['Taste graph moat', 'DMs reveal repeated private choices, not just search queries.'],
+            ['Agent context moat', 'Each message becomes evidence future agents can use.'],
+            ['Trust moat', 'No scraping, no impersonation, no password collection, explicit routing and consent.'],
+          ].map(([title, body]) => (
+            <div className="panel" key={title}>
+              <h2>{title}</h2>
+              <p>{body}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+      <Section title="Compliance boundary">
+        <PillList items={demoInstagramInbox.complianceNotes} />
+      </Section>
     </>
   );
 }
@@ -212,6 +276,17 @@ export function IntentView() {
     <>
       <PageHeader eyebrow="Intent Graph" title="What your saves imply you want to build or become" description="Recall infers goals, project signals, and suggested actions from what you repeatedly choose to keep." />
       <div className="stack">
+        <div className="wide-card">
+          <div>
+            <span className="eyebrow">Instagram Inbox</span>
+            <h2>Make Recall the account you message when something matters</h2>
+            <p>This turns capture into a native social habit instead of another dashboard chore.</p>
+          </div>
+          <div>
+            <strong>Build From This</strong>
+            <p>Ship shared inbox routing, webhook verification, DM normalization, and assistant follow-up replies.</p>
+          </div>
+        </div>
         {demoIntentNodes.map((node) => (
           <div className="wide-card" key={node.id}>
             <div>
@@ -395,6 +470,7 @@ export function AgentsView() {
           'Privacy Agent',
           'Reflection Agent',
           'Future MCP Agent',
+          'Instagram Inbox Agent',
         ].map((agent) => (
           <div className="mini-card" key={agent}>
             <strong>{agent}</strong>

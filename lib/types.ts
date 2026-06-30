@@ -332,3 +332,33 @@ export interface CaptureInput {
   type: MemoryType;
   platform: Platform;
 }
+
+export type InstagramInboxMode =
+  | 'shared_recall_inbox'
+  | 'connected_creator_account'
+  | 'future_dedicated_inbox';
+
+export interface InstagramInboxProvision {
+  id: string;
+  userId: string;
+  mode: InstagramInboxMode;
+  instagramHandle: string;
+  routingCode: string;
+  displayName: string;
+  status: 'ready' | 'needs_connection' | 'pending_meta_review';
+  setupSteps: string[];
+  complianceNotes: string[];
+  createdAt: string;
+}
+
+export interface InstagramInboxMessage {
+  userId: string;
+  instagramSenderId: string;
+  messageText: string;
+  attachments: Array<{
+    type: 'image' | 'video' | 'audio' | 'file' | 'story_mention' | 'unknown';
+    url?: string;
+    title?: string;
+  }>;
+  receivedAt: string;
+}

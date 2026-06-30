@@ -3,6 +3,9 @@ import type {
   AgentPrompt,
   AgentPromptType,
   CaptureInput,
+  InstagramInboxMessage,
+  InstagramInboxProvision,
+  InstagramInboxMode,
   IntentNode,
   MemoryItem,
   ProfileInsight,
@@ -28,6 +31,23 @@ function nowIso() {
 
 function scoreFromSignals(count: number, base = 58) {
   return Math.min(96, base + count * 8);
+}
+
+function routingCodeFor(userId: string, userDisplayName: string) {
+  const readable = userDisplayName.replace(/[^a-z0-9]/gi, '').slice(0, 8).toUpperCase() || 'USER';
+  const checksum = [...userId].reduce((sum, char) => sum + char.charCodeAt(0), 0).toString(36).toUpperCase();
+  return `RCL-${readable}-${checksum}`;
+}
+
+function firstUrl(text: string) {
+  return text.match(/https?:\/\/\S+/)?.[0]?.replace(/[),.]+$/, '');
+}
+
+function removeRoutingAndUrl(text: string, routingCode?: string, url?: string) {
+  return text
+    .replace(routingCode || '', '')
+    .replace(url || '', '')
+    .trim();
 }
 
 export function normalizeInput(input: CaptureInput): MemoryItem {
@@ -62,6 +82,59 @@ export function normalizeInput(input: CaptureInput): MemoryItem {
     sensitive: false,
     createdAt: timestamp,
     updatedAt: timestamp,
+  };
+}
+
+export function createInstagramInboxProvision({
+  userId,
+  recallHandle,
+  userDisplayName,
+  mode = 'shared_recall_inbox',
+}: {
+  userId: string;
+  recallHandle: string;
+  userDisplayName: string;
+  mode?: InstagramInboxMode;
+}): InstagramInboxProvision {
+  const routingCode = routingCodeFor(userId, userDisplayName);
+  return {
+    id: `ig_inbox_${userId}`,
+    userId,
+    mode,
+    instagramHandle: recallHandle,
+    routingCode,
+    displayName: `${userDisplayName}'s Recall Inbox`,
+    status: mode === 'shared_recall_inbox' ? 'ready' : 'needs_connection',
+    setupSteps: [
+      `Follow @${recallHandle}`,
+      `Send any post, reel, link, screenshot, voice note, or thought to @${recallHandle}`,
+      `Include ${routingCode} once so Recall can route the thread to your account`,
+      'Reply with a short reason saved when Recall asks for context',
+    ],
+    complianceNotes: [
+      'Uses Instagram Messaging API style webhooks for authorised professional inboxes.',
+      'No personal-account bot creation, impersonation, password collection, or scraping.',
+      'Shared inbox mode gives each user a private routing code instead of pretending every user owns a bot.',
+      'Connected account mode is reserved for users who explicitly connect an eligible Instagram professional account.',
+    ],
+    createdAt: nowIso(),
+  };
+}
+
+export function normalizeInstagramInboxMessage(message: InstagramInboxMessage): CaptureInput {
+  const url = firstUrl(message.messageText) || message.attachments.find((attachment) => attachment.url)?.url;
+  const routingCode = message.messageText.match(/RCL-[A-Z0-9]+-[A-Z0-9]+/i)?.[0];
+  const userNote = removeRoutingAndUrl(message.messageText, routingCode, url);
+  const attachment = message.attachments[0];
+  return {
+    type: attachment?.type === 'audio' ? 'audio' : attachment?.type === 'image' ? 'screenshot' : 'social',
+    platform: 'instagram',
+    sourceUrl: url,
+    title: attachment?.title || url || 'Instagram inbox capture',
+    creator: `instagram:${message.instagramSenderId}`,
+    rawContent: message.messageText,
+    reasonSaved: 'The user sent this to their Recall Instagram inbox, which is a high-intent save signal.',
+    userNote,
   };
 }
 

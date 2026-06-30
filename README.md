@@ -35,10 +35,26 @@ Recall is the private memory operating system underneath future agents. It gives
 - `lib/recallVault.ts` - Existing Obsidian inbox append helper.
 - `tests/agents.test.ts` - Node test coverage for the mock agent pipeline.
 
+## Instagram Inbox Capture
+
+Recall's strongest future capture habit is message-first: users should be able to DM a Recall inbox with a post, reel, screenshot, link, voice note, or thought.
+
+The MVP design uses a compliant shape:
+
+- Shared Recall-owned Instagram professional inbox first.
+- Private routing code per user, for example `RCL-MANAZ-9Q2`.
+- Meta webhook verification at `/api/instagram/inbox/webhook`.
+- Inbound messages normalize into Recall capture inputs.
+- Connected creator/professional accounts can come later.
+- No personal-account bot creation, scraping, impersonation, or password collection.
+
+See `POSTMORTEM.md` for the product reasoning and moat analysis.
+
 ## Routes
 
 - `/dashboard` - Overview, profile summary, themes, values, traits, insights, project and prompt suggestions.
 - `/capture` - Universal capture form and mock processing preview.
+- `/instagram-inbox` - DM-to-Recall capture setup.
 - `/inbox` - Review queue by status with user-control actions.
 - `/profile` - Living profile with evidence and confidence.
 - `/personality` - Human-readable memory mirror.
