@@ -2,11 +2,11 @@
 
 Date: 2026-06-30  
 Branch audited: `agents/recall-postmortem-instagram-inbox`  
-Scope: product reset follow-up, Instagram Inbox moat, webhook surface, docs, tests, and repository readiness.
+Scope: product reset follow-up, Instagram Inbox moat, Signal OS paid wedge, webhook surface, docs, tests, and repository readiness.
 
 ## Executive Summary
 
-The Recall repo is in a much stronger strategic position after PR #5 and PR #6. The product now points toward a future-facing personal intelligence layer rather than a generic saved-post dashboard. The largest remaining risk is not product direction; it is production hardening around real integrations, dependency upgrades, persistence, and Instagram compliance.
+The Recall repo is in a much stronger strategic position after PR #5 and PR #6. The product now points toward a future-facing personal intelligence layer rather than a generic saved-post dashboard. The latest viability pass adds a clearer paid reason: Signal OS, where captures are graded as GOLD, SILVER, or BRONZE and routed into daily actions or agent context packs. The largest remaining risk is not product direction; it is production hardening around real integrations, dependency upgrades, persistence, and Instagram compliance.
 
 The codebase is shippable for the current mock/demo layer and strategic product surface. It is not yet production-complete for real Instagram DM ingestion because durable thread routing, Meta app approval, webhook signature verification, and persistence are still required.
 
@@ -20,7 +20,7 @@ Status: `PASS WITH FOLLOW-UP RISKS`
 - GitHub PR #6 is mergeable.
 - GitHub CI and Vercel preview are green at time of audit.
 - No committed secret values were found in the scan.
-- One generated local log artifact was found and removed: `recall-3030.log`.
+- Local junk artifacts are not part of the branch. A generated dev-server log, `recall-3030.log`, was identified locally and should remain untracked/removed once the locking process exits.
 
 ## What Changed in This PR
 
@@ -35,12 +35,16 @@ Status: `PASS WITH FOLLOW-UP RISKS`
   - Agent context moat
   - Privacy and trust moat
   - Workflow distribution moat
+  - Signal scoring moat
+- Added Signal OS positioning: users pay for ranked signal, not storage.
 
 ### UX
 
 - Added `/instagram-inbox`.
+- Added `/signal-os`.
 - Added message-first capture framing: "DM anything to your Recall inbox."
 - Added setup steps for a shared Recall-owned Instagram inbox and routing code.
+- Added GOLD/SILVER/BRONZE signal cards with evidence reasons and recommended actions.
 
 ### Backend/API
 
@@ -53,8 +57,14 @@ Status: `PASS WITH FOLLOW-UP RISKS`
 
 - Added `InstagramInboxProvision`.
 - Added `InstagramInboxMessage`.
+- Added `SignalScore`.
+- Added `DailyBrief`.
+- Added `PaidPlanMoat`.
 - Added `createInstagramInboxProvision`.
 - Added `normalizeInstagramInboxMessage`.
+- Added `scoreMemorySignal`.
+- Added `createDailyBrief`.
+- Added `getPaidPlanMoats`.
 - Added demo Instagram Inbox memory and provisioning data.
 
 ### Tests
@@ -62,6 +72,8 @@ Status: `PASS WITH FOLLOW-UP RISKS`
 - Added tests for:
   - Provisioning an Instagram inbox identity without impersonation.
   - Turning an Instagram DM into a Recall memory capture.
+  - Scoring high-intent captures as GOLD.
+  - Creating a paid daily brief from memory signals.
 
 ## Verification Evidence
 
@@ -215,6 +227,8 @@ This is acceptable for the product reset, but the next architecture step is unif
 What is now differentiated:
 
 - Message-first capture.
+- Signal scoring: GOLD/SILVER/BRONZE with reasons and next action.
+- Paid daily brief and agent pack loop.
 - Private memory graph.
 - Taste and intent modeling.
 - Agent context packs.
@@ -230,6 +244,7 @@ What is still copyable:
 What becomes harder to copy:
 
 - Years of user DM captures.
+- Personal signal scoring tuned by repeated user behavior.
 - Evidence graph with traceable reasons saved.
 - Personal agent context packs accepted by user workflows.
 - Instagram Inbox habit plus browser extension plus Obsidian/MCP export loop.

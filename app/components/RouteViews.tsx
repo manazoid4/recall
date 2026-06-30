@@ -1,9 +1,12 @@
 import {
   createAgentPrompt,
+  createDailyBrief,
   createReflectionSummary,
   findContradictions,
   findPatterns,
+  getPaidPlanMoats,
   linkProjects,
+  scoreMemorySignal,
 } from '../../lib/agents';
 import {
   demoInsights,
@@ -37,6 +40,7 @@ function MemoryCard({ item }: { item: MemoryItem }) {
 
 export function DashboardView() {
   const unprocessed = demoMemoryItems.filter((item) => item.status === 'new' || item.status === 'needs_context');
+  const dailyBrief = createDailyBrief(demoMemoryItems, demoProfile);
   return (
     <>
       <PageHeader
@@ -49,7 +53,7 @@ export function DashboardView() {
         <Metric label="Memory items" value={demoMemoryItems.length} detail="demo evidence objects" />
         <Metric label="Unprocessed" value={unprocessed.length} detail="need context or review" />
         <Metric label="Profile version" value={`v${demoProfile.version}`} detail={`${Math.round(demoProfile.confidence * 100)}% confidence`} />
-        <Metric label="Agent prompts" value={demoPrompts.length} detail="context packs ready" />
+        <Metric label="GOLD signals" value={dailyBrief.goldSignals.length} detail="ready for action today" />
       </div>
       <div className="two-column">
         <Section title="Living Profile" eyebrow="Current direction">
@@ -76,6 +80,20 @@ export function DashboardView() {
               <PillList items={project.nextActions.slice(0, 2)} />
             </div>
           ))}
+        </div>
+      </Section>
+      <Section title="Paid daily signal brief" eyebrow="Signal OS">
+        <div className="wide-card">
+          <div>
+            <h2>{dailyBrief.title}</h2>
+            <p>{dailyBrief.summary}</p>
+            <PillList items={dailyBrief.nextActions.slice(0, 3)} />
+          </div>
+          <div>
+            <strong>Why pay for Recall</strong>
+            <p>It filters saved chaos into ranked signal, agent context, and daily action instead of becoming another archive.</p>
+            <a className="primary-button" href="/signal-os">Open Signal OS</a>
+          </div>
         </div>
       </Section>
     </>
@@ -153,6 +171,74 @@ export function InstagramInboxView() {
       </Section>
       <Section title="Compliance boundary">
         <PillList items={demoInstagramInbox.complianceNotes} />
+      </Section>
+    </>
+  );
+}
+
+export function SignalOSView() {
+  const dailyBrief = createDailyBrief(demoMemoryItems, demoProfile);
+  const signals = demoMemoryItems
+    .map((item) => ({ item, signal: scoreMemorySignal(item) }))
+    .sort((a, b) => b.signal.score - a.signal.score);
+  const moats = getPaidPlanMoats();
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Signal OS"
+        title="Recall should filter your digital life into what matters today."
+        description="Inspired by JobFilter's scoring discipline: every capture gets a grade, evidence reasons, and a next action so users pay for clarity, not storage."
+        action={<a className="primary-button" href="/instagram-inbox">Connect DM capture</a>}
+      />
+      <div className="metric-grid">
+        <Metric label="GOLD" value={dailyBrief.goldSignals.length} detail="act today" />
+        <Metric label="SILVER" value={dailyBrief.silverSignals.length} detail="watch for pattern" />
+        <Metric label="BRONZE" value={dailyBrief.bronzeSignals.length} detail="archive quietly" />
+        <Metric label="Agent packs" value={dailyBrief.agentPacks.length} detail="paid context exports" />
+      </div>
+      <Section title={dailyBrief.title} eyebrow="Daily paid loop">
+        <div className="wide-card">
+          <div>
+            <p className="lead">{dailyBrief.summary}</p>
+            <PillList items={dailyBrief.nextActions} />
+          </div>
+          <div>
+            <strong>Simple user promise</strong>
+            <p>DM or capture anything. Recall tells you if it is action, context, or archive, then prepares the right agent context.</p>
+          </div>
+        </div>
+      </Section>
+      <Section title="Scored memory signals">
+        <div className="stack">
+          {signals.map(({ item, signal }) => (
+            <div className="wide-card" key={item.id}>
+              <div>
+                <span className={`signal-grade signal-${signal.grade.toLowerCase()}`}>{signal.grade} / {signal.score}</span>
+                <h2>{item.title}</h2>
+                <p>{signal.recommendedAction}</p>
+                <PillList items={signal.reasons} />
+              </div>
+              <div>
+                <strong>Paid value</strong>
+                <p>{signal.paidValue}</p>
+                <EvidenceList ids={[signal.memoryId]} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+      <Section title="Defensible paid moats">
+        <div className="card-grid">
+          {moats.map((moat) => (
+            <div className="panel" key={moat.name}>
+              <span className="eyebrow">{moat.name}</span>
+              <h2>{moat.customerPromise}</h2>
+              <p>{moat.paidReason}</p>
+              <small>{moat.moat}</small>
+            </div>
+          ))}
+        </div>
       </Section>
     </>
   );

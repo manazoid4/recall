@@ -6,6 +6,8 @@ Recall's first reset moved it away from an agency creative-intelligence product 
 
 The next version should make Recall feel less like software you visit and more like a trusted person you message. The strongest wedge is an Instagram-native capture loop: users send posts, reels, screenshots, links, voice notes, and thoughts to a Recall inbox in DM, and those messages become structured memories.
 
+The paid wedge is Signal OS: Recall grades captures the way JobFilter grades leads. Users do not pay because Recall stores more links. They pay because Recall tells them what is GOLD signal today, what is SILVER context to watch, what is BRONZE archive material, and which agent prompt or project action should happen next.
+
 ## What Went Right
 
 - The product direction is now future-facing: memory graph, living profile, taste graph, intent graph, project map, and agent brain.
@@ -71,6 +73,10 @@ The product should be explicit: no scraping, no password collection, no imperson
 
 Instagram DM capture, browser extension capture, mobile share sheet, Obsidian sync, and MCP server distribution create many small doors into the same memory graph.
 
+### 7. Signal Scoring Moat
+
+Every capture receives a clear score, reasons, and recommended action. Over time, the scoring model becomes personal: what counts as GOLD for one user is not generic internet popularity. This makes Recall feel like a decision engine, not a passive library.
+
 ## Instagram Inbox Strategy
 
 ### User Feeling
@@ -130,9 +136,11 @@ It should ask: "What did this mean to you?"
 2. Store Instagram thread routing records.
 3. Add webhook verification and inbound message normalization.
 4. Convert DMs into `MemoryItem` records.
-5. Add assistant-style replies asking for reason saved, sensitivity, and project link.
-6. Add MCP/context pack export.
-7. Add semantic search and profile version timeline.
+5. Score every capture as GOLD, SILVER, or BRONZE with evidence reasons.
+6. Generate a daily paid signal brief from the highest-value captures.
+7. Add assistant-style replies asking for reason saved, sensitivity, and project link.
+8. Add MCP/context pack export.
+9. Add semantic search and profile version timeline.
 
 ## Failure Mode to Avoid
 

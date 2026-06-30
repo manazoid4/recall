@@ -12,11 +12,13 @@
 - Capture URLs, manual thoughts, reasons saved, platform, and type.
 - Preserve existing authorised Instagram/YouTube import routes.
 - Add Instagram Inbox concept: shared Recall-owned professional inbox, user routing codes, webhook verification, and DM normalization.
+- Add Signal OS scoring so every capture becomes GOLD, SILVER, or BRONZE with reasons and a recommended action.
 - Add placeholders for uploads, Obsidian, GitHub, social exports, browser extension, and wearable data.
 - Run deterministic intake, transcript, vision, meaning, privacy, and prompt mock agents.
 
-## Phase 2: Profile, Personality, Taste, and Intent Graph
+## Phase 2: Daily Brief, Profile, Personality, Taste, and Intent Graph
 
+- Generate a paid daily signal brief from top-scored captures.
 - Store living profile versions.
 - Add accept/reject controls for profile insights.
 - Build taste graph from visual/content/creator/writing/speaker signals.
@@ -29,6 +31,7 @@
 - Add prompt versioning.
 - Add sensitive-memory exclusion defaults.
 - Add project-specific prompt templates.
+- Route GOLD signals straight into project-specific agent prompts.
 
 ## Phase 4: Obsidian, Export, and MCP
 

@@ -5,6 +5,7 @@ const navItems = [
   ['Dashboard', '/dashboard'],
   ['Capture', '/capture'],
   ['Instagram Inbox', '/instagram-inbox'],
+  ['Signal OS', '/signal-os'],
   ['Inbox', '/inbox'],
   ['Profile', '/profile'],
   ['Personality', '/personality'],

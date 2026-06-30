@@ -174,6 +174,8 @@ export type InsightType =
 
 export type ProjectStatus = 'active' | 'watching' | 'paused' | 'future';
 
+export type SignalGrade = 'GOLD' | 'SILVER' | 'BRONZE';
+
 export type AgentPromptType =
   | 'personal_assistant'
   | 'coding_agent'
@@ -331,6 +333,35 @@ export interface CaptureInput {
   userNote?: string;
   type: MemoryType;
   platform: Platform;
+}
+
+export interface SignalScore {
+  memoryId: string;
+  score: number;
+  grade: SignalGrade;
+  reasons: string[];
+  recommendedAction: string;
+  paidValue: string;
+}
+
+export interface DailyBrief {
+  id: string;
+  userId: string;
+  title: string;
+  summary: string;
+  goldSignals: SignalScore[];
+  silverSignals: SignalScore[];
+  bronzeSignals: SignalScore[];
+  nextActions: string[];
+  agentPacks: AgentPromptType[];
+  createdAt: string;
+}
+
+export interface PaidPlanMoat {
+  name: string;
+  customerPromise: string;
+  paidReason: string;
+  moat: string;
 }
 
 export type InstagramInboxMode =

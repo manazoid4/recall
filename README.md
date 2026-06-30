@@ -55,6 +55,7 @@ See `POSTMORTEM.md` for the product reasoning and moat analysis.
 - `/dashboard` - Overview, profile summary, themes, values, traits, insights, project and prompt suggestions.
 - `/capture` - Universal capture form and mock processing preview.
 - `/instagram-inbox` - DM-to-Recall capture setup.
+- `/signal-os` - GOLD/SILVER/BRONZE signal scoring, daily brief, and paid moat surface.
 - `/inbox` - Review queue by status with user-control actions.
 - `/profile` - Living profile with evidence and confidence.
 - `/personality` - Human-readable memory mirror.
@@ -103,6 +104,18 @@ The agent services are deliberately simple and deterministic today. Their job is
 - Privacy Agent flags sensitive memories.
 - Reflection Agent produces self-understanding summaries.
 - Future MCP Agent is reserved for context-server export.
+
+## Paid Product Wedge
+
+Recall should not charge for storage. It should charge for signal:
+
+- DM or capture anything in the flow of life.
+- Recall scores it as GOLD, SILVER, or BRONZE.
+- GOLD becomes a daily action, agent prompt, or project move.
+- SILVER is watched for repeated patterns.
+- BRONZE stays searchable without polluting the active profile.
+
+This borrows the useful JobFilter principle of scored signal and next action, without turning Recall into a lead product.
 
 ## Privacy Principles
 
