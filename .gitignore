@@ -55,5 +55,6 @@ extension/*.zip
 # Temporary files
 *.tmp
 *.temp
+temp.json
 .cache/
 .vercel

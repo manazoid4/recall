@@ -2,151 +2,142 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Brain,
-  ChevronRight,
-  FileText,
+  Database,
+  Eye,
+  Fingerprint,
   GitBranch,
-  LayoutGrid,
-  Search,
+  Lock,
+  Network,
   Shield,
   Sparkles,
-  Upload,
-  Route,
 } from 'lucide-react';
+import { demoInsights, demoMemoryItems, demoProfile } from '../../lib/mockData';
 
-const workflow = [
+const pillars = [
   {
-    icon: Upload,
-    step: 'Capture',
-    title: 'Collect the saves your team chose',
+    icon: Database,
+    title: 'Universal input layer',
     description:
-      'Bring Instagram posts and other saved references into one private library with their source links intact.',
+      'Collect user-provided links, lectures, podcasts, screenshots, PDFs, voice notes, Obsidian notes, GitHub links, exports, and manual thoughts.',
   },
   {
     icon: GitBranch,
-    step: 'Patterns',
-    title: 'See repeated creative signals',
+    title: 'Living memory graph',
     description:
-      'Use enrichment, semantic search, and the knowledge graph to find recurring hooks, formats, topics, and audience tensions.',
+      'Connect inputs to topics, values, emotions, traits, projects, creators, platforms, actions, and agent prompts.',
   },
   {
-    icon: FileText,
-    step: 'Cited briefs',
-    title: 'Turn evidence into a client-ready board',
+    icon: Fingerprint,
+    title: 'Evidence-based profile',
     description:
-      'Curate the strongest examples into a shareable intelligence board today. Automated brief generation is coming to the agency pilot.',
-  },
-];
-
-const useCases = [
-  {
-    icon: Search,
-    title: 'Research with intent',
-    description:
-      'Search the references your strategists already judged worth keeping instead of starting every brief from a blank feed.',
+      'Build a profile from traceable inputs: interests, values, taste, communication style, goals, frictions, habits, and contradictions.',
   },
   {
-    icon: Sparkles,
-    title: 'Explain the pattern',
+    icon: Network,
+    title: 'Agent context layer',
     description:
-      'AI summaries, topics, entities, and semantic connections help teams move from scattered inspiration to a defensible point of view.',
+      'Generate structured context packs for personal assistants, coding agents, Obsidian helpers, project managers, and future MCP servers.',
   },
-  {
-    icon: LayoutGrid,
-    title: 'Show the evidence',
-    description:
-      'Organize source-linked examples into public or private boards that make creative recommendations easier to review.',
-  },
-];
-
-const pilotFeatures = [
-  'Shared agency workspaces',
-  'Team roles and permissions',
-  'Collaborative board editing',
-  'Automated cited brief exports',
 ];
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-40 border-b border-line bg-surface/80 backdrop-blur-md">
+    <div className="min-h-screen bg-surface">
+      <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <Link href="/" className="group flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-yellow shadow-sm transition-transform group-hover:scale-105">
               <Brain className="h-4 w-4 text-white" />
             </div>
-            <span className="text-sm font-bold tracking-tight text-ink">Recall Signals</span>
+            <span className="text-sm font-bold tracking-tight text-ink">Recall</span>
           </Link>
           <nav className="flex items-center gap-3 sm:gap-6">
-            <Link href="/router" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
-              Router
+            <Link href="/dashboard" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
+              Dashboard
             </Link>
-            <Link href="/pricing" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
-              Pricing
+            <Link href="/capture" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
+              Capture
             </Link>
-            <Link href="/sign-in" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
-              Sign in
+            <Link href="/prompts" className="hidden text-sm text-muted transition-colors hover:text-ink sm:block">
+              Prompts
             </Link>
             <Link
-              href="/onboarding"
+              href="/dashboard"
               className="inline-flex items-center gap-1.5 rounded-lg bg-yellow px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-orange hover:shadow-glow-amber active:scale-95"
             >
-              Build a board
-              <ChevronRight className="h-3.5 w-3.5" />
+              Open Recall
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </nav>
         </div>
       </header>
 
       <main>
-        <section className="relative overflow-hidden px-4 pb-24 pt-20 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden px-4 pb-20 pt-16 sm:px-6 lg:px-8">
           <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
-            <div className="absolute left-1/2 top-[-100px] h-[700px] w-[900px] -translate-x-1/2 rounded-full bg-yellow/5 blur-3xl" />
+            <div className="absolute left-1/2 top-[-160px] h-[760px] w-[980px] -translate-x-1/2 rounded-full bg-yellow/5 blur-3xl" />
           </div>
 
-          <div className="mx-auto max-w-5xl text-center">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-yellow/25 bg-yellow/10 px-4 py-1.5 text-sm font-medium text-yellow animate-fade-in">
-              <Sparkles className="h-3.5 w-3.5" />
-              Creative intelligence for agencies
+          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-yellow/25 bg-yellow/10 px-4 py-1.5 text-sm font-medium text-yellow">
+                <Sparkles className="h-3.5 w-3.5" />
+                Personal intelligence layer for future AI agents
+              </div>
+              <h1 className="text-balance text-5xl font-black leading-[1.03] tracking-tight text-ink sm:text-6xl lg:text-7xl">
+                Turn everything you save, watch, hear, read, and think into a living profile.
+              </h1>
+              <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
+                Recall is a private AI memory mirror and agent operating system. It turns user-owned
+                evidence into a memory graph, taste graph, intent graph, project map, and agent brain.
+              </p>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/capture"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow px-8 py-3.5 text-base font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-orange hover:shadow-glow-amber active:translate-y-0"
+                >
+                  Feed Recall
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/profile"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-panel px-8 py-3.5 text-base font-bold text-ink transition-all hover:-translate-y-0.5 hover:bg-overlay"
+                >
+                  View Living Profile
+                </Link>
+              </div>
             </div>
-            <h1 className="text-balance text-5xl font-black leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-7xl animate-slide-up">
-              Turn your team&apos;s saved posts into{' '}
-              <span className="gradient-text">client-ready creative intelligence.</span>
-            </h1>
-            <p className="mx-auto mt-7 max-w-3xl text-lg leading-relaxed text-muted sm:text-xl">
-              Social listening finds what is popular. Recall preserves what your team believes
-              matters.
-            </p>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted">
-              Capture the references your strategists save, surface the patterns across them, and
-              build source-linked boards that make the next client brief sharper.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
-                href="/onboarding"
-                className="inline-flex items-center gap-2 rounded-xl bg-yellow px-8 py-3.5 text-base font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-orange hover:shadow-glow-amber active:translate-y-0"
-              >
-                Build your first intelligence board
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/pricing#pilot"
-                className="inline-flex items-center gap-2 rounded-xl border border-line bg-panel px-8 py-3.5 text-base font-bold text-ink transition-all hover:-translate-y-0.5 hover:bg-overlay"
-              >
-                Join the agency pilot
-              </Link>
+
+            <div className="card p-6 shadow-panel">
+              <div className="flex items-center justify-between border-b border-line pb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-yellow">Living Profile</p>
+                  <h2 className="mt-1 text-2xl font-black text-ink">v{demoProfile.version}</h2>
+                </div>
+                <Eye className="h-6 w-6 text-yellow" />
+              </div>
+              <p className="mt-5 text-sm leading-relaxed text-muted">{demoProfile.summary}</p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {demoProfile.values.slice(0, 6).map((value) => (
+                  <div key={value} className="rounded-lg border border-line bg-overlay px-3 py-2 text-sm font-semibold text-ink">
+                    {value}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 rounded-lg border border-line bg-surface p-4">
+                <p className="text-xs font-bold uppercase tracking-widest text-yellow">Pattern signal</p>
+                <p className="mt-2 text-sm text-muted">{demoInsights[0].description}</p>
+              </div>
             </div>
-            <p className="mt-5 text-sm text-dim">
-              Start with an individual workspace today. Team collaboration is in pilot development.
-            </p>
           </div>
         </section>
 
         <section className="border-y border-line bg-panel px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-5xl gap-5 text-center sm:grid-cols-3">
             {[
-              ['Source-linked', 'Keep the original reference attached'],
-              ['Private by default', 'Your research library stays yours'],
-              ['Built for judgment', 'Start from what your team selected'],
+              ['Traceable', 'Every insight points back to evidence'],
+              ['User-owned', 'Export, exclude, delete, and mark sensitive'],
+              ['Agent-ready', 'Context packs for better AI assistants'],
             ].map(([title, description]) => (
               <div key={title}>
                 <p className="font-bold text-ink">{title}</p>
@@ -158,147 +149,47 @@ export default function LandingPage() {
 
         <section className="px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
-            <div className="mx-auto mb-14 max-w-3xl text-center">
-              <p className="text-sm font-bold uppercase tracking-widest text-yellow">
-                The intelligence workflow
-              </p>
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <p className="text-sm font-bold uppercase tracking-widest text-yellow">Product pillars</p>
               <h2 className="mt-3 text-balance text-4xl font-black tracking-tight text-ink">
-                Capture → patterns → cited briefs
+                A memory operating system, not another bookmark app.
               </h2>
-              <p className="mt-4 text-lg text-muted">
-                Preserve the provenance of every idea, then turn your team&apos;s collective taste
-                into evidence a client can act on.
-              </p>
             </div>
-            <div className="grid gap-5 lg:grid-cols-3">
-              {workflow.map((item, index) => (
-                <article key={item.step} className="card-hover p-7">
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-yellow/10 text-yellow">
-                      <item.icon className="h-5 w-5" />
-                    </div>
-                    <span className="font-mono text-xs font-bold text-dim">0{index + 1}</span>
+            <div className="grid gap-5 md:grid-cols-2">
+              {pillars.map((pillar) => (
+                <article key={pillar.title} className="card-hover p-7">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-yellow/10 text-yellow">
+                    <pillar.icon className="h-5 w-5" />
                   </div>
-                  <p className="mt-6 text-xs font-bold uppercase tracking-widest text-yellow">
-                    {item.step}
-                  </p>
-                  <h3 className="mt-2 text-xl font-black text-ink">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
+                  <h3 className="mt-5 text-xl font-black text-ink">{pillar.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{pillar.description}</p>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-6xl overflow-hidden border-2 border-ink bg-panel shadow-[8px_8px_0_hsl(var(--ink))] lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="border-b-2 border-ink bg-yellow p-8 text-white lg:border-b-0 lg:border-r-2 lg:p-12">
-              <div className="flex h-12 w-12 items-center justify-center border-2 border-white">
-                <Route className="h-6 w-6" />
-              </div>
-              <p className="mt-8 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/75">
-                Working now
-              </p>
-              <h2 className="mt-3 text-balance text-4xl font-black leading-none tracking-[-0.04em]">
-                Route the insight into action.
-              </h2>
-              <p className="mt-5 text-base leading-relaxed text-white/80">
-                Turn a client objective into an ordered execution plan with clear ownership,
-                dependencies, verification, and complete prompts for Claude, Codex, and OpenCode.
-              </p>
-              <Link
-                href="/router"
-                className="mt-8 inline-flex min-h-12 items-center gap-2 border-2 border-white bg-ink px-6 text-sm font-black text-white hover:bg-white hover:text-ink"
-              >
-                Route your next client brief
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="grid gap-px bg-line sm:grid-cols-2">
-              {[
-                ['01', 'Disjoint ownership', 'Give every task one accountable owner.'],
-                ['02', 'Dependency order', 'Research and design unblock implementation and QA.'],
-                ['03', 'Copy-ready prompts', 'Move from planning to execution without rewriting the brief.'],
-                ['04', 'Private by design', 'The first release routes work locally in your browser.'],
-              ].map(([number, title, copy]) => (
-                <article key={number} className="bg-panel p-7">
-                  <span className="font-mono text-xs font-black text-yellow">{number}</span>
-                  <h3 className="mt-5 text-xl font-black text-ink">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{copy}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-y border-line bg-panel px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-yellow">
-                  A different signal source
-                </p>
-                <h2 className="mt-3 text-balance text-4xl font-black tracking-tight text-ink">
-                  Popularity is public. Taste is proprietary.
-                </h2>
-                <p className="mt-5 text-lg leading-relaxed text-muted">
-                  Listening platforms scan the market for volume. Recall starts with a smaller,
-                  higher-intent dataset: the work your strategists, creators, and account leads
-                  deliberately saved.
-                </p>
-                <p className="mt-4 text-base leading-relaxed text-muted">
-                  That human selection becomes a reusable agency asset instead of disappearing
-                  inside personal bookmarks, DMs, and screenshots.
-                </p>
-              </div>
-              <div className="grid gap-5">
-                {useCases.map((item) => (
-                  <article key={item.title} className="card flex gap-4 p-6">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-yellow/10 text-yellow">
-                      <item.icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-ink">{item.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-muted">{item.description}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="pilot" className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-5xl gap-8 rounded-2xl bg-ink p-8 shadow-panel sm:p-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <section className="px-4 pb-20 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-6xl gap-8 rounded-2xl bg-ink p-8 shadow-panel sm:p-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
             <div>
               <div className="inline-flex rounded-full border border-yellow/30 bg-yellow/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-yellow">
-                Agency pilot · Upcoming
+                Privacy-first
               </div>
               <h2 className="mt-5 text-balance text-3xl font-black tracking-tight text-white sm:text-4xl">
-                Help shape the team workflow.
+                User-provided inputs only. No shady scraping.
               </h2>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-white/65">
-                Recall&apos;s individual capture, enrichment, search, graph, and boards are available
-                now. The pilot is for agencies that want to help design the collaborative layer.
+                Social support means pasted links, official exports, browser extension capture, or
+                authorised APIs. Recall models the user from evidence, not surveillance.
               </p>
-              <Link
-                href="/pricing#pilot"
-                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-yellow px-8 py-3.5 text-base font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-orange hover:shadow-glow-amber"
-              >
-                Join the agency pilot
-                <ArrowRight className="h-4 w-4" />
-              </Link>
             </div>
             <ul className="space-y-3">
-              {pilotFeatures.map((feature) => (
+              {['Mark input sensitive', 'Exclude from profile', 'Export everything', 'Trace every insight'].map((feature) => (
                 <li key={feature} className="flex items-center gap-3 text-sm text-white/75">
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-yellow/15 text-yellow">
-                    <ChevronRight className="h-3.5 w-3.5" />
+                    <Shield className="h-3.5 w-3.5" />
                   </span>
                   {feature}
-                  <span className="ml-auto text-xs font-bold uppercase tracking-wide text-yellow">
-                    Upcoming
-                  </span>
                 </li>
               ))}
             </ul>
@@ -308,36 +199,18 @@ export default function LandingPage() {
         <section className="px-4 pb-16 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-8 text-dim">
             {[
-              'Private workspaces',
-              'Source provenance retained',
-              'Exportable data',
+              `${demoMemoryItems.length} demo memories`,
+              'Evidence-based insights',
+              'Future MCP context layer',
             ].map((text) => (
               <div key={text} className="flex items-center gap-2 text-sm">
-                <Shield className="h-4 w-4 shrink-0 text-yellow" />
+                <Lock className="h-4 w-4 shrink-0 text-yellow" />
                 {text}
               </div>
             ))}
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-line bg-panel px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-yellow">
-              <Brain className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="text-sm font-bold text-ink">Recall Signals</span>
-          </div>
-          <nav className="flex gap-5 text-sm text-muted">
-            <Link href="/router" className="transition-colors hover:text-ink">Router</Link>
-            <Link href="/pricing" className="transition-colors hover:text-ink">Pricing</Link>
-            <Link href="/privacy" className="transition-colors hover:text-ink">Privacy</Link>
-            <Link href="/terms" className="transition-colors hover:text-ink">Terms</Link>
-          </nav>
-          <p className="text-xs text-dim">© 2026 Recall. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

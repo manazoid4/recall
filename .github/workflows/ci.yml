@@ -11,7 +11,7 @@ jobs:
     name: Lint and Build
     runs-on: ${{ matrix.os }}
     env:
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_Y2xlcmsuZXhhbXBsZS5jb20k' }}
       DATABASE_URL: postgres://ci:ci@127.0.0.1:5432/recall?pgbouncer=true
 
     strategy:
