@@ -174,6 +174,8 @@ export type InsightType =
 
 export type ProjectStatus = 'active' | 'watching' | 'paused' | 'future';
 
+export type SignalGrade = 'GOLD' | 'SILVER' | 'BRONZE';
+
 export type AgentPromptType =
   | 'personal_assistant'
   | 'coding_agent'
@@ -331,4 +333,63 @@ export interface CaptureInput {
   userNote?: string;
   type: MemoryType;
   platform: Platform;
+}
+
+export interface SignalScore {
+  memoryId: string;
+  score: number;
+  grade: SignalGrade;
+  reasons: string[];
+  recommendedAction: string;
+  paidValue: string;
+}
+
+export interface DailyBrief {
+  id: string;
+  userId: string;
+  title: string;
+  summary: string;
+  goldSignals: SignalScore[];
+  silverSignals: SignalScore[];
+  bronzeSignals: SignalScore[];
+  nextActions: string[];
+  agentPacks: AgentPromptType[];
+  createdAt: string;
+}
+
+export interface PaidPlanMoat {
+  name: string;
+  customerPromise: string;
+  paidReason: string;
+  moat: string;
+}
+
+export type InstagramInboxMode =
+  | 'shared_recall_inbox'
+  | 'connected_creator_account'
+  | 'future_dedicated_inbox';
+
+export interface InstagramInboxProvision {
+  id: string;
+  userId: string;
+  mode: InstagramInboxMode;
+  instagramHandle: string;
+  routingCode: string;
+  displayName: string;
+  status: 'ready' | 'needs_connection' | 'pending_meta_review';
+  setupSteps: string[];
+  complianceNotes: string[];
+  createdAt: string;
+}
+
+export interface InstagramInboxMessage {
+  userId: string;
+  instagramSenderId: string;
+  messageText: string;
+  attachments: Array<{
+    type: 'image' | 'video' | 'audio' | 'file' | 'story_mention' | 'unknown';
+    url?: string;
+    title?: string;
+  }>;
+  receivedAt: string;
 }

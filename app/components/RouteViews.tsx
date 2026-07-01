@@ -1,12 +1,16 @@
 import {
   createAgentPrompt,
+  createDailyBrief,
   createReflectionSummary,
   findContradictions,
   findPatterns,
+  getPaidPlanMoats,
   linkProjects,
+  scoreMemorySignal,
 } from '../../lib/agents';
 import {
   demoInsights,
+  demoInstagramInbox,
   demoIntentNodes,
   demoMemoryItems,
   demoProfile,
@@ -36,6 +40,7 @@ function MemoryCard({ item }: { item: MemoryItem }) {
 
 export function DashboardView() {
   const unprocessed = demoMemoryItems.filter((item) => item.status === 'new' || item.status === 'needs_context');
+  const dailyBrief = createDailyBrief(demoMemoryItems, demoProfile);
   return (
     <>
       <PageHeader
@@ -48,7 +53,7 @@ export function DashboardView() {
         <Metric label="Memory items" value={demoMemoryItems.length} detail="demo evidence objects" />
         <Metric label="Unprocessed" value={unprocessed.length} detail="need context or review" />
         <Metric label="Profile version" value={`v${demoProfile.version}`} detail={`${Math.round(demoProfile.confidence * 100)}% confidence`} />
-        <Metric label="Agent prompts" value={demoPrompts.length} detail="context packs ready" />
+        <Metric label="GOLD signals" value={dailyBrief.goldSignals.length} detail="ready for action today" />
       </div>
       <div className="two-column">
         <Section title="Living Profile" eyebrow="Current direction">
@@ -77,6 +82,20 @@ export function DashboardView() {
           ))}
         </div>
       </Section>
+      <Section title="Paid daily signal brief" eyebrow="Signal OS">
+        <div className="wide-card">
+          <div>
+            <h2>{dailyBrief.title}</h2>
+            <p>{dailyBrief.summary}</p>
+            <PillList items={dailyBrief.nextActions.slice(0, 3)} />
+          </div>
+          <div>
+            <strong>Why pay for Recall</strong>
+            <p>It filters saved chaos into ranked signal, agent context, and daily action instead of becoming another archive.</p>
+            <a className="primary-button" href="/signal-os">Open Signal OS</a>
+          </div>
+        </div>
+      </Section>
     </>
   );
 }
@@ -90,6 +109,137 @@ export function CaptureView() {
         description="Paste a URL, add a manual thought, include why you saved it, and preview how it becomes structured memory."
       />
       <CaptureConsole />
+      <Section title="Message-first capture moat" eyebrow="Instagram Inbox">
+        <div className="wide-card">
+          <div>
+            <h2>Capture should feel like sending a DM</h2>
+            <p>
+              The strongest Recall habit is not opening a dashboard. It is sending a reel, thought,
+              screenshot, or voice note to a private Recall inbox and letting the system ask for context.
+            </p>
+          </div>
+          <div>
+            <a className="primary-button" href="/instagram-inbox">Set up Instagram Inbox</a>
+          </div>
+        </div>
+      </Section>
+    </>
+  );
+}
+
+export function InstagramInboxView() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Capture Habit Moat"
+        title="DM anything to your Recall inbox"
+        description="Make feeding Recall feel like messaging a trusted person on Instagram: send a post, reel, screenshot, voice note, link, or thought and Recall turns it into structured memory."
+      />
+      <div className="two-column">
+        <Section title="Your inbox identity" eyebrow="Provisioned demo">
+          <div className="panel">
+            <span className="eyebrow">{demoInstagramInbox.mode.replaceAll('_', ' ')}</span>
+            <h2>@{demoInstagramInbox.instagramHandle}</h2>
+            <p className="lead">{demoInstagramInbox.displayName}</p>
+            <Metric label="Routing code" value={demoInstagramInbox.routingCode} detail={demoInstagramInbox.status} />
+          </div>
+        </Section>
+        <Section title="How it works">
+          <div className="stack">
+            {demoInstagramInbox.setupSteps.map((step, index) => (
+              <div className="mini-card" key={step}>
+                <strong>{index + 1}. {step}</strong>
+              </div>
+            ))}
+          </div>
+        </Section>
+      </div>
+      <Section title="Why this is unique">
+        <div className="card-grid">
+          {[
+            ['Capture habit moat', 'Recall owns the reflex: send it to the inbox when something matters.'],
+            ['Taste graph moat', 'DMs reveal repeated private choices, not just search queries.'],
+            ['Agent context moat', 'Each message becomes evidence future agents can use.'],
+            ['Trust moat', 'No scraping, no impersonation, no password collection, explicit routing and consent.'],
+          ].map(([title, body]) => (
+            <div className="panel" key={title}>
+              <h2>{title}</h2>
+              <p>{body}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+      <Section title="Compliance boundary">
+        <PillList items={demoInstagramInbox.complianceNotes} />
+      </Section>
+    </>
+  );
+}
+
+export function SignalOSView() {
+  const dailyBrief = createDailyBrief(demoMemoryItems, demoProfile);
+  const signals = demoMemoryItems
+    .map((item) => ({ item, signal: scoreMemorySignal(item) }))
+    .sort((a, b) => b.signal.score - a.signal.score);
+  const moats = getPaidPlanMoats();
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Signal OS"
+        title="Recall should filter your digital life into what matters today."
+        description="Inspired by JobFilter's scoring discipline: every capture gets a grade, evidence reasons, and a next action so users pay for clarity, not storage."
+        action={<a className="primary-button" href="/instagram-inbox">Connect DM capture</a>}
+      />
+      <div className="metric-grid">
+        <Metric label="GOLD" value={dailyBrief.goldSignals.length} detail="act today" />
+        <Metric label="SILVER" value={dailyBrief.silverSignals.length} detail="watch for pattern" />
+        <Metric label="BRONZE" value={dailyBrief.bronzeSignals.length} detail="archive quietly" />
+        <Metric label="Agent packs" value={dailyBrief.agentPacks.length} detail="paid context exports" />
+      </div>
+      <Section title={dailyBrief.title} eyebrow="Daily paid loop">
+        <div className="wide-card">
+          <div>
+            <p className="lead">{dailyBrief.summary}</p>
+            <PillList items={dailyBrief.nextActions} />
+          </div>
+          <div>
+            <strong>Simple user promise</strong>
+            <p>DM or capture anything. Recall tells you if it is action, context, or archive, then prepares the right agent context.</p>
+          </div>
+        </div>
+      </Section>
+      <Section title="Scored memory signals">
+        <div className="stack">
+          {signals.map(({ item, signal }) => (
+            <div className="wide-card" key={item.id}>
+              <div>
+                <span className={`signal-grade signal-${signal.grade.toLowerCase()}`}>{signal.grade} / {signal.score}</span>
+                <h2>{item.title}</h2>
+                <p>{signal.recommendedAction}</p>
+                <PillList items={signal.reasons} />
+              </div>
+              <div>
+                <strong>Paid value</strong>
+                <p>{signal.paidValue}</p>
+                <EvidenceList ids={[signal.memoryId]} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+      <Section title="Defensible paid moats">
+        <div className="card-grid">
+          {moats.map((moat) => (
+            <div className="panel" key={moat.name}>
+              <span className="eyebrow">{moat.name}</span>
+              <h2>{moat.customerPromise}</h2>
+              <p>{moat.paidReason}</p>
+              <small>{moat.moat}</small>
+            </div>
+          ))}
+        </div>
+      </Section>
     </>
   );
 }
@@ -212,6 +362,17 @@ export function IntentView() {
     <>
       <PageHeader eyebrow="Intent Graph" title="What your saves imply you want to build or become" description="Recall infers goals, project signals, and suggested actions from what you repeatedly choose to keep." />
       <div className="stack">
+        <div className="wide-card">
+          <div>
+            <span className="eyebrow">Instagram Inbox</span>
+            <h2>Make Recall the account you message when something matters</h2>
+            <p>This turns capture into a native social habit instead of another dashboard chore.</p>
+          </div>
+          <div>
+            <strong>Build From This</strong>
+            <p>Ship shared inbox routing, webhook verification, DM normalization, and assistant follow-up replies.</p>
+          </div>
+        </div>
         {demoIntentNodes.map((node) => (
           <div className="wide-card" key={node.id}>
             <div>
@@ -395,6 +556,7 @@ export function AgentsView() {
           'Privacy Agent',
           'Reflection Agent',
           'Future MCP Agent',
+          'Instagram Inbox Agent',
         ].map((agent) => (
           <div className="mini-card" key={agent}>
             <strong>{agent}</strong>

@@ -577,6 +577,31 @@ button.primary-button {
   text-align: left;
 }
 
+.signal-grade {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid hsl(var(--line));
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.signal-gold {
+  border-color: rgba(245, 158, 11, 0.72);
+  background: rgba(245, 158, 11, 0.16);
+  color: hsl(var(--ring));
+}
+
+.signal-silver {
+  background: hsl(var(--overlay));
+  color: hsl(var(--ink));
+}
+
+.signal-bronze {
+  background: hsl(var(--surface));
+  color: hsl(var(--muted));
+}
+
 @media (max-width: 920px) {
   .app-shell,
   .page-header,

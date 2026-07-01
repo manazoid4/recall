@@ -4,7 +4,7 @@
 
 1. Universal Input Layer
    - URLs, videos, audio, PDFs, screenshots, images, voice notes, manual thoughts, Obsidian notes, GitHub links, JSON/CSV exports, browser captures, and future device data.
-   - Social media capture must stay authorised: pasted links, official exports, browser extension capture, or future APIs.
+   - Social media capture must stay authorised: pasted links, official exports, browser extension capture, future APIs, and Instagram DM inbox capture through approved messaging surfaces.
 
 2. Memory Graph
    - Input -> topic -> value -> emotion -> project -> trait -> creator -> platform -> action -> agent prompt.
@@ -24,6 +24,17 @@
 7. Privacy and Control
    - User ownership, traceable evidence, deletion, sensitivity, profile exclusion, export, consent boundaries, and local-first direction.
 
+8. Capture Habit Moat
+   - Recall should become the account users message when something matters.
+   - The Instagram Inbox flow uses a shared Recall-owned professional inbox plus private routing codes first, with connected professional account mode later.
+
+9. Signal OS
+   - Every capture is scored as GOLD, SILVER, or BRONZE.
+   - GOLD means act today, generate a prompt, or move a project.
+   - SILVER means ask for one more context reply and watch for repetition.
+   - BRONZE means archive/search later without polluting the living profile.
+   - This is the JobFilter-inspired principle for Recall: paid users buy ranked signal, not another inbox.
+
 ## Data Model
 
 - `MemoryItem`
@@ -41,6 +52,8 @@ The current model lives in `lib/types.ts` and uses editable mock data from `lib/
 
 - `/dashboard` - Main overview and Feed Recall quick action.
 - `/capture` - Universal capture.
+- `/instagram-inbox` - Instagram DM capture setup and moat explanation.
+- `/signal-os` - Daily signal brief, scored captures, paid plan moats, and action routing.
 - `/inbox` - Processing queue and profile-control actions.
 - `/profile` - Living profile.
 - `/personality` - Human-readable mirror.
@@ -72,6 +85,8 @@ The current model lives in `lib/types.ts` and uses editable mock data from `lib/
 - Privacy Agent - flags sensitivity and exclusion boundaries.
 - Reflection Agent - creates weekly/monthly summaries.
 - Future MCP Agent - prepares future context-server exposure.
+- Instagram Inbox Agent - turns authorised DMs into memory items and asks follow-up context questions.
+- Signal Scoring Agent - ranks captures by intent, evidence, project relevance, profile impact, and context gaps.
 
 ## MVP Scope
 
@@ -83,10 +98,12 @@ The current MVP is intentionally mock-first:
 - Deterministic agent pipeline.
 - Capture form that previews processing.
 - Prompt/export/profile surfaces that demonstrate the future loop.
+- Signal OS route that demonstrates the paid loop: capture -> score -> daily action -> agent pack.
 
 ## Future Roadmap
 
 - Browser extension capture.
+- Instagram DM inbox capture with webhook verification and thread routing.
 - Instagram export parser.
 - TikTok export and link enrichment.
 - YouTube transcript integration.
@@ -109,12 +126,14 @@ The current MVP is intentionally mock-first:
 ## Integration Roadmap
 
 1. Keep existing Obsidian append flow for trusted manual imports.
-2. Add durable storage for `MemoryItem`.
-3. Add ingestion workers for transcripts/OCR.
-4. Add embeddings and graph relationships.
-5. Add profile versioning and accept/reject insight workflow.
-6. Add export adapters for Obsidian, JSON, and agent context.
-7. Add MCP context server once profile evidence is stable.
+2. Add Instagram Inbox routing records for sender/thread -> Recall user.
+3. Add durable storage for `MemoryItem`.
+4. Add ingestion workers for transcripts/OCR.
+5. Persist signal scores and daily briefs.
+6. Add embeddings and graph relationships.
+7. Add profile versioning and accept/reject insight workflow.
+8. Add export adapters for Obsidian, JSON, and agent context.
+9. Add MCP context server once profile evidence is stable.
 
 ## Privacy Model
 

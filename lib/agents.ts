@@ -3,10 +3,16 @@ import type {
   AgentPrompt,
   AgentPromptType,
   CaptureInput,
+  InstagramInboxMessage,
+  InstagramInboxProvision,
+  InstagramInboxMode,
   IntentNode,
   MemoryItem,
+  DailyBrief,
+  PaidPlanMoat,
   ProfileInsight,
   Project,
+  SignalScore,
   TasteNode,
   UserProfile,
 } from './types';
@@ -28,6 +34,29 @@ function nowIso() {
 
 function scoreFromSignals(count: number, base = 58) {
   return Math.min(96, base + count * 8);
+}
+
+function signalGrade(score: number) {
+  if (score >= 80) return 'GOLD';
+  if (score >= 50) return 'SILVER';
+  return 'BRONZE';
+}
+
+function routingCodeFor(userId: string, userDisplayName: string) {
+  const readable = userDisplayName.replace(/[^a-z0-9]/gi, '').slice(0, 8).toUpperCase() || 'USER';
+  const checksum = [...userId].reduce((sum, char) => sum + char.charCodeAt(0), 0).toString(36).toUpperCase();
+  return `RCL-${readable}-${checksum}`;
+}
+
+function firstUrl(text: string) {
+  return text.match(/https?:\/\/\S+/)?.[0]?.replace(/[),.]+$/, '');
+}
+
+function removeRoutingAndUrl(text: string, routingCode?: string, url?: string) {
+  return text
+    .replace(routingCode || '', '')
+    .replace(url || '', '')
+    .trim();
 }
 
 export function normalizeInput(input: CaptureInput): MemoryItem {
@@ -62,6 +91,59 @@ export function normalizeInput(input: CaptureInput): MemoryItem {
     sensitive: false,
     createdAt: timestamp,
     updatedAt: timestamp,
+  };
+}
+
+export function createInstagramInboxProvision({
+  userId,
+  recallHandle,
+  userDisplayName,
+  mode = 'shared_recall_inbox',
+}: {
+  userId: string;
+  recallHandle: string;
+  userDisplayName: string;
+  mode?: InstagramInboxMode;
+}): InstagramInboxProvision {
+  const routingCode = routingCodeFor(userId, userDisplayName);
+  return {
+    id: `ig_inbox_${userId}`,
+    userId,
+    mode,
+    instagramHandle: recallHandle,
+    routingCode,
+    displayName: `${userDisplayName}'s Recall Inbox`,
+    status: mode === 'shared_recall_inbox' ? 'ready' : 'needs_connection',
+    setupSteps: [
+      `Follow @${recallHandle}`,
+      `Send any post, reel, link, screenshot, voice note, or thought to @${recallHandle}`,
+      `Include ${routingCode} once so Recall can route the thread to your account`,
+      'Reply with a short reason saved when Recall asks for context',
+    ],
+    complianceNotes: [
+      'Uses Instagram Messaging API style webhooks for authorised professional inboxes.',
+      'No personal-account bot creation, impersonation, password collection, or scraping.',
+      'Shared inbox mode gives each user a private routing code instead of pretending every user owns a bot.',
+      'Connected account mode is reserved for users who explicitly connect an eligible Instagram professional account.',
+    ],
+    createdAt: nowIso(),
+  };
+}
+
+export function normalizeInstagramInboxMessage(message: InstagramInboxMessage): CaptureInput {
+  const url = firstUrl(message.messageText) || message.attachments.find((attachment) => attachment.url)?.url;
+  const routingCode = message.messageText.match(/RCL-[A-Z0-9]+-[A-Z0-9]+/i)?.[0];
+  const userNote = removeRoutingAndUrl(message.messageText, routingCode, url);
+  const attachment = message.attachments[0];
+  return {
+    type: attachment?.type === 'audio' ? 'audio' : attachment?.type === 'image' ? 'screenshot' : 'social',
+    platform: 'instagram',
+    sourceUrl: url,
+    title: attachment?.title || url || 'Instagram inbox capture',
+    creator: `instagram:${message.instagramSenderId}`,
+    rawContent: message.messageText,
+    reasonSaved: 'The user sent this to their Recall Instagram inbox, which is a high-intent save signal.',
+    userNote,
   };
 }
 
@@ -158,6 +240,122 @@ export function runPrivacyAgent(item: MemoryItem): MemoryItem {
 
 export function processMemoryItem(item: MemoryItem): MemoryItem {
   return runPrivacyAgent(runMeaningAgent(runVisionAgent(runTranscriptAgent({ ...item, status: 'processing' }))));
+}
+
+export function scoreMemorySignal(item: MemoryItem): SignalScore {
+  const reasons: string[] = [];
+  let score = 35;
+
+  if (item.reasonSaved || item.userNote) {
+    score += 18;
+    reasons.push('User supplied intent');
+  }
+
+  if (item.sourceUrl || item.transcript || item.extractedText || item.rawContent) {
+    score += 14;
+    reasons.push('Evidence attached');
+  }
+
+  if (item.projects.length > 0) {
+    score += 12;
+    reasons.push('Linked to a project');
+  }
+
+  if (item.profileImpactScore >= 80) {
+    score += 12;
+    reasons.push('High profile impact');
+  } else if (item.profileImpactScore >= 60) {
+    score += 6;
+    reasons.push('Medium profile impact');
+  }
+
+  if (item.values.length + item.topics.length >= 5) {
+    score += 8;
+    reasons.push('Rich meaning signals');
+  }
+
+  if (item.platform === 'instagram' && item.tags.includes('instagram-inbox')) {
+    score += 10;
+    reasons.push('High-friction social save avoided');
+  }
+
+  if (item.sensitive) {
+    score -= 6;
+    reasons.push('Sensitive review needed');
+  }
+
+  if (item.status === 'needs_context') {
+    score -= 12;
+    reasons.push('Needs one more context reply');
+  }
+
+  const finalScore = Math.max(0, Math.min(100, score));
+  const grade = signalGrade(finalScore);
+
+  return {
+    memoryId: item.id,
+    score: finalScore,
+    grade,
+    reasons: reasons.slice(0, 5),
+    recommendedAction:
+      grade === 'GOLD'
+        ? `Act today: turn "${item.title}" into a project task or agent prompt.`
+        : grade === 'SILVER'
+          ? `Keep warm: ask one follow-up question about why "${item.title}" matters.`
+          : `Archive or batch later unless this repeats across more inputs.`,
+    paidValue:
+      grade === 'GOLD'
+        ? 'Included in paid daily brief and agent context packs.'
+        : grade === 'SILVER'
+          ? 'Tracked for pattern detection and weekly review.'
+          : 'Kept searchable without polluting the active profile.',
+  };
+}
+
+export function createDailyBrief(items: MemoryItem[], profile: UserProfile): DailyBrief {
+  const scored = items.map(scoreMemorySignal).sort((a, b) => b.score - a.score);
+  const goldSignals = scored.filter((signal) => signal.grade === 'GOLD');
+  const silverSignals = scored.filter((signal) => signal.grade === 'SILVER');
+  const bronzeSignals = scored.filter((signal) => signal.grade === 'BRONZE');
+  const topItems = goldSignals
+    .map((signal) => items.find((item) => item.id === signal.memoryId))
+    .filter(Boolean) as MemoryItem[];
+
+  return {
+    id: `brief_${Date.now()}`,
+    userId: profile.userId,
+    title: 'Today in your personal AI signal',
+    summary: `${goldSignals.length} GOLD signals are ready for action, ${silverSignals.length} should be watched, and ${bronzeSignals.length} can stay in the archive.`,
+    goldSignals,
+    silverSignals,
+    bronzeSignals,
+    nextActions: topItems.slice(0, 3).map((item) => `Use "${item.title}" to move ${item.projects[0] || 'your main project'} forward.`),
+    agentPacks: ['personal_assistant', 'coding_agent', 'reflection_agent', 'mcp_context'],
+    createdAt: nowIso(),
+  };
+}
+
+export function getPaidPlanMoats(): PaidPlanMoat[] {
+  return [
+    {
+      name: 'DM capture habit',
+      customerPromise: 'Send anything to Recall like messaging a person.',
+      paidReason: 'Unlimited Instagram inbox captures, voice notes, screenshots, and follow-up context prompts.',
+      moat: 'Owning the capture reflex makes Recall harder to replace than a passive notes app.',
+    },
+    {
+      name: 'Signal scoring',
+      customerPromise: 'Know which saves deserve action today.',
+      paidReason: 'GOLD/SILVER/BRONZE filtering, evidence reasons, and daily brief delivery.',
+      moat: 'The scoring model compounds on personal evidence, not generic internet content.',
+    },
+    {
+      name: 'Agent context packs',
+      customerPromise: 'Make every AI assistant start with your real context.',
+      paidReason: 'Exportable prompts for Codex, OpenCode, Obsidian, personal assistants, and future MCP clients.',
+      moat: 'The more a user works through Recall, the more valuable their private context graph becomes.',
+    },
+  ];
 }
 
 export function updateProfileFromMemory(profile: UserProfile, item: MemoryItem): UserProfile {
